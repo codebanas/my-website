@@ -9,6 +9,13 @@ const codes = [
 
 export default function Home() {
   return (
+    <>
+    <div className="site-background" aria-hidden="true">
+      <video className="site-background-video" autoPlay muted loop playsInline preload="auto">
+        <source src="/background/video.mp4" type="video/mp4" />
+      </video>
+      <img className="site-background-gif" src="/background/gif.gif" alt="" />
+    </div>
     <main>
       <nav className="nav" aria-label="Main navigation">
         <img className="nav-logo" src="/nav/logo.svg" alt="Codebanas" width={29.538} height={32} />
@@ -77,5 +84,6 @@ export default function Home() {
       </section>
       </div>
     </main>
+    </>
   );
 }
