@@ -7,6 +7,27 @@ const codes = [
   { code: "BDZ - MPK", claimed: 5 },
 ];
 
+const plans = [
+  { price: "FREE", name: "STARTER", current: true },
+  { price: "$1.99", name: "ESSENTIAL" },
+  { price: "$9.99", name: "PLUS" },
+  { price: "$14.99", name: "PRO" },
+  { price: "$24.99", name: "PREMIUM" },
+];
+
+const planFeatures = [
+  { included: true, label: "Access To Database" },
+  { included: true, label: "Access Rewards $1 - $5" },
+  { included: true, label: "Only 1 Claim Every 24/Hr" },
+  { included: false, label: "Receive Notification About New Codes." },
+  { included: false, label: "No Filtering" },
+];
+
+const marqueeRows = [
+  "CHOOSE YOUR PLAN • UNLOCK MORE CODES • CLAIM MORE REWARDS",
+  "STARTER • ESSENTIAL • PLUS • PRO • PREMIUM",
+];
+
 export default function Home() {
   return (
     <>
@@ -82,6 +103,63 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </div>
+      <div className="section-pricing-wrap">
+        <section className="section-pricing" aria-labelledby="pricing-heading">
+          <header className="pricing-intro">
+            <div className="pricing-intro-row">
+              <div className="pricing-greeting">
+                <img src="/codes/hello.svg" alt="" width={48} height={24} />
+                <h2 id="pricing-heading">SEE OUR PLANS</h2>
+              </div>
+              <img className="pricing-barcode" src="/codes/barcode.svg" alt="" width={147.693} height={20} />
+            </div>
+            <p>Easily access our exclusive standalone codes outside of the main community database.</p>
+          </header>
+
+          <p className="pricing-referral">
+            <span>Invite A Friend</span>
+            <span aria-hidden="true">•</span>
+            <span>Get 5% Off Discount</span>
+          </p>
+
+          <div className="pricing-grid">
+            {plans.map(({ price, name, current }) => (
+              <article className="pricing-plan" key={price}>
+                <h3>{price}</h3>
+                <div className="pricing-labels" aria-label={`${name} plan`}>
+                  <span>• FEATURES<br />• FEATURES</span>
+                  <strong>{name}<br />{name}</strong>
+                </div>
+                <ul className="pricing-features">
+                  {planFeatures.map(({ included, label }) => (
+                    <li key={label}>
+                      <span className="pricing-mark" aria-hidden="true">{included ? "✓" : "×"}</span>
+                      <span>{label}</span>
+                    </li>
+                  ))}
+                </ul>
+                <button className={current ? "pricing-button pricing-button--current" : "pricing-button"} type="button">
+                  {current ? "CURRENT" : "UPGRADE"}
+                </button>
+              </article>
+            ))}
+          </div>
+
+          <div className="pricing-marquees" aria-hidden="true">
+            {marqueeRows.map((text, rowIndex) => (
+              <div className={`pricing-marquee pricing-marquee--${rowIndex === 0 ? "right" : "left"}`} key={text}>
+                <div className="pricing-marquee-track">
+                  {[0, 1].map((setIndex) => (
+                    <div className="pricing-marquee-set" key={setIndex}>
+                      {[0, 1, 2, 3].map((itemIndex) => <span key={itemIndex}>{text}</span>)}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
     </>
