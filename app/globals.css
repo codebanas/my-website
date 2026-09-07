@@ -19,5 +19,12 @@ body {
   left: 0;
   width: 100%;
   height: 80px;
+  padding: 0 48px;
   background: var(--dark);
+}
+
+.nav-logo {
+  display: block;
+  width: auto;
+  height: 32px;
 }
