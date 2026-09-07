@@ -220,18 +220,14 @@
 }
 
 .pricing-referral {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: fit-content;
-  margin: 0 0 48px;
-  padding: 8px;
-  border-radius: 4px;
-  background: var(--dark);
+  margin-bottom: 48px;
+}
+
+.pricing-referral a {
   color: var(--light);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.2;
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-underline-offset: 2px;
 }
 
 .pricing-grid {

@@ -117,9 +117,9 @@ export default function Home() {
             <p>Easily access our exclusive standalone codes outside of the main community database.</p>
           </header>
 
-          <p className="pricing-referral">
-            <span>Invite A Friend</span>
-            <span aria-hidden="true">•</span>
+          <p className="codes-availability pricing-referral">
+            <a href="#">Invite A Friend</a>
+            <img src="/codes/dot.svg" alt="" width={4} height={4} />
             <span>Get 5% Off Discount</span>
           </p>
 
