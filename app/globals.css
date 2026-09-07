@@ -3,6 +3,7 @@
 :root {
   --dark: #1A1A1A;
   --light: #F5F5F5;
+  --white: #FFFFFF;
   --codes-blue: #99C2FF;
 }
 
@@ -285,7 +286,24 @@ main {
 }
 
 .nav-sign-in {
-  width: 19.961px;
+  width: 20px;
+  -webkit-mask-image: url("/nav/sign-in.svg");
+  mask-image: url("/nav/sign-in.svg");
+}
+
+.nav-icon {
+  background-color: var(--white);
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.nav-search {
+  -webkit-mask-image: url("/nav/search.svg");
+  mask-image: url("/nav/search.svg");
 }
 
 .nav-divider {
@@ -294,7 +312,9 @@ main {
 }
 
 .nav-menu {
-  height: 10px;
+  height: 9px;
+  -webkit-mask-image: url("/nav/menu.svg");
+  mask-image: url("/nav/menu.svg");
 }
 
 @media (max-width: 600px) {
