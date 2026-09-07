@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  --dark: #1A1A1A;
   --ink: #11110e;
   --paper: #f4f1e8;
   --acid: #d9ff3f;
@@ -15,7 +16,7 @@ a { color: inherit; text-decoration: none; }
 
 .section-shell { padding-left: clamp(1.25rem, 4vw, 4.5rem); padding-right: clamp(1.25rem, 4vw, 4.5rem); }
 .hero { min-height: 100svh; background: var(--ink); color: var(--paper); display: flex; flex-direction: column; }
-.nav { height: 92px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(244,241,232,.25); }
+.nav { position: fixed; z-index: 50; top: 0; left: 0; width: 100%; height: 80px; padding: 0 clamp(1.25rem, 4vw, 4.5rem); display: flex; align-items: center; justify-content: space-between; background: var(--dark); border-bottom: 1px solid rgba(244,241,232,.25); }
 .wordmark { font-size: .9rem; font-weight: 800; letter-spacing: -.04em; display: flex; align-items: center; gap: .3rem; }
 .wordmark-mark { width: 1.55rem; height: 1.55rem; border-radius: 50%; background: var(--acid); color: var(--ink); display: inline-grid; place-items: center; font-weight: 900; font-size: .75rem; }
 .nav-links { display: flex; gap: 2rem; font-size: .8rem; }
@@ -23,7 +24,7 @@ a { color: inherit; text-decoration: none; }
 .nav-links a:hover, .footer a:hover { opacity: .6; }
 .nav-cta { background: var(--acid); color: var(--ink); font-weight: 700; padding: .77rem 1rem; font-size: .78rem; display: inline-flex; gap: .5rem; align-items: center; }
 .arrow { font-size: 1.05em; line-height: 1; display: inline-block; }
-.hero-grid { flex: 1; display: grid; grid-template-columns: 1.13fr .87fr; align-items: center; padding: clamp(3rem, 8vh, 7rem) 0 4rem; gap: 2rem; }
+.hero-grid { flex: 1; display: grid; grid-template-columns: 1.13fr .87fr; align-items: center; padding: clamp(8rem, 14vh, 10rem) 0 4rem; gap: 2rem; }
 .eyebrow { display: flex; align-items: center; gap: .55rem; font-size: .65rem; text-transform: uppercase; letter-spacing: .09em; font-weight: 700; margin: 0 0 1.45rem; }
 .eyebrow span { width: 7px; height: 7px; border-radius: 50%; background: var(--acid); display: inline-block; }
 h1, h2, h3, p { margin-top: 0; }
@@ -78,5 +79,5 @@ h1 em, h2 em { font-family: Georgia, 'Times New Roman', serif; font-weight: 400;
 .footer { background: var(--ink); color: var(--paper); border-top: 1px solid rgba(244,241,232,.25); min-height: 86px; display: flex; align-items: center; justify-content: space-between; font-size: .65rem; }.footer p { margin: 0; color: rgba(244,241,232,.55); }.footer > div { display: flex; gap: 1rem; }
 
 @media (max-width: 720px) {
-  .nav { height: 72px; }.nav-links { display: none; }.nav-cta { padding: .65rem .75rem; font-size: .7rem; }.hero-grid { grid-template-columns: 1fr; padding-top: 4.4rem; }.hero-art { min-height: 330px; }.project-grid { grid-template-columns: 1fr; }.project { min-height: 23rem; }.project-two, .project-three { min-height: 18rem; }.services-section { display: block; }.capability-list { margin-top: 3rem; }.capability { grid-template-columns: 2.1rem 1fr 1rem; }.capability p { grid-column: 2 / 4; }.capability > .arrow { grid-column: 3; grid-row: 1; }.statement-section { min-height: 62vh; }.statement-graphic { width: 69vw; bottom: -10vw; right: -10vw; }.contact-section { display: block; }.contact-email { display: inline-flex; margin-top: 2.5rem; }.footer { min-height: 125px; align-items: flex-start; padding-top: 1.4rem; flex-wrap: wrap; gap: 1rem; }.footer p { order: 3; width: 100%; }.footer > div { margin-left: auto; }
+  .nav { height: 80px; }.nav-links { display: none; }.nav-cta { padding: .65rem .75rem; font-size: .7rem; }.hero-grid { grid-template-columns: 1fr; padding-top: 7.5rem; }.hero-art { min-height: 330px; }.project-grid { grid-template-columns: 1fr; }.project { min-height: 23rem; }.project-two, .project-three { min-height: 18rem; }.services-section { display: block; }.capability-list { margin-top: 3rem; }.capability { grid-template-columns: 2.1rem 1fr 1rem; }.capability p { grid-column: 2 / 4; }.capability > .arrow { grid-column: 3; grid-row: 1; }.statement-section { min-height: 62vh; }.statement-graphic { width: 69vw; bottom: -10vw; right: -10vw; }.contact-section { display: block; }.contact-email { display: inline-flex; margin-top: 2.5rem; }.footer { min-height: 125px; align-items: flex-start; padding-top: 1.4rem; flex-wrap: wrap; gap: 1rem; }.footer p { order: 3; width: 100%; }.footer > div { margin-left: auto; }
 }
