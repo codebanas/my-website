@@ -55,15 +55,24 @@ export default function Home() {
             <img src="/codes/dot.svg" alt="" width={4} height={4} />
             <time dateTime="2026-08-29">August 29, 2026</time>
           </p>
-          <ul className="codes-list" aria-label="Available codes and claim counts">
-            {codes.map(({ code, claimed }) => (
-              <li className="codes-row" key={code}>
-                <span className="codes-value"><span>{code}</span></span>
-                <img className="codes-arrow" src="/codes/arrow.svg" alt="" width={16} height={12} />
-                <span className="codes-claimed" aria-label={`Claimed ${claimed} times`}>CLAIMED[{claimed}]</span>
-              </li>
+          <div className="codes-groups">
+            {[false, true].map((isRepeat) => (
+              <ul
+                className={`codes-list${isRepeat ? " codes-list--repeat" : ""}`}
+                aria-label={isRepeat ? undefined : "Available codes and claim counts"}
+                aria-hidden={isRepeat || undefined}
+                key={String(isRepeat)}
+              >
+                {codes.map(({ code, claimed }) => (
+                  <li className="codes-row" key={code}>
+                    <span className="codes-value"><span>{code}</span></span>
+                    <img className="codes-arrow" src="/codes/arrow.svg" alt="" width={16} height={12} />
+                    <span className="codes-claimed" aria-label={`Claimed ${claimed} times`}>CLAIMED[{claimed}]</span>
+                  </li>
+                ))}
+              </ul>
             ))}
-          </ul>
+          </div>
         </div>
       </section>
       </div>

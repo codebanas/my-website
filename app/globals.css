@@ -110,6 +110,12 @@
 .codes-availability img { width: 4px; height: 4px; }
 .codes-availability time { white-space: nowrap; }
 
+.codes-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 108px;
+}
+
 .codes-list {
   display: flex;
   flex-direction: column;
@@ -120,9 +126,9 @@
 }
 
 .codes-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: max-content minmax(24px, 1fr) max-content;
   align-items: center;
-  justify-content: space-between;
   gap: 16px;
   font-family: var(--font-geist), Arial, sans-serif;
   font-size: 40px;
@@ -132,17 +138,11 @@
 }
 
 .codes-value {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-  border-radius: 2px;
-  background: var(--dark);
-  color: var(--light);
+  color: var(--dark);
   white-space: nowrap;
 }
 
+.codes-arrow { justify-self: center; }
 .codes-claimed { white-space: nowrap; }
 
 @media (max-width: 1100px) {
@@ -152,6 +152,8 @@
   .codes-heading-space { display: none; }
   .codes-heading-word { white-space: normal; }
   .codes-row { font-size: clamp(24px, 4.5vw, 40px); }
+  .codes-groups { grid-template-columns: 1fr; }
+  .codes-list--repeat { display: none; }
 }
 
 @media (max-width: 600px) {
@@ -162,7 +164,6 @@
   .codes-listing { margin-top: 32px; }
   .codes-availability { gap: 6px; font-size: 11px; }
   .codes-row { gap: 8px; font-size: clamp(18px, 4.8vw, 28px); }
-  .codes-value { padding: 10px 8px; }
 }
 
 * { box-sizing: border-box; }
