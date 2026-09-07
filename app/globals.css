@@ -36,6 +36,7 @@ body {
 
 .nav-cta {
   padding: 1rem 1.25rem;
+  border-radius: 24px;
   background: var(--light);
   color: var(--dark);
   font-family: var(--font-geist), Arial, sans-serif;
