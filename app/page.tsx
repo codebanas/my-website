@@ -134,7 +134,13 @@ export default function Home() {
                 <ul className="pricing-features">
                   {planFeatures.map(({ included, label }) => (
                     <li key={label}>
-                      <span className="pricing-mark" aria-hidden="true">{included ? "✓" : "×"}</span>
+                      <img
+                        className="pricing-mark"
+                        src={included ? "/pricing/check.svg" : "/pricing/cross.svg"}
+                        alt=""
+                        width={12}
+                        height={12}
+                      />
                       <span>{label}</span>
                     </li>
                   ))}

@@ -289,17 +289,15 @@
 .pricing-features li {
   display: grid;
   grid-template-columns: 12px 1fr;
+  align-items: start;
   gap: 8px;
 }
 
 .pricing-mark {
+  display: block;
   width: 12px;
   height: 12px;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 12px;
-  text-align: center;
+  object-fit: contain;
 }
 
 .pricing-button {
