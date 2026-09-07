@@ -23,11 +23,6 @@ const planFeatures = [
   { included: false, label: "No Filtering" },
 ];
 
-const marqueeRows = [
-  "CHOOSE YOUR PLAN • UNLOCK MORE CODES • CLAIM MORE REWARDS",
-  "STARTER • ESSENTIAL • PLUS • PRO • PREMIUM",
-];
-
 export default function Home() {
   return (
     <>
@@ -149,19 +144,6 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="pricing-marquees" aria-hidden="true">
-            {marqueeRows.map((text, rowIndex) => (
-              <div className={`pricing-marquee pricing-marquee--${rowIndex === 0 ? "right" : "left"}`} key={text}>
-                <div className="pricing-marquee-track">
-                  {[0, 1].map((setIndex) => (
-                    <div className="pricing-marquee-set" key={setIndex}>
-                      {[0, 1, 2, 3].map((itemIndex) => <span key={itemIndex}>{text}</span>)}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
         </section>
       </div>
     </main>

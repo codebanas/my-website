@@ -328,67 +328,11 @@
   background: #978E82;
 }
 
-.pricing-marquees {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 64px -48px -48px;
-  padding-block: 8px;
-  overflow: hidden;
-  background: var(--dark);
-  color: var(--cream-orange);
-}
-
-.pricing-marquee {
-  overflow: hidden;
-}
-
-.pricing-marquee-track,
-.pricing-marquee-set {
-  display: flex;
-  width: max-content;
-  align-items: center;
-  gap: 48px;
-}
-
-.pricing-marquee-track {
-  will-change: transform;
-}
-
-.pricing-marquee span {
-  flex-shrink: 0;
-  font-family: var(--font-geist), Arial, sans-serif;
-  font-size: clamp(24px, 2.4vw, 42px);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  white-space: nowrap;
-}
-
-.pricing-marquee--left .pricing-marquee-track {
-  animation: marquee-left 28s linear infinite;
-}
-
-.pricing-marquee--right .pricing-marquee-track {
-  animation: marquee-right 28s linear infinite;
-}
-
-@keyframes marquee-left {
-  from { transform: translateX(0); }
-  to { transform: translateX(calc(-50% - 24px)); }
-}
-
-@keyframes marquee-right {
-  from { transform: translateX(calc(-50% - 24px)); }
-  to { transform: translateX(0); }
-}
-
 @media (max-width: 1200px) {
   .section-pricing-wrap { padding-inline: 24px; }
   .section-pricing { padding-inline: 32px; }
   .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 48px; }
   .pricing-plan h3 { font-size: clamp(48px, 7vw, 64px); }
-  .pricing-marquees { margin-inline: -32px; }
 }
 
 @media (max-width: 600px) {
@@ -398,11 +342,6 @@
   .pricing-referral { margin-bottom: 40px; font-size: 11px; }
   .pricing-grid { grid-template-columns: 1fr; }
   .pricing-features { min-height: 0; }
-  .pricing-marquees { margin: 48px -16px -32px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pricing-marquee-track { animation-play-state: paused; }
 }
 
 * { box-sizing: border-box; }
