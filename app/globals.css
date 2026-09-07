@@ -297,7 +297,23 @@
   display: block;
   width: 12px;
   height: 12px;
-  object-fit: contain;
+  background-color: var(--dark);
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.pricing-mark--check {
+  -webkit-mask-image: url("/pricing/check.svg");
+  mask-image: url("/pricing/check.svg");
+}
+
+.pricing-mark--cross {
+  -webkit-mask-image: url("/pricing/cross.svg");
+  mask-image: url("/pricing/cross.svg");
 }
 
 .pricing-button {
