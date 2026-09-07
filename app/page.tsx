@@ -22,7 +22,8 @@ export default function Home() {
           <img className="nav-icon nav-menu" src="/nav/menu.png" alt="Menu" width={20} height={10} />
         </div>
       </nav>
-      <section className="codes-section" aria-labelledby="codes-heading">
+      <div className="section-hello-wrap">
+      <section className="section-hello" id="section-hello" aria-labelledby="codes-heading">
         <header className="codes-intro">
           <div className="codes-intro-row">
             <div className="codes-greeting">
@@ -65,6 +66,7 @@ export default function Home() {
           </ul>
         </div>
       </section>
+      </div>
     </main>
   );
 }

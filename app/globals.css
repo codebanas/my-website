@@ -6,9 +6,13 @@
   --codes-blue: #99C2FF;
 }
 
-.codes-section {
-  margin: 154px 48px 0;
-  padding: 48px 72px 80px;
+.section-hello-wrap {
+  margin-top: 154px;
+  padding-inline: 48px;
+}
+
+.section-hello {
+  padding: 48px 48px 80px;
   border-top: 1.5px solid var(--dark);
   background: var(--codes-blue);
   color: var(--dark);
@@ -38,7 +42,7 @@
   letter-spacing: -0.02em;
 }
 
-.codes-section img {
+.section-hello img {
   display: block;
   flex-shrink: 0;
 }
@@ -142,7 +146,8 @@
 .codes-claimed { white-space: nowrap; }
 
 @media (max-width: 1100px) {
-  .codes-section { margin-inline: 24px; padding-inline: 32px; }
+  .section-hello-wrap { padding-inline: 24px; }
+  .section-hello { padding-inline: 32px; }
   .codes-heading { display: block; font-size: clamp(36px, 5.8vw, 64px); line-height: 1; }
   .codes-heading-space { display: none; }
   .codes-heading-word { white-space: normal; }
@@ -150,7 +155,8 @@
 }
 
 @media (max-width: 600px) {
-  .codes-section { margin: 114px 16px 0; padding: 32px 16px 48px; }
+  .section-hello-wrap { margin-top: 114px; padding-inline: 16px; }
+  .section-hello { padding: 32px 16px 48px; }
   .codes-intro-row { gap: 16px; }
   .codes-barcode { width: 88.616px; height: 12px; }
   .codes-listing { margin-top: 32px; }
