@@ -254,20 +254,56 @@
 }
 
 .pricing-labels {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 12px;
-  min-height: 44px;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
   padding-bottom: 12px;
   border-bottom: 1.5px solid var(--dark);
   font-family: var(--font-geist), Arial, sans-serif;
   font-size: 12px;
-  font-weight: 700;
-  line-height: 1.35;
+  font-weight: 600;
+  line-height: 1;
 }
 
-.pricing-labels strong {
-  font-weight: 700;
+.pricing-label-row {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.pricing-label-track,
+.pricing-label-set {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 48px;
+}
+
+.pricing-label-track {
+  will-change: transform;
+}
+
+.pricing-label-set span {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.pricing-label-row--left .pricing-label-track {
+  animation: pricing-label-left 12s linear infinite;
+}
+
+.pricing-label-row--right .pricing-label-track {
+  animation: pricing-label-right 12s linear infinite;
+}
+
+@keyframes pricing-label-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 24px)); }
+}
+
+@keyframes pricing-label-right {
+  from { transform: translateX(calc(-50% - 24px)); }
+  to { transform: translateX(0); }
 }
 
 .pricing-features {
@@ -342,6 +378,10 @@
   .pricing-referral { margin-bottom: 40px; font-size: 11px; }
   .pricing-grid { grid-template-columns: 1fr; }
   .pricing-features { min-height: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pricing-label-track { animation-play-state: paused; }
 }
 
 * { box-sizing: border-box; }

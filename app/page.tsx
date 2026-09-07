@@ -123,8 +123,17 @@ export default function Home() {
               <article className="pricing-plan" key={price}>
                 <h3>{price}</h3>
                 <div className="pricing-labels" aria-label={`${name} plan`}>
-                  <span>• FEATURES<br />• FEATURES</span>
-                  <strong>{name}<br />{name}</strong>
+                  {["right", "left"].map((direction) => (
+                    <div className={`pricing-label-row pricing-label-row--${direction}`} aria-hidden="true" key={direction}>
+                      <div className="pricing-label-track">
+                        {[0, 1].map((setIndex) => (
+                          <div className="pricing-label-set" key={setIndex}>
+                            {[0, 1, 2, 3].map((itemIndex) => <span key={itemIndex}>{name}</span>)}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
                 <ul className="pricing-features">
                   {planFeatures.map(({ included, label }) => (
