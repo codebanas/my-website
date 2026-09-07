@@ -54,6 +54,7 @@
 
 .codes-intro p {
   margin: 13px 0 0;
+  font-family: var(--font-helvetica-neue), Arial, sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.2;
