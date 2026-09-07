@@ -233,7 +233,7 @@
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 16px;
+  gap: 48px;
 }
 
 .pricing-plan {
@@ -289,11 +289,11 @@
 }
 
 .pricing-label-row--left .pricing-label-track {
-  animation: pricing-label-left 12s linear infinite;
+  animation: pricing-label-left 8s linear infinite;
 }
 
 .pricing-label-row--right .pricing-label-track {
-  animation: pricing-label-right 12s linear infinite;
+  animation: pricing-label-right 8s linear infinite;
 }
 
 @keyframes pricing-label-left {

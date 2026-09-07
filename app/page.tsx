@@ -128,7 +128,7 @@ export default function Home() {
                       <div className="pricing-label-track">
                         {[0, 1].map((setIndex) => (
                           <div className="pricing-label-set" key={setIndex}>
-                            {[0, 1, 2, 3].map((itemIndex) => <span key={itemIndex}>{name}</span>)}
+                            {[0, 1, 2, 3].map((itemIndex) => <span key={itemIndex}>{name} PLAN</span>)}
                           </div>
                         ))}
                       </div>
