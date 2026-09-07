@@ -259,7 +259,7 @@ main {
   background: var(--light);
   color: var(--dark);
   font-family: var(--font-geist), Arial, sans-serif;
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
