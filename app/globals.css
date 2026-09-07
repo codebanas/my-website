@@ -100,13 +100,12 @@
   border-radius: 4px;
   background: var(--dark);
   color: var(--light);
-  opacity: 0.75;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.2;
 }
 
-.codes-availability strong { font-weight: 700; }
+.codes-availability strong { font-weight: 500; }
 .codes-availability img { width: 4px; height: 4px; }
 .codes-availability time { white-space: nowrap; }
 
