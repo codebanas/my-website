@@ -7,14 +7,33 @@
   --Brand: #99C2FF;
   --cream-orange: #F4E4CD;
   --screen-gutter: 48px;
+  --brand-logo-height: 32px;
+  --cta-height: 42px;
+  --nav-cta-width: 96px;
+  --cta-inline-padding: 20px;
+  --cta-radius: 24px;
 }
 
 @media (max-width: 1200px) {
-  :root { --screen-gutter: 24px; }
+  :root {
+    --screen-gutter: 24px;
+    --brand-logo-height: 28px;
+    --cta-height: 38px;
+    --nav-cta-width: 92px;
+    --cta-inline-padding: 16px;
+    --cta-radius: 20px;
+  }
 }
 
 @media (max-width: 600px) {
-  :root { --screen-gutter: 16px; }
+  :root {
+    --screen-gutter: 16px;
+    --brand-logo-height: 24px;
+    --cta-height: 34px;
+    --nav-cta-width: 88px;
+    --cta-inline-padding: 12px;
+    --cta-radius: 16px;
+  }
 }
 
 .section-hello-wrap {
@@ -398,13 +417,14 @@
 
 .pricing-button {
   width: 100%;
+  height: var(--cta-height);
   margin-top: 16px;
-  padding: 13px 20px;
+  padding: 0 var(--cta-inline-padding);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--cta-radius);
   background: var(--dark);
-  color: var(--cream-orange);
-  font: 700 14px/1 var(--font-geist), Arial, sans-serif;
+  color: var(--light);
+  font: 700 12px/1.2 var(--font-geist), Arial, sans-serif;
 }
 
 .pricing-button--current {
@@ -653,8 +673,8 @@ main {
 .nav-logo {
   display: block;
   flex-shrink: 0;
-  width: 29.538px;
-  height: 32px;
+  width: auto;
+  height: var(--brand-logo-height);
   transform: scaleY(-1);
 }
 
@@ -671,10 +691,10 @@ main {
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 96px;
-  height: 42px;
-  padding: 0 20px;
-  border-radius: 24px;
+  width: var(--nav-cta-width);
+  height: var(--cta-height);
+  padding: 0 var(--cta-inline-padding);
+  border-radius: var(--cta-radius);
   background: var(--light);
   color: var(--dark);
   font-family: var(--font-geist), Arial, sans-serif;
