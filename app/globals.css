@@ -168,9 +168,17 @@
   .codes-heading { display: block; font-size: clamp(36px, 5.8vw, 64px); line-height: 1; }
   .codes-heading-space { display: none; }
   .codes-heading-word { white-space: normal; }
-  .codes-row { font-size: clamp(24px, 4.5vw, 40px); }
-  .codes-groups { grid-template-columns: 1fr; }
-  .codes-list--repeat { display: none; }
+  .codes-groups {
+    grid-template-columns: max-content minmax(24px, 1fr) max-content;
+    align-items: center;
+    gap: 4px 16px;
+  }
+  .codes-list,
+  .codes-row { display: contents; }
+  .codes-row {
+    font-size: clamp(24px, 4.5vw, 40px);
+    list-style: none;
+  }
 }
 
 @media (max-width: 600px) {
@@ -179,7 +187,8 @@
   .codes-intro-row { gap: 16px; }
   .codes-listing { margin-top: 32px; }
   .info-badge { gap: 6px; font-size: 11px; }
-  .codes-row { gap: 8px; font-size: clamp(18px, 4.8vw, 28px); }
+  .codes-groups { column-gap: 8px; }
+  .codes-row { font-size: clamp(18px, 4.8vw, 28px); }
 }
 
 .section-pricing-wrap {
