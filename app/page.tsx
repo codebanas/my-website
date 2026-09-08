@@ -163,6 +163,10 @@ export default function Home() {
               </article>
             ))}
           </PricingCarousel>
+          <p className="pricing-terms">
+            Please note that all plan purchases are final. You can read our full{" "}
+            <a href="#">Cancellation and Refund Terms</a> here.
+          </p>
           <img className="section-barcode section-barcode--mobile" src="/codes/barcode.svg" alt="" />
         </section>
       </div>

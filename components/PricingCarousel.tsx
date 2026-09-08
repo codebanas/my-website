@@ -18,9 +18,12 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
     const nextIndex = Math.min(Math.max(index, 0), count - 1);
     const target = scroller.children.item(nextIndex) as HTMLElement | null;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const targetLeft = target
+      ? target.getBoundingClientRect().left - scroller.getBoundingClientRect().left + scroller.scrollLeft
+      : nextIndex * scroller.clientWidth;
 
     scroller.scrollTo({
-      left: target?.offsetLeft ?? nextIndex * scroller.clientWidth,
+      left: targetLeft,
       behavior: reduceMotion ? "auto" : "smooth",
     });
   };
@@ -33,9 +36,12 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
     const updateActivePlan = () => {
       animationFrame = 0;
       const plans = Array.from(scroller.children) as HTMLElement[];
+      const scrollerLeft = scroller.getBoundingClientRect().left;
       const closestIndex = plans.reduce((closest, plan, index) => {
-        const currentDistance = Math.abs(plan.offsetLeft - scroller.scrollLeft);
-        const closestDistance = Math.abs(plans[closest].offsetLeft - scroller.scrollLeft);
+        const currentLeft = plan.getBoundingClientRect().left - scrollerLeft;
+        const closestLeft = plans[closest].getBoundingClientRect().left - scrollerLeft;
+        const currentDistance = Math.abs(currentLeft);
+        const closestDistance = Math.abs(closestLeft);
         return currentDistance < closestDistance ? index : closest;
       }, 0);
       setActiveIndex(closestIndex);
