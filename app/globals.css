@@ -4,7 +4,7 @@
   --dark: #1A1A1A;
   --light: #F5F5F5;
   --white: #FFFFFF;
-  --codes-blue: #99C2FF;
+  --Brand: #99C2FF;
   --cream-orange: #F4E4CD;
 }
 
@@ -16,7 +16,7 @@
 .section-hello {
   padding: 48px 48px 80px;
   border-top: 1.5px solid var(--dark);
-  background: var(--codes-blue);
+  background: var(--Brand);
   color: var(--dark);
 }
 
