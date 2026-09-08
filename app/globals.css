@@ -553,25 +553,23 @@
     padding-bottom: 32px;
   }
   .pricing-grid {
-    display: flex;
-    align-items: stretch;
+    grid-template-columns: none;
+    grid-template-rows: 1fr;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 16px) / 2);
     gap: 16px;
     overflow-x: auto;
     overscroll-behavior-inline: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: 0;
+    scroll-snap-type: inline mandatory;
     scrollbar-width: none;
     touch-action: pan-x pan-y;
   }
   .pricing-grid::-webkit-scrollbar { display: none; }
-  .pricing-plan {
-    flex: 0 0 calc((100% - 16px) / 2);
-    scroll-snap-align: none;
-  }
-  /* The final pair shares one reachable snap point at the penultimate card. */
-  .pricing-plan:nth-child(odd):not(:last-child),
+  .pricing-plan { scroll-snap-align: none; }
+  .pricing-plan:nth-child(odd),
   .pricing-plan:nth-last-child(2) {
     scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
   .pricing-carousel-controls { display: grid; }
   .pricing-plan h3 { font-size: clamp(48px, 7vw, 64px); }
@@ -581,6 +579,7 @@
   .section-pricing { padding: 32px 16px; }
   .pricing-intro { margin-bottom: 32px; }
   .pricing-referral { margin-bottom: 40px; }
+  .pricing-grid { grid-template-columns: 1fr; }
   .pricing-features { min-height: 0; }
 }
 
@@ -591,12 +590,14 @@
   .pricing-intro { margin-bottom: 32px; }
 
   .pricing-grid {
+    grid-template-columns: none;
+    grid-auto-columns: 100%;
     gap: 32px;
   }
 
   .pricing-plan {
-    flex-basis: 100%;
     scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
 }
 
