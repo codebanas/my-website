@@ -396,6 +396,54 @@
 
 .pricing-carousel-controls {
   display: none;
+  grid-template-columns: 24px 1fr 24px;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.pricing-carousel-arrow,
+.pricing-carousel-dot {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.pricing-carousel-arrow {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+}
+
+.pricing-carousel-arrow img {
+  width: 6px;
+  height: 12px;
+}
+
+.pricing-carousel-arrow--next img { transform: rotate(180deg); }
+.pricing-carousel-arrow:disabled { opacity: 0.35; }
+
+.pricing-carousel-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.pricing-carousel-dot {
+  width: 20px;
+  height: 10px;
+  border-radius: 999px;
+  background: #978E82;
+  transition: width 180ms ease, background-color 180ms ease;
+}
+
+.pricing-carousel-dot.is-active {
+  width: 56px;
+  background: var(--dark);
 }
 
 .pricing-terms {
@@ -417,7 +465,26 @@
 
 @media (max-width: 1200px) {
   .section-pricing { padding-inline: 32px; }
-  .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .pricing-grid {
+    grid-template-columns: none;
+    grid-template-rows: 1fr;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 16px) / 2);
+    gap: 16px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: none;
+    touch-action: pan-x;
+  }
+  .pricing-grid::-webkit-scrollbar { display: none; }
+  .pricing-plan { scroll-snap-align: none; }
+  .pricing-plan:nth-child(odd),
+  .pricing-plan:nth-last-child(2) {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .pricing-carousel-controls { display: grid; }
   .pricing-plan h3 { font-size: clamp(48px, 7vw, 64px); }
 }
 
@@ -446,76 +513,14 @@
 
   .pricing-grid {
     grid-template-columns: none;
-    grid-template-rows: 1fr;
-    grid-auto-flow: column;
     grid-auto-columns: 100%;
     gap: 32px;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    scroll-snap-type: inline mandatory;
-    scrollbar-width: none;
-    touch-action: pan-x;
   }
-
-  .pricing-grid::-webkit-scrollbar { display: none; }
 
   .pricing-plan {
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
-
-  .pricing-carousel-controls {
-    display: grid;
-    grid-template-columns: 24px 1fr 24px;
-    align-items: center;
-    gap: 16px;
-    margin-top: 24px;
-  }
-
-  .pricing-carousel-arrow,
-  .pricing-carousel-dot {
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-  }
-
-  .pricing-carousel-arrow {
-    display: grid;
-    width: 24px;
-    height: 24px;
-    place-items: center;
-  }
-
-  .pricing-carousel-arrow img {
-    width: 6px;
-    height: 12px;
-  }
-
-  .pricing-carousel-arrow--next img { transform: rotate(180deg); }
-  .pricing-carousel-arrow:disabled { opacity: 0.35; }
-
-  .pricing-carousel-dots {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-  }
-
-  .pricing-carousel-dot {
-    width: 20px;
-    height: 10px;
-    border-radius: 999px;
-    background: #978E82;
-    transition: width 180ms ease, background-color 180ms ease;
-  }
-
-  .pricing-carousel-dot.is-active {
-    width: 56px;
-    background: var(--dark);
-  }
-
 }
 
 @media (max-width: 600px) {

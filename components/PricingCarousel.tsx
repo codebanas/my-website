@@ -9,18 +9,22 @@ type PricingCarouselProps = {
 
 export function PricingCarousel({ children, count }: PricingCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activePage, setActivePage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(1);
+  const pageCount = Math.ceil(count / itemsPerPage);
 
-  const scrollToPlan = (index: number) => {
+  const scrollToPage = (page: number) => {
     const scroller = scrollRef.current;
     if (!scroller) return;
 
-    const nextIndex = Math.min(Math.max(index, 0), count - 1);
-    const target = scroller.children.item(nextIndex) as HTMLElement | null;
+    const nextPage = Math.min(Math.max(page, 0), pageCount - 1);
+    const lastPageStart = Math.max(count - itemsPerPage, 0);
+    const targetIndex = Math.min(nextPage * itemsPerPage, lastPageStart);
+    const target = scroller.children.item(targetIndex) as HTMLElement | null;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const targetLeft = target
       ? target.getBoundingClientRect().left - scroller.getBoundingClientRect().left + scroller.scrollLeft
-      : nextIndex * scroller.clientWidth;
+      : nextPage * scroller.clientWidth;
 
     scroller.scrollTo({
       left: targetLeft,
@@ -29,22 +33,28 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
   };
 
   useEffect(() => {
+    const twoUpQuery = window.matchMedia("(min-width: 1101px) and (max-width: 1200px)");
+    const updateItemsPerPage = () => {
+      setItemsPerPage(twoUpQuery.matches ? 2 : 1);
+      setActivePage(0);
+      scrollRef.current?.scrollTo({ left: 0, behavior: "auto" });
+    };
+
+    updateItemsPerPage();
+    twoUpQuery.addEventListener("change", updateItemsPerPage);
+    return () => twoUpQuery.removeEventListener("change", updateItemsPerPage);
+  }, []);
+
+  useEffect(() => {
     const scroller = scrollRef.current;
     if (!scroller) return;
 
     let animationFrame = 0;
     const updateActivePlan = () => {
       animationFrame = 0;
-      const plans = Array.from(scroller.children) as HTMLElement[];
-      const scrollerLeft = scroller.getBoundingClientRect().left;
-      const closestIndex = plans.reduce((closest, plan, index) => {
-        const currentLeft = plan.getBoundingClientRect().left - scrollerLeft;
-        const closestLeft = plans[closest].getBoundingClientRect().left - scrollerLeft;
-        const currentDistance = Math.abs(currentLeft);
-        const closestDistance = Math.abs(closestLeft);
-        return currentDistance < closestDistance ? index : closest;
-      }, 0);
-      setActiveIndex(closestIndex);
+      const maxScroll = Math.max(scroller.scrollWidth - scroller.clientWidth, 1);
+      const nextPage = Math.round((scroller.scrollLeft / maxScroll) * (pageCount - 1));
+      setActivePage(Math.min(Math.max(nextPage, 0), pageCount - 1));
     };
 
     const scheduleUpdate = () => {
@@ -59,7 +69,7 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
       window.removeEventListener("resize", scheduleUpdate);
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
     };
-  }, []);
+  }, [pageCount]);
 
   return (
     <div className="pricing-carousel">
@@ -68,20 +78,20 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
         <button
           className="pricing-carousel-arrow"
           type="button"
-          aria-label="Previous plan"
-          disabled={activeIndex === 0}
-          onClick={() => scrollToPlan(activeIndex - 1)}
+          aria-label="Previous plans"
+          disabled={activePage === 0}
+          onClick={() => scrollToPage(activePage - 1)}
         >
           <img src="/pricing/arrow-no-stroke.svg" alt="" />
         </button>
-        <div className="pricing-carousel-dots" aria-label={`Plan ${activeIndex + 1} of ${count}`}>
-          {Array.from({ length: count }, (_, index) => (
+        <div className="pricing-carousel-dots" aria-label={`Plan group ${activePage + 1} of ${pageCount}`}>
+          {Array.from({ length: pageCount }, (_, index) => (
             <button
-              className={`pricing-carousel-dot${index === activeIndex ? " is-active" : ""}`}
+              className={`pricing-carousel-dot${index === activePage ? " is-active" : ""}`}
               type="button"
-              aria-label={`Go to plan ${index + 1}`}
-              aria-current={index === activeIndex ? "true" : undefined}
-              onClick={() => scrollToPlan(index)}
+              aria-label={`Go to plan group ${index + 1}`}
+              aria-current={index === activePage ? "true" : undefined}
+              onClick={() => scrollToPage(index)}
               key={index}
             />
           ))}
@@ -89,9 +99,9 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
         <button
           className="pricing-carousel-arrow pricing-carousel-arrow--next"
           type="button"
-          aria-label="Next plan"
-          disabled={activeIndex === count - 1}
-          onClick={() => scrollToPlan(activeIndex + 1)}
+          aria-label="Next plans"
+          disabled={activePage === pageCount - 1}
+          onClick={() => scrollToPage(activePage + 1)}
         >
           <img src="/pricing/arrow-no-stroke.svg" alt="" />
         </button>
