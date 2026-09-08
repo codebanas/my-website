@@ -568,10 +568,10 @@
     flex: 0 0 calc((100% - 16px) / 2);
     scroll-snap-align: none;
   }
-  .pricing-plan:nth-child(odd),
+  /* The final pair shares one reachable snap point at the penultimate card. */
+  .pricing-plan:nth-child(odd):not(:last-child),
   .pricing-plan:nth-last-child(2) {
     scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
   .pricing-carousel-controls { display: grid; }
   .pricing-plan h3 { font-size: clamp(48px, 7vw, 64px); }
@@ -597,7 +597,6 @@
   .pricing-plan {
     flex-basis: 100%;
     scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
 }
 
