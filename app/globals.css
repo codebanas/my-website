@@ -422,6 +422,8 @@
   padding: 20px 16px 24px;
   border: 2px solid var(--dark);
   border-radius: 4px;
+  background-color: rgba(26, 26, 26, 0.1);
+  background-color: color-mix(in srgb, var(--dark) 10%, transparent);
   list-style: none;
   font-size: 14px;
   line-height: 1.2;
@@ -467,10 +469,13 @@
   background: var(--dark);
   color: var(--light);
   font: 700 12px/1.2 var(--font-geist), Arial, sans-serif;
+  cursor: pointer;
 }
 
-.pricing-button--current {
-  background: #978E82;
+.pricing-button--current,
+.pricing-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .pricing-carousel-controls {

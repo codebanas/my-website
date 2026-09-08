@@ -154,7 +154,11 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <button className={current ? "pricing-button pricing-button--current" : "pricing-button"} type="button">
+                <button
+                  className={current ? "pricing-button pricing-button--current" : "pricing-button"}
+                  type="button"
+                  disabled={Boolean(current)}
+                >
                   {current ? "CURRENT" : "UPGRADE"}
                 </button>
               </article>
