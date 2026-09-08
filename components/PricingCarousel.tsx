@@ -10,6 +10,8 @@ type PricingCarouselProps = {
 export function PricingCarousel({ children, count }: PricingCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const layoutRef = useRef({ itemsPerPage: 1, offsets: [0] });
+  const scrollTargetRef = useRef<number | null>(null);
+  const cancelSettleRef = useRef<(() => void) | null>(null);
   const [activePage, setActivePage] = useState(0);
   const [pageCount, setPageCount] = useState(count);
   const [atStart, setAtStart] = useState(true);
@@ -23,6 +25,8 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
     const nextPage = Math.min(Math.max(page, 0), offsets.length - 1);
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    cancelSettleRef.current?.();
+    scrollTargetRef.current = offsets[nextPage];
     scroller.scrollTo({
       left: offsets[nextPage],
       behavior: reduceMotion ? "auto" : "smooth",
@@ -55,6 +59,55 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
     if (!scroller || !(firstCard instanceof HTMLElement)) return;
 
     let animationFrame = 0;
+    let settleTimer = 0;
+    let touching = false;
+    const cancelSettle = () => {
+      window.clearTimeout(settleTimer);
+      settleTimer = 0;
+    };
+    cancelSettleRef.current = cancelSettle;
+
+    const settle = () => {
+      settleTimer = 0;
+      if (touching || scrollTargetRef.current !== null) return;
+      const { offsets } = layoutRef.current;
+      const target = offsets.reduce((nearest, offset) => (
+        Math.abs(offset - scroller.scrollLeft) < Math.abs(nearest - scroller.scrollLeft)
+          ? offset
+          : nearest
+      ), offsets[0]);
+      if (Math.abs(target - scroller.scrollLeft) <= 1) return;
+      scrollTargetRef.current = target;
+      scroller.scrollTo({
+        left: target,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      });
+    };
+
+    const scheduleSettle = () => {
+      cancelSettle();
+      if (!touching && scrollTargetRef.current === null) {
+        settleTimer = window.setTimeout(settle, 160);
+      }
+    };
+
+    const interruptSettle = () => {
+      cancelSettle();
+      if (scrollTargetRef.current !== null) {
+        scrollTargetRef.current = null;
+        // Stop the previous animation before handing scrolling back to the user's gesture.
+        scroller.scrollTo({ left: scroller.scrollLeft, behavior: "instant" });
+      }
+    };
+
+    const startTouch = () => {
+      touching = true;
+      interruptSettle();
+    };
+    const endTouch = (event: TouchEvent) => {
+      touching = event.touches.length > 0;
+      scheduleSettle();
+    };
     const updateActivePlan = () => {
       animationFrame = 0;
       const { offsets } = layoutRef.current;
@@ -94,6 +147,7 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
         || offsets.length !== previousLayout.offsets.length
         || offsets.some((offset, page) => offset !== previousLayout.offsets[page]);
       if (layoutChanged) {
+        interruptSettle();
         layoutRef.current = { itemsPerPage, offsets };
         setPageCount(offsets.length);
       }
@@ -103,6 +157,13 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
 
     const scheduleUpdate = () => {
       if (!animationFrame) animationFrame = window.requestAnimationFrame(updateActivePlan);
+      if (scrollTargetRef.current !== null) {
+        if (Math.abs(scroller.scrollLeft - scrollTargetRef.current) <= 1) {
+          scrollTargetRef.current = null;
+        }
+        return;
+      }
+      scheduleSettle();
     };
 
     measureCards();
@@ -110,9 +171,20 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
     resizeObserver.observe(scroller);
     resizeObserver.observe(firstCard);
     scroller.addEventListener("scroll", scheduleUpdate, { passive: true });
+    scroller.addEventListener("touchstart", startTouch, { passive: true });
+    scroller.addEventListener("touchend", endTouch, { passive: true });
+    scroller.addEventListener("touchcancel", endTouch, { passive: true });
+    scroller.addEventListener("wheel", interruptSettle, { passive: true });
 
     return () => {
       scroller.removeEventListener("scroll", scheduleUpdate);
+      scroller.removeEventListener("touchstart", startTouch);
+      scroller.removeEventListener("touchend", endTouch);
+      scroller.removeEventListener("touchcancel", endTouch);
+      scroller.removeEventListener("wheel", interruptSettle);
+      cancelSettle();
+      cancelSettleRef.current = null;
+      scrollTargetRef.current = null;
       resizeObserver.disconnect();
       scroller.style.removeProperty("--pricing-card-width");
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
