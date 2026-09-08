@@ -9,6 +9,7 @@
 }
 
 .section-hello-wrap {
+  --stack-scale: 1;
   padding-inline: 48px;
 }
 
@@ -171,6 +172,7 @@
 }
 
 .section-pricing-wrap {
+  --stack-scale: 1;
   margin-top: 64px;
   padding-inline: 48px;
 }
@@ -419,6 +421,14 @@ main {
   left: 0;
   overflow-y: auto;
   overscroll-behavior-y: contain;
+}
+
+.stack-section {
+  position: sticky;
+  top: 0;
+  transform: scale(var(--stack-scale));
+  transform-origin: top center;
+  will-change: transform;
 }
 
 .site-background {

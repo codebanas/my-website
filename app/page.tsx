@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { InfoBadge } from "@/components/InfoBadge";
+import { SectionStack } from "@/components/SectionStack";
 
 const headlineWords = "Claim your awards or search our database for codes easily.".split(" ");
 const codeGroups = [
@@ -53,8 +54,8 @@ export default function Home() {
           <span className="nav-icon nav-menu" aria-hidden="true" />
         </div>
       </nav>
-      <div className="page-content">
-      <div className="section-hello-wrap">
+      <SectionStack>
+      <div className="section-hello-wrap stack-section">
       <section className="section-hello" id="section-hello" aria-labelledby="codes-heading">
         <header className="codes-intro">
           <div className="codes-intro-row">
@@ -107,7 +108,7 @@ export default function Home() {
         </div>
       </section>
       </div>
-      <div className="section-pricing-wrap">
+      <div className="section-pricing-wrap stack-section">
         <section className="section-pricing" aria-labelledby="pricing-heading">
           <header className="pricing-intro">
             <div className="pricing-intro-row">
@@ -163,7 +164,7 @@ export default function Home() {
 
         </section>
       </div>
-      </div>
+      </SectionStack>
     </main>
     </>
   );
