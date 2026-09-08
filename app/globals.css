@@ -565,7 +565,6 @@
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
-  .pricing-plan:last-child { scroll-snap-align: end; }
   .pricing-carousel-controls { display: grid; }
   .pricing-plan h3 { font-size: clamp(48px, 7vw, 64px); }
 }
@@ -592,7 +591,6 @@
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
-  .pricing-plan:last-child { scroll-snap-align: end; }
 }
 
 @media (max-width: 600px) {

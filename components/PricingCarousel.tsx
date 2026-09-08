@@ -54,8 +54,6 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
     if (!scroller) return;
 
     let animationFrame = 0;
-    let settleTimer = 0;
-    let isTouching = false;
 
     const getNearestPage = () => {
       const maxScroll = Math.max(scroller.scrollWidth - scroller.clientWidth, 1);
@@ -63,29 +61,6 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
         Math.max(Math.round((scroller.scrollLeft / maxScroll) * (pageCount - 1)), 0),
         pageCount - 1,
       );
-    };
-
-    const settleOnCompletePage = () => {
-      const nextPage = getNearestPage();
-      const lastPageStart = Math.max(count - itemsPerPage, 0);
-      const targetIndex = Math.min(nextPage * itemsPerPage, lastPageStart);
-      const target = scroller.children.item(targetIndex) as HTMLElement | null;
-      const maxScroll = Math.max(scroller.scrollWidth - scroller.clientWidth, 0);
-      const targetLeft = nextPage === pageCount - 1
-        ? maxScroll
-        : target
-          ? target.getBoundingClientRect().left - scroller.getBoundingClientRect().left + scroller.scrollLeft
-          : nextPage * scroller.clientWidth;
-
-      if (Math.abs(scroller.scrollLeft - targetLeft) > 1) {
-        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        scroller.scrollTo({ left: targetLeft, behavior: reduceMotion ? "auto" : "smooth" });
-      }
-    };
-
-    const scheduleSettle = () => {
-      window.clearTimeout(settleTimer);
-      settleTimer = window.setTimeout(settleOnCompletePage, 160);
     };
 
     const updateActivePlan = () => {
@@ -98,36 +73,18 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
 
     const scheduleUpdate = () => {
       if (!animationFrame) animationFrame = window.requestAnimationFrame(updateActivePlan);
-      if (!isTouching) scheduleSettle();
-    };
-
-    const handleTouchStart = () => {
-      isTouching = true;
-      window.clearTimeout(settleTimer);
-    };
-
-    const handleTouchEnd = () => {
-      isTouching = false;
-      scheduleSettle();
     };
 
     updateActivePlan();
     scroller.addEventListener("scroll", scheduleUpdate, { passive: true });
-    scroller.addEventListener("touchstart", handleTouchStart, { passive: true });
-    scroller.addEventListener("touchend", handleTouchEnd, { passive: true });
-    scroller.addEventListener("touchcancel", handleTouchEnd, { passive: true });
     window.addEventListener("resize", scheduleUpdate);
 
     return () => {
       scroller.removeEventListener("scroll", scheduleUpdate);
-      scroller.removeEventListener("touchstart", handleTouchStart);
-      scroller.removeEventListener("touchend", handleTouchEnd);
-      scroller.removeEventListener("touchcancel", handleTouchEnd);
       window.removeEventListener("resize", scheduleUpdate);
-      window.clearTimeout(settleTimer);
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
     };
-  }, [count, itemsPerPage, pageCount]);
+  }, [pageCount]);
 
   return (
     <div className="pricing-carousel">
