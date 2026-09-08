@@ -1,9 +1,14 @@
-import { Fragment } from "react";
 import { InfoBadge } from "@/components/InfoBadge";
 import { PricingCarousel } from "@/components/PricingCarousel";
 import { SectionStack } from "@/components/SectionStack";
 
-const headlineWords = "Claim your awards or search our database for codes easily.".split(" ");
+const headlineRows = [
+  ["Claim", "your"],
+  ["awards", "or"],
+  ["search", "our"],
+  ["database", "for"],
+  ["codes", "easily."],
+];
 const codeGroups = [
   [
     { code: "XGH - 6QR", claimed: 20, total: 50 },
@@ -70,16 +75,11 @@ export default function Home() {
         </header>
 
         <h1 className="codes-heading" id="codes-heading">
-          {headlineWords.map((word, index) => (
-            <Fragment key={word}>
-              <span className="codes-heading-word">{word}</span>
-              {index < headlineWords.length - 1 && (
-                <>
-                  {" "}
-                  {word !== "our" && <span className="codes-heading-space" aria-hidden="true" />}
-                </>
-              )}
-            </Fragment>
+          {headlineRows.map(([leftWord, rightWord]) => (
+            <span className="codes-heading-row" key={leftWord}>
+              <span className="codes-heading-word">{leftWord}</span>
+              <span className="codes-heading-word">{rightWord}</span>
+            </span>
           ))}
         </h1>
 

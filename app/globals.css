@@ -91,7 +91,7 @@
 }
 
 .codes-heading-word { flex-shrink: 0; white-space: nowrap; }
-.codes-heading-space { flex: 1 0 0; min-width: 1px; height: 32px; }
+.codes-heading-row { display: contents; }
 
 .codes-greeting span,
 .codes-intro p,
@@ -165,9 +165,22 @@
 
 @media (max-width: 1100px) {
   .section-hello { padding-inline: 32px; }
-  .codes-heading { display: block; font-size: clamp(36px, 5.8vw, 64px); line-height: 1; }
-  .codes-heading-space { display: none; }
-  .codes-heading-word { white-space: normal; }
+  .codes-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    font-size: clamp(28px, 8vw, 56px);
+    line-height: 0.88;
+  }
+  .codes-heading-row {
+    display: flex;
+    width: 100%;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .codes-heading-row .codes-heading-word:last-child { text-align: right; }
   .codes-groups {
     grid-template-columns: max-content minmax(24px, 1fr) max-content;
     align-items: center;
