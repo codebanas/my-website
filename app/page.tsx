@@ -99,7 +99,7 @@ export default function Home() {
                   <li className="codes-row" key={code}>
                     <span className="codes-value"><span>{code}</span></span>
                     <img className="codes-arrow" src="/codes/arrow.svg" alt="" width={16} height={12} />
-                    <span className="codes-claimed" aria-label={`${claimed} of ${total} claimed`}>CLAIMED [{claimed}/{total}]</span>
+                    <span className="codes-claimed" aria-label={`${claimed} of ${total} claimed`}>[{claimed}/{total}]</span>
                   </li>
                 ))}
               </ul>
