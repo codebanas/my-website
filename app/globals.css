@@ -62,7 +62,7 @@
 .codes-barcode { width: 147.693px; height: 20px; }
 .codes-arrow { width: 16px; height: 12px; }
 
-.section-barcode--mobile {
+.section-barcode.section-barcode--mobile {
   display: none;
 }
 
@@ -177,17 +177,9 @@
   .section-hello { padding: 32px 16px 48px; }
   .codes-intro { padding-bottom: 32px; }
   .codes-intro-row { gap: 16px; }
-  .codes-barcode { display: none; }
   .codes-listing { margin-top: 32px; }
   .info-badge { gap: 6px; font-size: 11px; }
   .codes-row { gap: 8px; font-size: clamp(18px, 4.8vw, 28px); }
-
-  .section-barcode--mobile {
-    display: block;
-    width: 100%;
-    height: 32px;
-    margin-top: 32px;
-  }
 }
 
 .section-pricing-wrap {
@@ -397,10 +389,23 @@
 @media (max-width: 600px) {
   .section-pricing { padding: 32px 16px; }
   .pricing-intro { margin-bottom: 32px; }
-  .pricing-barcode { display: none; }
   .pricing-referral { margin-bottom: 40px; }
   .pricing-grid { grid-template-columns: 1fr; }
   .pricing-features { min-height: 0; }
+}
+
+@media (max-width: 1100px) {
+  .codes-intro { padding-bottom: 32px; }
+  .pricing-intro { margin-bottom: 32px; }
+  .section-hello .codes-barcode,
+  .pricing-barcode { display: none; }
+
+  .section-barcode.section-barcode--mobile {
+    display: block;
+    width: 100%;
+    height: 32px;
+    margin-top: 32px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
