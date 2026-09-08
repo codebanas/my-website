@@ -604,6 +604,11 @@
   .section-hello,
   .section-pricing { padding-bottom: 16px; }
   .pricing-grid { gap: 16px; }
+  .pricing-plan:nth-last-child(2) { scroll-snap-align: center; }
+  .pricing-plan:last-child {
+    scroll-snap-align: end;
+    scroll-snap-stop: normal;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -33,6 +33,7 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
     const firstCard = scroller?.firstElementChild;
     if (!scroller || !(firstCard instanceof HTMLElement)) return;
 
+    const mobileQuery = window.matchMedia("(max-width: 600px)");
     let animationFrame = 0;
     const updateActivePlan = () => {
       animationFrame = 0;
@@ -66,6 +67,17 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
       const offsets = Array.from({ length: Math.ceil(count / itemsPerPage) }, (_, page) => (
         Math.min(page * pageWidth, maxScroll)
       ));
+      if (mobileQuery.matches && itemsPerPage === 1 && offsets.length > 1) {
+        const lastCard = scroller.lastElementChild as HTMLElement;
+        const lastCardWidth = lastCard.getBoundingClientRect().width;
+        const lastPage = offsets.length - 1;
+        offsets[lastPage] = maxScroll;
+        // Step back from the right edge by the final card and gap, centering its neighbor.
+        offsets[lastPage - 1] = Math.min(maxScroll, Math.max(
+          0,
+          maxScroll - lastCardWidth - gap + (scroller.clientWidth - cardWidth) / 2,
+        ));
+      }
       const previousLayout = layoutRef.current;
       const layoutChanged = itemsPerPage !== previousLayout.itemsPerPage
         || offsets.length !== previousLayout.offsets.length
@@ -100,9 +112,11 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
     resizeObserver.observe(scroller);
     resizeObserver.observe(firstCard);
     scroller.addEventListener("scroll", scheduleUpdate, { passive: true });
+    mobileQuery.addEventListener("change", measureCards);
 
     return () => {
       scroller.removeEventListener("scroll", scheduleUpdate);
+      mobileQuery.removeEventListener("change", measureCards);
       resizeObserver.disconnect();
       scroller.style.removeProperty("--pricing-card-width");
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
