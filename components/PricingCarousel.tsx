@@ -11,6 +11,8 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activePage, setActivePage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(1);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
   const pageCount = Math.ceil(count / itemsPerPage);
 
   const scrollToPage = (page: number) => {
@@ -52,26 +54,80 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
     if (!scroller) return;
 
     let animationFrame = 0;
+    let settleTimer = 0;
+    let isTouching = false;
+
+    const getNearestPage = () => {
+      const maxScroll = Math.max(scroller.scrollWidth - scroller.clientWidth, 1);
+      return Math.min(
+        Math.max(Math.round((scroller.scrollLeft / maxScroll) * (pageCount - 1)), 0),
+        pageCount - 1,
+      );
+    };
+
+    const settleOnCompletePage = () => {
+      const nextPage = getNearestPage();
+      const lastPageStart = Math.max(count - itemsPerPage, 0);
+      const targetIndex = Math.min(nextPage * itemsPerPage, lastPageStart);
+      const target = scroller.children.item(targetIndex) as HTMLElement | null;
+      const maxScroll = Math.max(scroller.scrollWidth - scroller.clientWidth, 0);
+      const targetLeft = nextPage === pageCount - 1
+        ? maxScroll
+        : target
+          ? target.getBoundingClientRect().left - scroller.getBoundingClientRect().left + scroller.scrollLeft
+          : nextPage * scroller.clientWidth;
+
+      if (Math.abs(scroller.scrollLeft - targetLeft) > 1) {
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        scroller.scrollTo({ left: targetLeft, behavior: reduceMotion ? "auto" : "smooth" });
+      }
+    };
+
+    const scheduleSettle = () => {
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(settleOnCompletePage, 160);
+    };
+
     const updateActivePlan = () => {
       animationFrame = 0;
       const maxScroll = Math.max(scroller.scrollWidth - scroller.clientWidth, 1);
-      const nextPage = Math.round((scroller.scrollLeft / maxScroll) * (pageCount - 1));
-      setActivePage(Math.min(Math.max(nextPage, 0), pageCount - 1));
+      setActivePage(getNearestPage());
+      setAtStart(scroller.scrollLeft <= 1);
+      setAtEnd(maxScroll - scroller.scrollLeft <= 1);
     };
 
     const scheduleUpdate = () => {
       if (!animationFrame) animationFrame = window.requestAnimationFrame(updateActivePlan);
+      if (!isTouching) scheduleSettle();
     };
 
+    const handleTouchStart = () => {
+      isTouching = true;
+      window.clearTimeout(settleTimer);
+    };
+
+    const handleTouchEnd = () => {
+      isTouching = false;
+      scheduleSettle();
+    };
+
+    updateActivePlan();
     scroller.addEventListener("scroll", scheduleUpdate, { passive: true });
+    scroller.addEventListener("touchstart", handleTouchStart, { passive: true });
+    scroller.addEventListener("touchend", handleTouchEnd, { passive: true });
+    scroller.addEventListener("touchcancel", handleTouchEnd, { passive: true });
     window.addEventListener("resize", scheduleUpdate);
 
     return () => {
       scroller.removeEventListener("scroll", scheduleUpdate);
+      scroller.removeEventListener("touchstart", handleTouchStart);
+      scroller.removeEventListener("touchend", handleTouchEnd);
+      scroller.removeEventListener("touchcancel", handleTouchEnd);
       window.removeEventListener("resize", scheduleUpdate);
+      window.clearTimeout(settleTimer);
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
     };
-  }, [pageCount]);
+  }, [count, itemsPerPage, pageCount]);
 
   return (
     <div className="pricing-carousel">
@@ -81,7 +137,7 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
           className="pricing-carousel-arrow"
           type="button"
           aria-label="Previous plans"
-          disabled={activePage === 0}
+          disabled={atStart}
           onClick={() => scrollToPage(activePage - 1)}
         >
           <img src="/pricing/arrow-no-stroke.svg" alt="" />
@@ -102,7 +158,7 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
           className="pricing-carousel-arrow pricing-carousel-arrow--next"
           type="button"
           aria-label="Next plans"
-          disabled={activePage === pageCount - 1}
+          disabled={atEnd}
           onClick={() => scrollToPage(activePage + 1)}
         >
           <img src="/pricing/arrow-no-stroke.svg" alt="" />
