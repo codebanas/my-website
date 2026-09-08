@@ -662,9 +662,9 @@ main {
 .stack-section {
   position: sticky;
   top: 0;
-  transform: scale(var(--stack-scale));
   transform-origin: top center;
-  will-change: transform;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .site-background {

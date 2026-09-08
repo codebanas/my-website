@@ -25,6 +25,7 @@ export function SectionStack({ children }: SectionStackProps) {
         section.style.zIndex = String(index + 1);
 
         if (reduceMotion.matches || index === sections.length - 1) {
+          section.style.transform = "none";
           section.style.setProperty("--stack-scale", "1");
           return;
         }
@@ -33,11 +34,19 @@ export function SectionStack({ children }: SectionStackProps) {
         const nextTop = nextSection.offsetTop - scrollArea.scrollTop;
         const overlapDistance = Math.max(section.offsetHeight, 1);
         const progress = Math.min(Math.max((overlapDistance - nextTop) / overlapDistance, 0), 1);
+
+        if (progress <= 0) {
+          section.style.transform = "none";
+          section.style.setProperty("--stack-scale", "1");
+          return;
+        }
+
         const styles = window.getComputedStyle(section);
         const horizontalMargin = parseFloat(styles.paddingLeft) || 0;
         const targetScale = Math.max((section.offsetWidth - horizontalMargin * 2) / section.offsetWidth, 0.8);
         const scale = 1 - (1 - targetScale) * progress;
 
+        section.style.transform = `scale(${scale.toFixed(4)})`;
         section.style.setProperty("--stack-scale", scale.toFixed(4));
       });
     };
