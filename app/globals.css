@@ -395,6 +395,8 @@
 }
 
 @media (max-width: 1100px) {
+  .section-hello,
+  .section-pricing { padding-bottom: 32px; }
   .codes-intro { padding-bottom: 32px; }
   .pricing-intro { margin-bottom: 32px; }
   .section-hello .codes-barcode,
@@ -406,6 +408,11 @@
     height: 32px;
     margin-top: 32px;
   }
+}
+
+@media (max-width: 600px) {
+  .section-hello,
+  .section-pricing { padding-bottom: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
