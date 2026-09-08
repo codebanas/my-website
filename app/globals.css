@@ -251,7 +251,7 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
   grid-auto-rows: 1fr;
   align-items: stretch;
-  gap: 48px;
+  gap: 24px;
 }
 
 .pricing-plan {
@@ -390,8 +390,8 @@
 }
 
 .pricing-terms {
-  display: none;
-  margin: 0;
+  display: block;
+  margin: 32px 0 0;
   font-family: var(--font-geist), Arial, sans-serif;
   font-size: 14px;
   font-weight: 500;
@@ -408,7 +408,7 @@
 
 @media (max-width: 1200px) {
   .section-pricing { padding-inline: 32px; }
-  .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 48px; }
+  .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   .pricing-plan h3 { font-size: clamp(48px, 7vw, 64px); }
 }
 
@@ -507,10 +507,6 @@
     background: var(--dark);
   }
 
-  .pricing-terms {
-    display: block;
-    margin-top: 32px;
-  }
 }
 
 @media (max-width: 600px) {
