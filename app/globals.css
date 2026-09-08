@@ -562,7 +562,7 @@
     overscroll-behavior-inline: contain;
     scroll-snap-type: inline mandatory;
     scrollbar-width: none;
-    touch-action: pan-x pan-y;
+    touch-action: pan-y pinch-zoom;
   }
   .pricing-grid::-webkit-scrollbar { display: none; }
   .pricing-plan { scroll-snap-align: none; }
