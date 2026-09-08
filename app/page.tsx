@@ -106,6 +106,7 @@ export default function Home() {
             ))}
           </div>
         </div>
+        <img className="section-barcode section-barcode--mobile" src="/codes/barcode.svg" alt="" />
       </section>
       </div>
       <div className="section-pricing-wrap stack-section">
@@ -161,7 +162,7 @@ export default function Home() {
               </article>
             ))}
           </div>
-
+          <img className="section-barcode section-barcode--mobile" src="/codes/barcode.svg" alt="" />
         </section>
       </div>
       </SectionStack>
