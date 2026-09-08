@@ -83,8 +83,8 @@
 .codes-greeting span,
 .codes-intro p,
 .codes-heading-word,
-.codes-availability strong,
-.codes-availability time,
+.info-badge strong,
+.info-badge time,
 .codes-value span,
 .codes-claimed {
   text-box-trim: trim-both;
@@ -93,24 +93,27 @@
 
 .codes-listing { margin-top: 48px; }
 
-.codes-availability {
+.info-badge {
   display: flex;
   align-items: center;
   gap: 8px;
   width: fit-content;
-  margin: 0 0 16px;
-  padding: 8px;
+  height: 32px;
+  margin: 0;
+  padding: 0 8px;
   border-radius: 4px;
   background: var(--dark);
   color: var(--light);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.2;
+  white-space: nowrap;
 }
 
-.codes-availability strong { font-weight: 500; }
-.codes-availability img { width: 4px; height: 4px; }
-.codes-availability time { white-space: nowrap; }
+.info-badge strong { font-weight: 500; }
+.info-badge img { width: 4px; height: 4px; }
+.info-badge time { white-space: nowrap; }
+.codes-availability { margin-bottom: 16px; }
 
 .codes-groups {
   display: grid;
@@ -164,7 +167,7 @@
   .codes-intro-row { gap: 16px; }
   .codes-barcode { width: 88.616px; height: 12px; }
   .codes-listing { margin-top: 32px; }
-  .codes-availability { gap: 6px; font-size: 11px; }
+  .info-badge { gap: 6px; font-size: 11px; }
   .codes-row { gap: 8px; font-size: clamp(18px, 4.8vw, 28px); }
 }
 
@@ -375,7 +378,7 @@
   .section-pricing-wrap { padding-inline: 16px; }
   .section-pricing { padding: 32px 16px; }
   .pricing-barcode { width: 88.616px; height: 12px; }
-  .pricing-referral { margin-bottom: 40px; font-size: 11px; }
+  .pricing-referral { margin-bottom: 40px; }
   .pricing-grid { grid-template-columns: 1fr; }
   .pricing-features { min-height: 0; }
 }

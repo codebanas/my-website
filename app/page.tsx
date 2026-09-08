@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { InfoBadge } from "@/components/InfoBadge";
 
 const headlineWords = "Claim your awards or search our database for codes easily.".split(" ");
 const codes = [
@@ -73,11 +74,11 @@ export default function Home() {
         </h1>
 
         <div className="codes-listing">
-          <p className="codes-availability">
+          <InfoBadge className="codes-availability">
             <strong>120 Codes Available</strong>
             <img src="/codes/dot.svg" alt="" width={4} height={4} />
             <time dateTime="2026-08-29">August 29, 2026</time>
-          </p>
+          </InfoBadge>
           <div className="codes-groups">
             {[false, true].map((isRepeat) => (
               <ul
@@ -112,11 +113,11 @@ export default function Home() {
             <p>Easily access our exclusive standalone codes outside of the main community database.</p>
           </header>
 
-          <p className="codes-availability pricing-referral">
+          <InfoBadge className="pricing-referral">
             <a href="#">Invite A Friend</a>
             <img src="/codes/dot.svg" alt="" width={4} height={4} />
             <span>Get 5% Off Discount</span>
-          </p>
+          </InfoBadge>
 
           <div className="pricing-grid">
             {plans.map(({ price, name, current }) => (
