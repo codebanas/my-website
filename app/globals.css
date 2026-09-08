@@ -262,7 +262,6 @@
   flex-direction: column;
   gap: 8px;
   padding-bottom: 12px;
-  border-bottom: 1.5px solid var(--dark);
   font-family: var(--font-geist), Arial, sans-serif;
   font-size: 12px;
   font-weight: 600;
@@ -315,8 +314,9 @@
   flex-direction: column;
   gap: 12px;
   margin: 0;
-  padding: 16px 16px 24px;
-  border-bottom: 1.5px solid var(--dark);
+  padding: 20px 16px 24px;
+  border: 4px solid var(--dark);
+  border-radius: 24px;
   list-style: none;
   font-size: 14px;
   line-height: 1.2;
