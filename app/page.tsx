@@ -1,5 +1,6 @@
 import { InfoBadge } from "@/components/InfoBadge";
 import { PricingCarousel } from "@/components/PricingCarousel";
+import { SectionBarcodeFooter } from "@/components/SectionBarcodeFooter";
 import { SectionStack } from "@/components/SectionStack";
 
 const headlineRows = [
@@ -66,10 +67,8 @@ export default function Home() {
         <header className="codes-intro">
           <div className="codes-intro-row">
             <div className="codes-greeting">
-              <img src="/codes/hello.svg" alt="" width={48} height={24} />
               <span>HELLO</span>
             </div>
-            <img className="codes-barcode" src="/codes/barcode.svg" alt="" width={147.693} height={20} />
           </div>
           <p>Easily access our exclusive standalone codes outside of the main community database.</p>
         </header>
@@ -107,7 +106,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-        <img className="section-barcode section-barcode--mobile" src="/codes/barcode.svg" alt="" />
+        <SectionBarcodeFooter />
       </section>
       </div>
       <div className="section-pricing-wrap stack-section">
@@ -115,10 +114,8 @@ export default function Home() {
           <header className="pricing-intro">
             <div className="pricing-intro-row">
               <div className="pricing-greeting">
-                <img src="/codes/hello.svg" alt="" width={48} height={24} />
                 <h2 id="pricing-heading">SEE OUR PLANS</h2>
               </div>
-              <img className="pricing-barcode" src="/codes/barcode.svg" alt="" width={147.693} height={20} />
             </div>
             <p>Easily access our exclusive standalone codes outside of the main community database.</p>
           </header>
@@ -167,7 +164,7 @@ export default function Home() {
             Please note that all plan purchases are final. You can read our full{" "}
             <a href="#">Cancellation and Refund Terms</a> here.
           </p>
-          <img className="section-barcode section-barcode--mobile" src="/codes/barcode.svg" alt="" />
+          <SectionBarcodeFooter />
         </section>
       </div>
       </SectionStack>
