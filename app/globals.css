@@ -6,11 +6,20 @@
   --white: #FFFFFF;
   --Brand: #99C2FF;
   --cream-orange: #F4E4CD;
+  --screen-gutter: 48px;
+}
+
+@media (max-width: 1200px) {
+  :root { --screen-gutter: 24px; }
+}
+
+@media (max-width: 600px) {
+  :root { --screen-gutter: 16px; }
 }
 
 .section-hello-wrap {
   --stack-scale: 1;
-  padding-inline: 48px;
+  padding-inline: var(--screen-gutter);
 }
 
 .section-hello {
@@ -151,7 +160,6 @@
 .codes-claimed { white-space: nowrap; }
 
 @media (max-width: 1100px) {
-  .section-hello-wrap { padding-inline: 24px; }
   .section-hello { padding-inline: 32px; }
   .codes-heading { display: block; font-size: clamp(36px, 5.8vw, 64px); line-height: 1; }
   .codes-heading-space { display: none; }
@@ -162,7 +170,6 @@
 }
 
 @media (max-width: 600px) {
-  .section-hello-wrap { padding-inline: 16px; }
   .section-hello { padding: 32px 16px 48px; }
   .codes-intro-row { gap: 16px; }
   .codes-barcode { width: 88.616px; height: 12px; }
@@ -173,8 +180,8 @@
 
 .section-pricing-wrap {
   --stack-scale: 1;
-  margin-top: 64px;
-  padding-inline: 48px;
+  margin-top: var(--screen-gutter);
+  padding-inline: var(--screen-gutter);
 }
 
 .section-pricing {
@@ -370,14 +377,12 @@
 }
 
 @media (max-width: 1200px) {
-  .section-pricing-wrap { padding-inline: 24px; }
   .section-pricing { padding-inline: 32px; }
   .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 48px; }
   .pricing-plan h3 { font-size: clamp(48px, 7vw, 64px); }
 }
 
 @media (max-width: 600px) {
-  .section-pricing-wrap { padding-inline: 16px; }
   .section-pricing { padding: 32px 16px; }
   .pricing-barcode { width: 88.616px; height: 12px; }
   .pricing-referral { margin-bottom: 40px; }
