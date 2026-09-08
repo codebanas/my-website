@@ -553,16 +553,16 @@
     padding-bottom: 32px;
   }
   .pricing-grid {
-    grid-template-columns: none;
+    grid-template-columns: calc((100% - 16px) / 2);
     grid-template-rows: 1fr;
     grid-auto-flow: column;
-    grid-auto-columns: calc((100% - 16px) / 2);
+    grid-auto-columns: var(--pricing-card-width, calc((100% - 16px) / 2));
     gap: 16px;
     overflow-x: auto;
     overscroll-behavior-inline: contain;
     scroll-snap-type: inline mandatory;
     scrollbar-width: none;
-    touch-action: pan-y pinch-zoom;
+    touch-action: pan-x pan-y;
   }
   .pricing-grid::-webkit-scrollbar { display: none; }
   .pricing-plan { scroll-snap-align: none; }
@@ -579,7 +579,6 @@
   .section-pricing { padding: 32px 16px; }
   .pricing-intro { margin-bottom: 32px; }
   .pricing-referral { margin-bottom: 40px; }
-  .pricing-grid { grid-template-columns: 1fr; }
   .pricing-features { min-height: 0; }
 }
 
@@ -590,8 +589,8 @@
   .pricing-intro { margin-bottom: 32px; }
 
   .pricing-grid {
-    grid-template-columns: none;
-    grid-auto-columns: 100%;
+    grid-template-columns: 100%;
+    grid-auto-columns: var(--pricing-card-width, 100%);
     gap: 32px;
   }
 

@@ -1,17 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
-
-const SWIPE_THRESHOLD = 48;
-
-type Swipe = {
-  pointerId: number;
-  startX: number;
-  startY: number;
-  startPage: number;
-  horizontal: boolean;
-  advanced: boolean;
-};
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 type PricingCarouselProps = {
   children: ReactNode;
@@ -20,148 +9,109 @@ type PricingCarouselProps = {
 
 export function PricingCarousel({ children, count }: PricingCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const swipeRef = useRef<Swipe | null>(null);
-  const suppressClickRef = useRef(false);
+  const layoutRef = useRef({ itemsPerPage: 1, offsets: [0] });
+  const activePageRef = useRef(0);
   const [activePage, setActivePage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(1);
-  const pageCount = Math.ceil(count / itemsPerPage);
+  const [pageCount, setPageCount] = useState(count);
 
   const scrollToPage = (page: number) => {
     const scroller = scrollRef.current;
     if (!scroller) return;
 
-    const nextPage = Math.min(Math.max(page, 0), pageCount - 1);
-    const lastPageStart = Math.max(count - itemsPerPage, 0);
-    const targetIndex = Math.min(nextPage * itemsPerPage, lastPageStart);
-    const target = scroller.children.item(targetIndex) as HTMLElement | null;
+    const { offsets } = layoutRef.current;
+    const nextPage = Math.min(Math.max(page, 0), offsets.length - 1);
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const targetLeft = target
-      ? target.getBoundingClientRect().left - scroller.getBoundingClientRect().left + scroller.scrollLeft
-      : nextPage * scroller.clientWidth;
 
     scroller.scrollTo({
-      left: targetLeft,
+      left: offsets[nextPage],
       behavior: reduceMotion ? "auto" : "smooth",
     });
   };
 
-  const startSwipe = (event: PointerEvent<HTMLDivElement>) => {
-    suppressClickRef.current = false;
-    if (!event.isPrimary) {
-      swipeRef.current = null;
-      return;
-    }
-    if (event.pointerType === "mouse" || event.button !== 0) return;
-
-    const scroller = event.currentTarget;
-    if (scroller.scrollWidth <= scroller.clientWidth) return;
-
-    swipeRef.current = {
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      startPage: activePage,
-      horizontal: false,
-      advanced: false,
-    };
-  };
-
-  const moveSwipe = (event: PointerEvent<HTMLDivElement>) => {
-    const swipe = swipeRef.current;
-    if (!swipe || swipe.pointerId !== event.pointerId) return;
-
-    const deltaX = event.clientX - swipe.startX;
-    const deltaY = event.clientY - swipe.startY;
-
-    if (!swipe.horizontal) {
-      if (Math.max(Math.abs(deltaX), Math.abs(deltaY)) < 8) return;
-      if (Math.abs(deltaY) >= Math.abs(deltaX)) {
-        swipeRef.current = null;
-        return;
-      }
-
-      swipe.horizontal = true;
-      suppressClickRef.current = true;
-      event.currentTarget.setPointerCapture(event.pointerId);
-    }
-
-    event.preventDefault();
-    // Advance once per gesture; native vertical scrolling and pinch zoom remain available.
-    if (!swipe.advanced && Math.abs(deltaX) >= SWIPE_THRESHOLD) {
-      swipe.advanced = true;
-      scrollToPage(swipe.startPage + (deltaX < 0 ? 1 : -1));
-    }
-  };
-
-  const endSwipe = (event: PointerEvent<HTMLDivElement>) => {
-    if (swipeRef.current?.pointerId !== event.pointerId) return;
-    swipeRef.current = null;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-  };
-
-  useEffect(() => {
-    const twoUpQuery = window.matchMedia("(min-width: 1101px) and (max-width: 1200px)");
-    const updateItemsPerPage = () => {
-      setItemsPerPage(twoUpQuery.matches ? 2 : 1);
-      setActivePage(0);
-      scrollRef.current?.scrollTo({ left: 0, behavior: "auto" });
-    };
-
-    updateItemsPerPage();
-    twoUpQuery.addEventListener("change", updateItemsPerPage);
-    return () => twoUpQuery.removeEventListener("change", updateItemsPerPage);
-  }, []);
-
   useEffect(() => {
     const scroller = scrollRef.current;
-    if (!scroller) return;
+    const firstCard = scroller?.firstElementChild;
+    if (!scroller || !(firstCard instanceof HTMLElement)) return;
 
     let animationFrame = 0;
     const updateActivePlan = () => {
       animationFrame = 0;
-      const maxScroll = Math.max(scroller.scrollWidth - scroller.clientWidth, 1);
-      const nextPage = Math.round((scroller.scrollLeft / maxScroll) * (pageCount - 1));
-      setActivePage(Math.min(Math.max(nextPage, 0), pageCount - 1));
+      const { offsets } = layoutRef.current;
+      const nearestPage = offsets.reduce((nearest, offset, page) => (
+        Math.abs(offset - scroller.scrollLeft) < Math.abs(offsets[nearest] - scroller.scrollLeft)
+          ? page
+          : nearest
+      ), 0);
+      activePageRef.current = nearestPage;
+      setActivePage(nearestPage);
+    };
+
+    const measureCards = () => {
+      // The first grid track stays responsive; all following tracks use its pixel width.
+      const cardWidth = firstCard.getBoundingClientRect().width;
+      if (cardWidth <= 0) return;
+
+      const gap = parseFloat(window.getComputedStyle(scroller).columnGap) || 0;
+      const itemsPerPage = Math.max(1, Math.min(
+        count,
+        Math.round((scroller.clientWidth + gap) / (cardWidth + gap)),
+      ));
+      const fixedWidth = `${cardWidth}px`;
+      if (scroller.style.getPropertyValue("--pricing-card-width") !== fixedWidth) {
+        scroller.style.setProperty("--pricing-card-width", fixedWidth);
+      }
+
+      const maxScroll = Math.max(scroller.scrollWidth - scroller.clientWidth, 0);
+      const pageWidth = itemsPerPage * (cardWidth + gap);
+      const offsets = Array.from({ length: Math.ceil(count / itemsPerPage) }, (_, page) => (
+        Math.min(page * pageWidth, maxScroll)
+      ));
+      const previousLayout = layoutRef.current;
+      const layoutChanged = itemsPerPage !== previousLayout.itemsPerPage
+        || offsets.length !== previousLayout.offsets.length
+        || offsets.some((offset, page) => offset !== previousLayout.offsets[page]);
+      if (!layoutChanged) return;
+
+      const firstVisibleCard = Math.min(
+        activePageRef.current * previousLayout.itemsPerPage,
+        Math.max(count - previousLayout.itemsPerPage, 0),
+      );
+      const nextPage = Math.min(
+        itemsPerPage === previousLayout.itemsPerPage
+          ? activePageRef.current
+          : Math.floor(firstVisibleCard / itemsPerPage),
+        offsets.length - 1,
+      );
+
+      layoutRef.current = { itemsPerPage, offsets };
+      setPageCount(offsets.length);
+      // Only real layout changes reposition the slider; swiping remains native.
+      scroller.scrollTo({ left: offsets[nextPage], behavior: "auto" });
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      updateActivePlan();
     };
 
     const scheduleUpdate = () => {
       if (!animationFrame) animationFrame = window.requestAnimationFrame(updateActivePlan);
     };
 
+    measureCards();
+    const resizeObserver = new ResizeObserver(measureCards);
+    resizeObserver.observe(scroller);
+    resizeObserver.observe(firstCard);
     scroller.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
 
     return () => {
       scroller.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
+      resizeObserver.disconnect();
+      scroller.style.removeProperty("--pricing-card-width");
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
     };
-  }, [pageCount]);
+  }, [count]);
 
   return (
     <div className="pricing-carousel">
-      <div
-        className="pricing-grid"
-        ref={scrollRef}
-        onPointerDown={startSwipe}
-        onPointerMove={moveSwipe}
-        onPointerUp={endSwipe}
-        onPointerCancel={endSwipe}
-        onLostPointerCapture={(event) => {
-          if (event.target === event.currentTarget) endSwipe(event);
-        }}
-        onClickCapture={(event) => {
-          if (suppressClickRef.current && event.detail !== 0) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          suppressClickRef.current = false;
-        }}
-      >
-        {children}
-      </div>
+      <div className="pricing-grid" ref={scrollRef}>{children}</div>
       <div className="pricing-carousel-controls" aria-label="Plan carousel controls">
         <button
           className="pricing-carousel-arrow"
