@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { InfoBadge } from "@/components/InfoBadge";
+import { PricingCarousel } from "@/components/PricingCarousel";
 import { SectionStack } from "@/components/SectionStack";
 
 const headlineWords = "Claim your awards or search our database for codes easily.".split(" ");
@@ -128,7 +129,7 @@ export default function Home() {
             <span>Get 5% Off Discount</span>
           </InfoBadge>
 
-          <div className="pricing-grid">
+          <PricingCarousel count={plans.length}>
             {plans.map(({ price, name, current }) => (
               <article className="pricing-plan" key={price}>
                 <h3>{price}</h3>
@@ -161,7 +162,7 @@ export default function Home() {
                 </button>
               </article>
             ))}
-          </div>
+          </PricingCarousel>
           <img className="section-barcode section-barcode--mobile" src="/codes/barcode.svg" alt="" />
         </section>
       </div>
