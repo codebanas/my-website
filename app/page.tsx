@@ -2,10 +2,17 @@ import { Fragment } from "react";
 import { InfoBadge } from "@/components/InfoBadge";
 
 const headlineWords = "Claim your awards or search our database for codes easily.".split(" ");
-const codes = [
-  { code: "XGH - 6QR", claimed: 50 },
-  { code: "RT2 - LAC", claimed: 10 },
-  { code: "BDZ - MPK", claimed: 5 },
+const codeGroups = [
+  [
+    { code: "XGH - 6QR", claimed: 20, total: 50 },
+    { code: "RT2 - LAC", claimed: 7, total: 18 },
+    { code: "BDZ - MPK", claimed: 3, total: 12 },
+  ],
+  [
+    { code: "NV4 - KQ8", claimed: 31, total: 64 },
+    { code: "P7M - 2WX", claimed: 14, total: 35 },
+    { code: "J9C - VR5", claimed: 42, total: 80 },
+  ],
 ];
 
 const plans = [
@@ -81,18 +88,17 @@ export default function Home() {
             <time dateTime="2026-08-29">August 29, 2026</time>
           </InfoBadge>
           <div className="codes-groups">
-            {[false, true].map((isRepeat) => (
+            {codeGroups.map((group, groupIndex) => (
               <ul
-                className={`codes-list${isRepeat ? " codes-list--repeat" : ""}`}
-                aria-label={isRepeat ? undefined : "Available codes and claim counts"}
-                aria-hidden={isRepeat || undefined}
-                key={String(isRepeat)}
+                className={`codes-list${groupIndex === 1 ? " codes-list--repeat" : ""}`}
+                aria-label={`Available codes group ${groupIndex + 1}`}
+                key={groupIndex}
               >
-                {codes.map(({ code, claimed }) => (
+                {group.map(({ code, claimed, total }) => (
                   <li className="codes-row" key={code}>
                     <span className="codes-value"><span>{code}</span></span>
                     <img className="codes-arrow" src="/codes/arrow.svg" alt="" width={16} height={12} />
-                    <span className="codes-claimed" aria-label={`Claimed ${claimed} times`}>CLAIMED[{claimed}]</span>
+                    <span className="codes-claimed" aria-label={`${claimed} of ${total} claimed`}>CLAIMED [{claimed}/{total}]</span>
                   </li>
                 ))}
               </ul>
