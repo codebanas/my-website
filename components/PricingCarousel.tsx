@@ -12,6 +12,8 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
   const layoutRef = useRef({ itemsPerPage: 1, offsets: [0] });
   const [activePage, setActivePage] = useState(0);
   const [pageCount, setPageCount] = useState(count);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
 
   const scrollToPage = (page: number) => {
     const scroller = scrollRef.current;
@@ -25,6 +27,26 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
       left: offsets[nextPage],
       behavior: reduceMotion ? "auto" : "smooth",
     });
+  };
+
+  const scrollInDirection = (direction: -1 | 1) => {
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+
+    const { offsets } = layoutRef.current;
+    let nextPage = direction === 1 ? offsets.length - 1 : 0;
+    if (direction === 1) {
+      const page = offsets.findIndex(offset => offset > scroller.scrollLeft + 1);
+      if (page !== -1) nextPage = page;
+    } else {
+      for (let page = offsets.length - 1; page >= 0; page--) {
+        if (offsets[page] < scroller.scrollLeft - 1) {
+          nextPage = page;
+          break;
+        }
+      }
+    }
+    scrollToPage(nextPage);
   };
 
   useEffect(() => {
@@ -42,6 +64,9 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
           : nearest
       ), 0);
       setActivePage(nearestPage);
+      const maxScroll = Math.max(scroller.scrollWidth - scroller.clientWidth, 0);
+      setAtStart(scroller.scrollLeft <= 1);
+      setAtEnd(maxScroll - scroller.scrollLeft <= 1);
     };
 
     const measureCards = () => {
@@ -68,10 +93,10 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
       const layoutChanged = itemsPerPage !== previousLayout.itemsPerPage
         || offsets.length !== previousLayout.offsets.length
         || offsets.some((offset, page) => offset !== previousLayout.offsets[page]);
-      if (!layoutChanged) return;
-
-      layoutRef.current = { itemsPerPage, offsets };
-      setPageCount(offsets.length);
+      if (layoutChanged) {
+        layoutRef.current = { itemsPerPage, offsets };
+        setPageCount(offsets.length);
+      }
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
       updateActivePlan();
     };
@@ -102,8 +127,8 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
           className="pricing-carousel-arrow"
           type="button"
           aria-label="Previous plans"
-          disabled={activePage === 0}
-          onClick={() => scrollToPage(activePage - 1)}
+          disabled={atStart}
+          onClick={() => scrollInDirection(-1)}
         >
           <img src="/pricing/arrow-no-stroke.svg" alt="" />
         </button>
@@ -123,8 +148,8 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
           className="pricing-carousel-arrow pricing-carousel-arrow--next"
           type="button"
           aria-label="Next plans"
-          disabled={activePage === pageCount - 1}
-          onClick={() => scrollToPage(activePage + 1)}
+          disabled={atEnd}
+          onClick={() => scrollInDirection(1)}
         >
           <img src="/pricing/arrow-no-stroke.svg" alt="" />
         </button>
