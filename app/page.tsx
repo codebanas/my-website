@@ -46,6 +46,7 @@ export default function Home() {
           <span className="nav-icon nav-menu" aria-hidden="true" />
         </div>
       </nav>
+      <div className="page-content">
       <div className="section-hello-wrap">
       <section className="section-hello" id="section-hello" aria-labelledby="codes-heading">
         <header className="codes-intro">
@@ -155,6 +156,7 @@ export default function Home() {
           </div>
 
         </section>
+      </div>
       </div>
     </main>
     </>

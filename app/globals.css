@@ -9,7 +9,6 @@
 }
 
 .section-hello-wrap {
-  margin-top: 154px;
   padding-inline: 48px;
 }
 
@@ -162,7 +161,7 @@
 }
 
 @media (max-width: 600px) {
-  .section-hello-wrap { margin-top: 114px; padding-inline: 16px; }
+  .section-hello-wrap { padding-inline: 16px; }
   .section-hello { padding: 32px 16px 48px; }
   .codes-intro-row { gap: 16px; }
   .codes-barcode { width: 88.616px; height: 12px; }
@@ -172,6 +171,7 @@
 }
 
 .section-pricing-wrap {
+  margin-top: 64px;
   padding-inline: 48px;
 }
 
@@ -400,12 +400,25 @@ body {
 body {
   position: relative;
   isolation: isolate;
+  overflow: hidden;
 }
 
 main {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.page-content {
+  position: fixed;
+  z-index: 1;
+  top: 82px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
 }
 
 .site-background {
