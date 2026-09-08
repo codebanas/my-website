@@ -42,7 +42,7 @@
 }
 
 .section-hello {
-  padding: 48px 48px 80px;
+  padding: 48px;
   border-top: 1.5px solid var(--dark);
   background: var(--Brand);
   color: var(--dark);
@@ -543,7 +543,10 @@
 }
 
 @media (max-width: 1200px) {
-  .section-pricing { padding-inline: 32px; }
+  .section-pricing {
+    padding-inline: 32px;
+    padding-bottom: 32px;
+  }
   .pricing-grid {
     display: flex;
     align-items: stretch;
