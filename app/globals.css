@@ -179,6 +179,10 @@
     font-size: clamp(24px, 4.5vw, 40px);
     list-style: none;
   }
+  .codes-claimed {
+    justify-self: end;
+    text-align: right;
+  }
 }
 
 @media (max-width: 600px) {
