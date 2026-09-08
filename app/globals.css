@@ -100,12 +100,18 @@
   text-box-edge: cap alphabetic;
 }
 
-.section-barcode-footer img {
-  display: block;
+.section-barcode-frame {
   width: 100%;
   min-width: 0;
   height: 100%;
   flex: 1 1 auto;
+  padding-top: 8px;
+}
+
+.section-barcode-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .codes-intro p {
