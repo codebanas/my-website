@@ -63,8 +63,8 @@ export default function Home() {
       </nav>
       <SectionStack>
       <div className="section-hello-wrap stack-section">
-      <section className="section-hello" id="section-hello" aria-labelledby="codes-heading">
-        <header className="codes-intro">
+      <section className="section-hello stack-panel" id="section-hello" aria-labelledby="codes-heading">
+        <header className="codes-intro stack-header">
           <div className="codes-intro-row">
             <div className="codes-greeting">
               <span>HELLO</span>
@@ -73,6 +73,7 @@ export default function Home() {
           <p>Easily access our exclusive standalone codes outside of the main community database.</p>
         </header>
 
+        <div className="stack-body">
         <h1 className="codes-heading" id="codes-heading">
           {headlineRows.map(([leftWord, rightWord]) => (
             <span className="codes-heading-row" key={leftWord}>
@@ -107,11 +108,12 @@ export default function Home() {
           </div>
         </div>
         <SectionBarcodeFooter />
+        </div>
       </section>
       </div>
       <div className="section-pricing-wrap stack-section">
-        <section className="section-pricing" aria-labelledby="pricing-heading">
-          <header className="pricing-intro">
+        <section className="section-pricing stack-panel" aria-labelledby="pricing-heading">
+          <header className="pricing-intro stack-header">
             <div className="pricing-intro-row">
               <div className="pricing-greeting">
                 <h2 id="pricing-heading">SEE OUR PLANS</h2>
@@ -120,6 +122,7 @@ export default function Home() {
             <p>Easily access our exclusive standalone codes outside of the main community database.</p>
           </header>
 
+          <div className="stack-body">
           <InfoBadge className="pricing-referral">
             <a href="#">Invite A Friend</a>
             <img src="/codes/dot.svg" alt="" width={4} height={4} />
@@ -169,6 +172,7 @@ export default function Home() {
             <a href="#">Cancellation and Refund Terms</a> here.
           </p>
           <SectionBarcodeFooter />
+          </div>
         </section>
       </div>
       </SectionStack>

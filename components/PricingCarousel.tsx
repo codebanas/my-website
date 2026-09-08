@@ -124,7 +124,7 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
 
     const measureCards = () => {
       // The first grid track stays responsive; all following tracks use its pixel width.
-      const cardWidth = firstCard.getBoundingClientRect().width;
+      const cardWidth = parseFloat(window.getComputedStyle(firstCard).width);
       if (cardWidth <= 0) return;
 
       const gap = parseFloat(window.getComputedStyle(scroller).columnGap) || 0;
