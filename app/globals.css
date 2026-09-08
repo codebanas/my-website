@@ -763,6 +763,7 @@ main {
 
 .nav-menu {
   height: 9px;
+  transform: scaleX(-1);
   -webkit-mask-image: url("/nav/menu.svg");
   mask-image: url("/nav/menu.svg");
 }
