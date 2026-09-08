@@ -22,9 +22,11 @@ export function PricingCarousel({ children, count }: PricingCarouselProps) {
     const targetIndex = Math.min(nextPage * itemsPerPage, lastPageStart);
     const target = scroller.children.item(targetIndex) as HTMLElement | null;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const targetLeft = target
-      ? target.getBoundingClientRect().left - scroller.getBoundingClientRect().left + scroller.scrollLeft
-      : nextPage * scroller.clientWidth;
+    const targetLeft = nextPage === pageCount - 1
+      ? scroller.scrollWidth - scroller.clientWidth
+      : target
+        ? target.getBoundingClientRect().left - scroller.getBoundingClientRect().left + scroller.scrollLeft
+        : nextPage * scroller.clientWidth;
 
     scroller.scrollTo({
       left: targetLeft,
