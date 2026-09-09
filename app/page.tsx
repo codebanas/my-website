@@ -49,6 +49,7 @@ export default function Home() {
       <img className="site-background-gif" src="/background/gif.gif" alt="" />
     </div>
     <main>
+      <SectionStack>
       <nav className="nav" aria-label="Main navigation">
         <img className="nav-logo" src="/nav/logo.svg" alt="Codebanas" width={29.538} height={32} />
         <div className="nav-actions">
@@ -61,7 +62,6 @@ export default function Home() {
           <span className="nav-icon nav-menu" aria-hidden="true" />
         </div>
       </nav>
-      <SectionStack>
       <div className="section-hello-wrap stack-section">
       <section className="section-hello stack-panel" id="section-hello" aria-labelledby="codes-heading">
         <header className="codes-intro stack-header">

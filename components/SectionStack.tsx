@@ -14,6 +14,7 @@ export function SectionStack({ children }: SectionStackProps) {
 
     if (!scrollArea) return;
 
+    const nav = scrollArea.querySelector<HTMLElement>(":scope > .nav");
     const observedElements = new Set<Element>();
     const resizeObserver = new ResizeObserver(() => measureStack());
     const observe = (element: Element) => {
@@ -23,6 +24,7 @@ export function SectionStack({ children }: SectionStackProps) {
       }
     };
     const measureStack = () => {
+      const availableHeight = Math.max(scrollArea.clientHeight - (nav?.offsetHeight ?? 0), 0);
       const sectionHeights = Array.from(scrollArea.querySelectorAll<HTMLElement>(":scope > .stack-section")).map((section, index) => {
         const header = section.querySelector<HTMLElement>(".stack-header");
         const styles = window.getComputedStyle(section);
@@ -37,13 +39,15 @@ export function SectionStack({ children }: SectionStackProps) {
         if (header) observe(header);
         return height;
       });
-      const lastSectionHeight = sectionHeights[sectionHeights.length - 1] ?? scrollArea.clientHeight;
+      const lastSectionHeight = sectionHeights[sectionHeights.length - 1] ?? availableHeight;
       // A short final section still needs enough travel to cover the preceding header.
       scrollArea.style.setProperty("--stack-end-space", `${Math.max(
-        scrollArea.clientHeight - lastSectionHeight, 0,
+        availableHeight - lastSectionHeight, 0,
       )}px`);
     };
 
+    observe(scrollArea);
+    if (nav) observe(nav);
     measureStack();
     window.addEventListener("resize", measureStack);
 
@@ -54,7 +58,7 @@ export function SectionStack({ children }: SectionStackProps) {
   }, [children]);
 
   return (
-    <div className="page-content" ref={scrollRef} tabIndex={0} role="region" aria-label="Page sections">
+    <div className="page-content" ref={scrollRef} tabIndex={0} role="region" aria-label="Page navigation and sections">
       {children}
     </div>
   );
