@@ -38,7 +38,6 @@
 }
 
 .section-hello-wrap {
-  --stack-scale: 1;
   padding-inline: var(--screen-gutter);
 }
 
@@ -277,7 +276,6 @@
 }
 
 .section-pricing-wrap {
-  --stack-scale: 1;
   margin-top: var(--screen-gutter);
   padding-inline: var(--screen-gutter);
 }
@@ -661,7 +659,6 @@ main {
   position: sticky;
   top: calc(-1 * var(--stack-body-height, 0px));
   flex-shrink: 0;
-  transform-origin: top center;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
