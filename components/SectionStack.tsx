@@ -53,5 +53,9 @@ export function SectionStack({ children }: SectionStackProps) {
     };
   }, [children]);
 
-  return <div className="page-content" ref={scrollRef}>{children}</div>;
+  return (
+    <div className="page-content" ref={scrollRef} tabIndex={0} role="region" aria-label="Page sections">
+      {children}
+    </div>
+  );
 }
