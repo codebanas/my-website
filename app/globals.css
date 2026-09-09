@@ -728,7 +728,6 @@ main {
   flex-shrink: 0;
   width: auto;
   height: var(--brand-logo-height);
-  transform: scaleY(-1);
 }
 
 .nav-actions {
@@ -769,18 +768,11 @@ main {
   outline-offset: 4px;
 }
 
-.nav-icon,
-.nav-divider {
+.nav-icon {
   display: block;
   flex-shrink: 0;
   width: 20px;
   height: 20px;
-}
-
-.nav-sign-in {
-  width: 20px;
-  -webkit-mask-image: url("/nav/sign-in.svg");
-  mask-image: url("/nav/sign-in.svg");
 }
 
 .nav-icon {
@@ -796,11 +788,6 @@ main {
 .nav-search {
   -webkit-mask-image: url("/nav/search.svg");
   mask-image: url("/nav/search.svg");
-}
-
-.nav-divider {
-  width: 32px;
-  height: 24px;
 }
 
 .nav-menu {

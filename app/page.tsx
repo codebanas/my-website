@@ -56,8 +56,6 @@ export default function Home() {
           <a className="nav-cta" href="mailto:hello@codebanas.com">
             <span>JOIN US</span>
           </a>
-          <span className="nav-icon nav-sign-in" aria-hidden="true" />
-          <img className="nav-divider" src="/nav/divider.svg" alt="" width={32} height={24} />
           <span className="nav-icon nav-search" aria-hidden="true" />
           <span className="nav-icon nav-menu" aria-hidden="true" />
         </div>
