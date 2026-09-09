@@ -7,6 +7,7 @@
   --Brand: #C5E2FC;
   --cream-orange: #F4E4CD;
   --screen-gutter: 48px;
+  --section-content-max-width: 1200px;
   --brand-logo-height: 32px;
   --cta-height: 42px;
   --nav-cta-width: 96px;
@@ -680,6 +681,16 @@ main {
   position: relative;
   z-index: 0;
   padding: 0 var(--panel-padding-inline) var(--panel-padding-bottom);
+}
+
+@media (width > 1200px) {
+  .stack-header,
+  .stack-body {
+    padding-inline: max(
+      var(--panel-padding-inline),
+      calc((100% - var(--section-content-max-width)) / 2)
+    );
+  }
 }
 
 .site-background {
