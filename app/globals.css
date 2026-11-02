@@ -5,6 +5,9 @@
   --nav-height: 44px;
   --nav-fade-height: 160px;
   --hero-top: 160px;
+  --container-width: 1393px;
+  --page-gutter: 16px;
+  --slider-bleed: 12px;
 
   --font-weight-ultra-light: 100;
   --font-weight-thin: 200;
@@ -93,7 +96,7 @@ a:focus-visible {
   top: 0;
   left: 0;
   width: 100%;
-  padding: var(--nav-top) 16px 0;
+  padding: var(--nav-top) var(--page-gutter) 0;
   background: transparent;
 }
 
@@ -103,6 +106,8 @@ a:focus-visible {
   justify-content: space-between;
   gap: 16px;
   width: 100%;
+  max-width: var(--container-width);
+  margin-inline: auto;
 }
 
 .nav-brand,
@@ -195,9 +200,8 @@ a:focus-visible {
 
 /* Tablet: 768px to 1023px. */
 @media (min-width: 768px) {
-  .site-header {
-    padding-right: 32px;
-    padding-left: 32px;
+  :root {
+    --page-gutter: 32px;
   }
 
   .nav-brand {
@@ -213,9 +217,8 @@ a:focus-visible {
 
 /* Desktop: 1024px and above. */
 @media (min-width: 1024px) {
-  .site-header {
-    padding-right: 64px;
-    padding-left: 64px;
+  :root {
+    --page-gutter: 64px;
   }
 
   .nav-brand {
@@ -234,15 +237,15 @@ a:focus-visible {
   flex-direction: column;
   align-items: center;
   gap: 64px;
-  width: 100%;
+  width: min(var(--container-width), calc(100% - 2 * var(--page-gutter)));
   min-width: 0;
+  margin-inline: auto;
   padding-top: var(--hero-top);
   padding-bottom: 48px;
 }
 
 .hero-section {
   width: 100%;
-  padding-inline: 16px;
   text-align: center;
 }
 
@@ -286,14 +289,102 @@ a:focus-visible {
 }
 
 .code-gallery {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: calc(32px - var(--slider-bleed));
   width: 100%;
   min-width: 0;
 }
 
+.gallery-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 44px;
+}
+
+.gallery-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  line-height: 100%;
+}
+
+.gallery-toolbar-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.gallery-favorites {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 18.21px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.gallery-favorites::before {
+  position: absolute;
+  inset: 0 -6px;
+  content: "";
+}
+
+.gallery-favorites[aria-pressed="true"] img {
+  border-radius: 4px;
+  box-shadow: 0 0 0 6px var(--color-button-rest);
+}
+
+.gallery-favorites img {
+  display: block;
+  width: 18.21px;
+  height: 16px;
+}
+
+.shuffle-button {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+  width: 105px;
+  height: 44px;
+  padding: 0 16px 0 14px;
+  border: 1.5px solid var(--color-white);
+  border-radius: 16px;
+  background: transparent;
+  color: var(--color-white);
+  font-size: 13px;
+  font-weight: var(--font-weight-bold);
+  line-height: 100%;
+  letter-spacing: 0;
+  cursor: pointer;
+}
+
+.shuffle-button img {
+  display: block;
+  flex-shrink: 0;
+}
+
+.shuffle-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.code-slider {
+  position: relative;
+  min-width: 0;
+}
+
 /* Fade only the edges instead of masking the text-bearing scroll layer. */
-.code-gallery::before,
-.code-gallery::after {
+.code-slider::before,
+.code-slider::after {
   position: absolute;
   z-index: 2;
   top: 0;
@@ -303,12 +394,12 @@ a:focus-visible {
   content: "";
 }
 
-.code-gallery::before {
+.code-slider::before {
   left: 0;
   background: linear-gradient(to right, #0d0d0d, transparent);
 }
 
-.code-gallery::after {
+.code-slider::after {
   right: 0;
   background: linear-gradient(to left, #0d0d0d, transparent);
 }
@@ -329,9 +420,25 @@ a:focus-visible {
   align-items: center;
   gap: 16px;
   width: max-content;
-  min-height: 448px;
   margin-inline: auto;
-  padding: 48px 32px;
+  padding: var(--slider-bleed) 32px;
+}
+
+.code-gallery-empty {
+  display: grid;
+  place-items: center;
+  min-height: 356px;
+  margin: 0;
+  padding: 24px;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .gallery-toolbar {
+    flex-wrap: wrap;
+  }
 }
 
 .code-card {
