@@ -1,10 +1,11 @@
 import CodeCards from "@/components/CodeCards";
 import HeroText from "@/components/HeroText";
+import ProgressiveFade from "@/components/ProgressiveFade";
 
 export default function Home() {
   return (
     <>
-      <div className="nav-fade" aria-hidden="true" />
+      <ProgressiveFade edge="top" strength={6} className="nav-fade" />
       <header className="site-header">
         <nav className="site-nav" aria-label="Main navigation">
           <div className="nav-brand">

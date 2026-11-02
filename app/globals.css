@@ -8,6 +8,8 @@
   --container-width: 1393px;
   --page-gutter: 16px;
   --slider-bleed: 12px;
+  --slider-fade-width: 384px;
+  --slider-fade-height: 256px;
 
   --font-weight-ultra-light: 100;
   --font-weight-thin: 200;
@@ -72,7 +74,17 @@ a:focus-visible {
   outline-offset: 5px;
 }
 
-/* Mobile: below 768px. */
+.progressive-fade {
+  pointer-events: none;
+}
+
+.progressive-fade-blur,
+.progressive-fade-tint {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
 .nav-fade {
   position: fixed;
   z-index: 10;
@@ -80,16 +92,9 @@ a:focus-visible {
   right: 0;
   left: 0;
   height: var(--nav-fade-height);
-  background:
-    linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%),
-    linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%),
-    linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%),
-    linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%),
-    linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%),
-    linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%);
-  pointer-events: none;
 }
 
+/* Mobile: below 768px. */
 .site-header {
   position: fixed;
   z-index: 20;
@@ -382,26 +387,21 @@ a:focus-visible {
   min-width: 0;
 }
 
-/* Fade only the edges instead of masking the text-bearing scroll layer. */
-.code-slider::before,
-.code-slider::after {
+/* Blur only the edge overlays, leaving the central text outside their masks. */
+.slider-fade {
   position: absolute;
   z-index: 2;
-  top: 0;
-  bottom: 0;
-  width: 32px;
-  pointer-events: none;
-  content: "";
+  top: calc(50% - var(--slider-fade-height) / 2);
+  width: min(var(--slider-fade-width), 40%);
+  height: var(--slider-fade-height);
 }
 
-.code-slider::before {
+.slider-fade-left {
   left: 0;
-  background: linear-gradient(to right, #0d0d0d, transparent);
 }
 
-.code-slider::after {
+.slider-fade-right {
   right: 0;
-  background: linear-gradient(to left, #0d0d0d, transparent);
 }
 
 .code-gallery-viewport {

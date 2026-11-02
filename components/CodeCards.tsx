@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import CardTexture from "@/components/CardTexture";
+import ProgressiveFade from "@/components/ProgressiveFade";
 import { getCardAppearance, getCardColor, type CardAppearance } from "@/lib/card-styles";
 import { shuffle } from "@/lib/shuffle";
 
@@ -108,6 +109,8 @@ export default function CodeCards({
         </div>
       </div>
       <div className="code-slider">
+        <ProgressiveFade edge="left" strength={2} className="slider-fade slider-fade-left" />
+        <ProgressiveFade edge="right" strength={2} className="slider-fade slider-fade-right" />
         <div className="code-gallery-viewport" ref={viewport}>
           {visibleCards.length === 0 ? (
             <p className="code-gallery-empty" role="status">Save a card with its heart to see it here.</p>
