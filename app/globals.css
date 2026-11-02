@@ -206,15 +206,14 @@ a:focus-visible {
 .code-gallery-track {
   display: flex;
   align-items: center;
-  /* Allow room for the rotated corners and hover expansion. */
-  gap: 32px;
+  gap: 16px;
   width: max-content;
   margin-inline: auto;
   padding: 48px 32px;
 }
 
 .code-card {
-  --card-rotation: -2deg;
+  --card-rotation: -0.8deg;
   position: relative;
   flex: 0 0 272px;
   width: 272px;
@@ -231,7 +230,7 @@ a:focus-visible {
 }
 
 .code-card:nth-child(even) {
-  --card-rotation: 2deg;
+  --card-rotation: 0.8deg;
 }
 
 .code-card-details {
