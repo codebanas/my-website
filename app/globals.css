@@ -206,7 +206,8 @@ a:focus-visible {
 .code-gallery-track {
   display: flex;
   align-items: center;
-  gap: 16px;
+  /* Allow room for the rotated corners and hover expansion. */
+  gap: 32px;
   width: max-content;
   margin-inline: auto;
   padding: 48px 32px;
