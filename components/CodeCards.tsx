@@ -109,8 +109,20 @@ export default function CodeCards({
         </div>
       </div>
       <div className="code-slider">
-        <ProgressiveFade edge="left" strength={2} className="slider-fade slider-fade-left" />
-        <ProgressiveFade edge="right" strength={2} className="slider-fade slider-fade-right" />
+        <ProgressiveFade
+          edge="left"
+          strength={2}
+          maxBlur={14}
+          tintOpacity={0.8}
+          className="slider-fade slider-fade-left"
+        />
+        <ProgressiveFade
+          edge="right"
+          strength={2}
+          maxBlur={14}
+          tintOpacity={0.8}
+          className="slider-fade slider-fade-right"
+        />
         <div className="code-gallery-viewport" ref={viewport}>
           {visibleCards.length === 0 ? (
             <p className="code-gallery-empty" role="status">Save a card with its heart to see it here.</p>

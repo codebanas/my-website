@@ -7,7 +7,7 @@ const directions = {
 } as const;
 
 /** Masked blur bands approximate Figma's progressive 16px-to-0px background blur. */
-export function getProgressiveFade(edge: FadeEdge, strength: 2 | 6) {
+export function getProgressiveFade(edge: FadeEdge, strength: 2 | 6, maxBlur = 16) {
   const direction = directions[edge];
   const gradient = `linear-gradient(${direction}, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%)`;
   const steps = 8;
@@ -23,7 +23,7 @@ export function getProgressiveFade(edge: FadeEdge, strength: 2 | 6) {
         : `transparent ${start}%, #000 ${center}%, transparent ${end}%`;
 
       return {
-        radius: 16 * (1 - index / steps),
+        radius: maxBlur * (1 - index / steps),
         maskImage: `linear-gradient(${direction}, ${stops})`,
       };
     }),
