@@ -242,15 +242,15 @@ a:focus-visible {
   flex-direction: column;
   align-items: center;
   gap: 64px;
-  width: min(var(--container-width), calc(100% - 2 * var(--page-gutter)));
+  width: 100%;
   min-width: 0;
-  margin-inline: auto;
   padding-top: var(--hero-top);
   padding-bottom: 48px;
 }
 
 .hero-section {
-  width: 100%;
+  width: min(var(--container-width), calc(100% - 2 * var(--page-gutter)));
+  margin-inline: auto;
   text-align: center;
 }
 
@@ -306,7 +306,9 @@ a:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  width: min(var(--container-width), calc(100% - 2 * var(--page-gutter)));
   min-height: 44px;
+  margin-inline: auto;
 }
 
 .gallery-title {
@@ -384,6 +386,7 @@ a:focus-visible {
 
 .code-slider {
   position: relative;
+  width: 100%;
   min-width: 0;
 }
 
