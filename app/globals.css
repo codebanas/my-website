@@ -3,6 +3,7 @@
   --color-button-rest: #1a1a1a;
   --nav-top: 32px;
   --nav-height: 44px;
+  --nav-fade-height: 192px;
   --hero-top: 192px;
 
   --font-weight-ultra-light: 100;
@@ -40,6 +41,7 @@ body {
 
 html {
   color-scheme: dark;
+  scroll-padding-top: var(--nav-fade-height);
 }
 
 body {
@@ -68,10 +70,25 @@ a:focus-visible {
 }
 
 /* Mobile: below 768px. */
+.nav-fade {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--nav-fade-height);
+  background: linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%);
+  pointer-events: none;
+}
+
 .site-header {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  left: 0;
   width: 100%;
   padding: var(--nav-top) 16px 0;
-  background: #0d0d0d;
+  background: transparent;
 }
 
 .site-nav {
@@ -213,7 +230,7 @@ a:focus-visible {
   gap: 64px;
   width: 100%;
   min-width: 0;
-  padding-top: calc(var(--hero-top) - var(--nav-top) - var(--nav-height));
+  padding-top: var(--hero-top);
   padding-bottom: 48px;
 }
 
@@ -226,8 +243,8 @@ a:focus-visible {
 .hero-title {
   margin: 0;
   color: var(--color-white);
-  font-size: clamp(22px, 6vw, 40px);
-  font-weight: var(--font-weight-black);
+  font-size: clamp(22px, 6vw, 56px);
+  font-weight: var(--font-weight-heavy);
   line-height: 95%;
   letter-spacing: -0.02em;
 }

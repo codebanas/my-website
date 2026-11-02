@@ -24,6 +24,8 @@ spacing separately; do not resize text to compensate for a different weight.
 The card code uses 14px Bold with 100% line height. The account button label uses
 13px Bold with 100% line height. Card prices and percentages use 20px Heavy with
 86% line height, matching the supplied Figma typography references.
+The hero uses 56px Heavy with 95% line height on desktop, scaling down on
+smaller screens.
 
 ```css
 .example {

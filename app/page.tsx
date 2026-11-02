@@ -4,6 +4,7 @@ import HeroText from "@/components/HeroText";
 export default function Home() {
   return (
     <>
+      <div className="nav-fade" aria-hidden="true" />
       <header className="site-header">
         <nav className="site-nav" aria-label="Main navigation">
           <div className="nav-brand">
