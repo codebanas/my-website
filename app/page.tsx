@@ -1,3 +1,5 @@
+import CodeCards from "@/components/CodeCards";
+
 export default function Home() {
   return (
     <>
@@ -23,7 +25,9 @@ export default function Home() {
           </div>
         </nav>
       </header>
-      <main aria-label="Codebanas" />
+      <main className="home-content" aria-label="Codebanas">
+        <CodeCards />
+      </main>
     </>
   );
 }
