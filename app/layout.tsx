@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
+
+const helveticaNeue = localFont({
+  src: "./fonts/HelveticaNeueRoman.otf",
+  variable: "--font-helvetica-neue",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Codebanas",
@@ -9,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={helveticaNeue.variable}>{children}</body>
     </html>
   );
 }
