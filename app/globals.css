@@ -1,4 +1,13 @@
 :root {
+  --font-weight-ultra-light: 100;
+  --font-weight-thin: 200;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-heavy: 800;
+  --font-weight-black: 900;
+
   --card-blue: #7596f0;
   --card-orange: #fa9507;
   --card-green: #cef297;
@@ -19,6 +28,8 @@ body {
   background: #0d0d0d;
   color: #f5f5f5;
   font-family: var(--font-helvetica-neue), Arial, sans-serif;
+  font-weight: var(--font-weight-regular);
+  font-synthesis: none;
 }
 
 html {
@@ -104,7 +115,7 @@ a:focus-visible {
   background: #191919;
   color: #f5f5f5;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0;
   line-height: 20px;
   white-space: nowrap;
@@ -269,7 +280,7 @@ a:focus-visible {
   gap: 4px;
   margin: 0;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   line-height: 20px;
 }
 
@@ -324,7 +335,7 @@ a:focus-visible {
 .code-card-numbers {
   margin-top: auto;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   line-height: 24px;
 }
 
