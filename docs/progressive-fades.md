@@ -7,7 +7,9 @@ standard and WebKit-prefixed mask/backdrop-filter properties are supplied.
 
 The top overlay stays fixed at 160px high with six darkening gradient layers.
 The slider overlays mirror each other and use two darkening gradient layers
-each at 80% tint opacity. Their blur tapers from 14px at the outer edge to clear.
+each at 100% tint opacity, making the screen edge fully dark. Their blur tapers
+from a softer 10px at the outer edge to clear, while the inner edge stays fully
+transparent.
 They are centered vertically over the slider at 264.88px wide by 430px high. This
 matches the visible footprint of the 430px by 264.88px Figma layer rotated 90
 degrees. Their height extends beyond the cards to cover the whole outer card;

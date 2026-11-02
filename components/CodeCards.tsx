@@ -117,15 +117,15 @@ export default function CodeCards({
         <ProgressiveFade
           edge="left"
           strength={2}
-          maxBlur={14}
-          tintOpacity={0.8}
+          maxBlur={10}
+          tintOpacity={1}
           className="slider-fade slider-fade-left"
         />
         <ProgressiveFade
           edge="right"
           strength={2}
-          maxBlur={14}
-          tintOpacity={0.8}
+          maxBlur={10}
+          tintOpacity={1}
           className="slider-fade slider-fade-right"
         />
         <div className="code-gallery-viewport" ref={viewport}>
