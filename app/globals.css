@@ -83,9 +83,10 @@ a:focus-visible {
 .profile-button {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
-  min-width: 152px;
+  flex-shrink: 0;
+  width: 164px;
   height: 44px;
   padding: 0 12px;
   border: 0;
@@ -98,28 +99,16 @@ a:focus-visible {
   line-height: 20px;
   white-space: nowrap;
   cursor: pointer;
-  transition:
-    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    background-color 220ms ease;
+  transition: gap 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.profile-button span,
-.profile-button img {
-  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+.profile-button span {
+  flex-shrink: 0;
 }
 
 @media (hover: hover) {
   .profile-button:hover {
-    background: #242424;
-    transform: translateY(-1px);
-  }
-
-  .profile-button:hover span {
-    transform: translateX(-2px);
-  }
-
-  .profile-button:hover img {
-    transform: translateX(2px);
+    gap: 12px;
   }
 }
 
@@ -163,6 +152,7 @@ a:focus-visible {
   }
 
   .profile-button {
+    width: 172px;
     padding-right: 16px;
     padding-left: 16px;
   }
@@ -180,6 +170,7 @@ a:focus-visible {
   }
 
   .profile-button {
+    width: 180px;
     padding-right: 20px;
     padding-left: 20px;
   }
@@ -370,13 +361,7 @@ a:focus-visible {
     transform: rotate(var(--card-rotation));
   }
 
-  .profile-button,
-  .profile-button span,
-  .profile-button img,
-  .profile-button:hover,
-  .profile-button:hover span,
-  .profile-button:hover img {
+  .profile-button {
     transition: none;
-    transform: none;
   }
 }
