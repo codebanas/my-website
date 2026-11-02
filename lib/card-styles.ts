@@ -1,6 +1,6 @@
 export const CARD_COLORS = [
-  "blue",
   "orange",
+  "blue",
   "green",
   "pink",
   "yellow",
@@ -60,12 +60,22 @@ function hash(value: string): number {
   return (result ^ (result >>> 16)) >>> 0;
 }
 
-/** Shared by the UI and future backend; identical record IDs keep identical styles. */
-export function getCardAppearance(id: string | number): CardAppearance {
+/** Absolute slider positions can extend in either direction without restarting the cycle. */
+export function getCardColor(position: number): CardColor {
+  if (!Number.isSafeInteger(position)) {
+    throw new Error("Card position must be a safe integer.");
+  }
+
+  const index = ((position % CARD_COLORS.length) + CARD_COLORS.length) % CARD_COLORS.length;
+  return CARD_COLORS[index];
+}
+
+/** Ordered colors follow position; texture and blend choices stay tied to the record ID. */
+export function getCardAppearance(id: string | number, position: number): CardAppearance {
   const texture = CARD_TEXTURES[hash(`${id}:texture`) % CARD_TEXTURES.length];
 
   return {
-    color: CARD_COLORS[hash(`${id}:color`) % CARD_COLORS.length],
+    color: getCardColor(position),
     texture,
     blendMode: texture.blendModes[hash(`${id}:blend`) % texture.blendModes.length],
   };

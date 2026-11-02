@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import CardTexture from "@/components/CardTexture";
-import { getCardAppearance, type CardAppearance } from "@/lib/card-styles";
+import { getCardAppearance, getCardColor, type CardAppearance } from "@/lib/card-styles";
 
 export type CodeCardData = {
   id: string;
@@ -22,7 +22,13 @@ const sampleCards: CodeCardData[] = [
   { id: "FD2K9", code: "FD2K9", price: 109, rate: "0.9%" },
 ];
 
-export default function CodeCards({ cards = sampleCards }: { cards?: CodeCardData[] }) {
+export default function CodeCards({
+  cards = sampleCards,
+  startIndex = 0,
+}: {
+  cards?: CodeCardData[];
+  startIndex?: number;
+}) {
   const viewport = useRef<HTMLDivElement>(null);
   const [savedCodes, setSavedCodes] = useState<string[]>([]);
 
@@ -55,9 +61,13 @@ export default function CodeCards({ cards = sampleCards }: { cards?: CodeCardDat
     <section className="code-gallery" aria-label="Explore sample codes">
       <div className="code-gallery-viewport" ref={viewport}>
         <div className="code-gallery-track">
-          {cards.map((card) => {
+          {cards.map((card, index) => {
             const isSaved = savedCodes.includes(card.id);
-            const appearance = card.appearance ?? getCardAppearance(card.id);
+            const position = startIndex + index;
+            const appearance = {
+              ...(card.appearance ?? getCardAppearance(card.id, position)),
+              color: getCardColor(position),
+            };
 
             return (
               <article className="code-card" key={card.id} aria-labelledby={`code-${card.id}`}>
