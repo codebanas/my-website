@@ -8,8 +8,8 @@
   --container-width: 1393px;
   --page-gutter: 16px;
   --slider-bleed: 12px;
-  --slider-fade-width: 384px;
-  --slider-fade-height: 256px;
+  --slider-fade-width: 264.88px;
+  --slider-fade-height: 430px;
 
   --font-weight-ultra-light: 100;
   --font-weight-thin: 200;
@@ -302,6 +302,8 @@ a:focus-visible {
 }
 
 .gallery-toolbar {
+  position: relative;
+  z-index: 3;
   display: flex;
   align-items: center;
   justify-content: space-between;
