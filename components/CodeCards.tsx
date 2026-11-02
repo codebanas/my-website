@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import CardTexture from "@/components/CardTexture";
 import ProgressiveFade from "@/components/ProgressiveFade";
 import { getCardAppearance, getCardColor, type CardAppearance } from "@/lib/card-styles";
-import { shuffle } from "@/lib/shuffle";
+import { shuffleWithFavorites } from "@/lib/shuffle";
 
 export type CodeCardData = {
   id: string;
@@ -34,6 +34,7 @@ export default function CodeCards({
   const viewport = useRef<HTMLDivElement>(null);
   const [savedCodes, setSavedCodes] = useState<string[]>([]);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const hasSavedCards = savedCodes.length > 0;
   const [cardOrder, setCardOrder] = useState<string[]>([]);
   const ranks = new Map(cardOrder.map((id, index) => [id, index]));
   const orderedCards = cardOrder.length
@@ -67,18 +68,17 @@ export default function CodeCards({
   }, [favoritesOnly]);
 
   function toggleSaved(code: string) {
-    setSavedCodes((saved) =>
-      saved.includes(code) ? saved.filter((item) => item !== code) : [...saved, code],
-    );
+    const nextSaved = savedCodes.includes(code)
+      ? savedCodes.filter((item) => item !== code)
+      : [...savedCodes, code];
+    setSavedCodes(nextSaved);
+    if (nextSaved.length === 0) setFavoritesOnly(false);
   }
 
-  function shuffleVisibleCards() {
-    const shuffled = shuffle(visibleCards);
-    const visibleIds = new Set(visibleCards.map((card) => card.id));
-    let index = 0;
-    setCardOrder(
-      orderedCards.map((card) => visibleIds.has(card.id) ? shuffled[index++].id : card.id),
-    );
+  function shuffleAllCards() {
+    const shuffled = shuffleWithFavorites(orderedCards, new Set(savedCodes));
+    setCardOrder(shuffled.map((card) => card.id));
+    setFavoritesOnly(false);
   }
 
   return (
@@ -93,15 +93,21 @@ export default function CodeCards({
             type="button"
             aria-label="Show saved cards"
             aria-pressed={favoritesOnly}
+            disabled={!hasSavedCards}
             onClick={() => setFavoritesOnly((current) => !current)}
           >
-            <img src="/gallery/heart.svg" alt="" width={19} height={16} />
+            <img
+              src={hasSavedCards ? "/gallery/heart-pink.svg" : "/gallery/heart.svg"}
+              alt=""
+              width={19}
+              height={16}
+            />
           </button>
           <button
             className="shuffle-button"
             type="button"
-            onClick={shuffleVisibleCards}
-            disabled={visibleCards.length < 2}
+            onClick={shuffleAllCards}
+            disabled={orderedCards.length < 2}
           >
             <img src="/gallery/shuffle.svg" alt="" width={20} height={20} />
             <span>Shuffle</span>
@@ -160,7 +166,12 @@ export default function CodeCards({
                             aria-pressed={isSaved}
                             onClick={() => toggleSaved(card.id)}
                           >
-                            <img src="/cards/heart-light-pink.svg" alt="" width={19} height={16} />
+                            <img
+                              src={isSaved ? "/cards/heart-pink.svg" : "/cards/heart-light-pink.svg"}
+                              alt=""
+                              width={19}
+                              height={16}
+                            />
                           </button>
                           <img src="/cards/arrow-dark-single.svg" alt="" width={12} height={12} />
                         </div>

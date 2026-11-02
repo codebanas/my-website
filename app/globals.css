@@ -346,9 +346,8 @@ a:focus-visible {
   content: "";
 }
 
-.gallery-favorites[aria-pressed="true"] img {
-  border-radius: 4px;
-  box-shadow: 0 0 0 6px var(--color-button-rest);
+.gallery-favorites:disabled {
+  cursor: default;
 }
 
 .gallery-favorites img {
@@ -547,10 +546,6 @@ a:focus-visible {
   height: 16px;
   object-fit: cover;
   object-position: left;
-}
-
-.code-card-save[aria-pressed="true"] {
-  background: #f4edf2;
 }
 
 .code-card-save:focus-visible {
