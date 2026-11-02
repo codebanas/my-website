@@ -1,4 +1,5 @@
 import CodeCards from "@/components/CodeCards";
+import HeroText from "@/components/HeroText";
 
 export default function Home() {
   return (
@@ -26,6 +27,7 @@ export default function Home() {
         </nav>
       </header>
       <main className="home-content" aria-label="Codebanas">
+        <HeroText />
         <CodeCards />
       </main>
     </>
