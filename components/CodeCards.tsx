@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import CardTexture from "@/components/CardTexture";
 import ProgressiveFade from "@/components/ProgressiveFade";
 import { getCardAppearance, getCardColor, type CardAppearance } from "@/lib/card-styles";
-import { shuffleWithFavorites } from "@/lib/shuffle";
+import { groupFavorites, shuffleWithFavorites } from "@/lib/shuffle";
 
 export type CodeCardData = {
   id: string;
@@ -33,7 +33,7 @@ export default function CodeCards({
 }) {
   const viewport = useRef<HTMLDivElement>(null);
   const [savedCodes, setSavedCodes] = useState<string[]>([]);
-  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [groupSaved, setGroupSaved] = useState(false);
   const hasSavedCards = savedCodes.length > 0;
   const [cardOrder, setCardOrder] = useState<string[]>([]);
   const ranks = new Map(cardOrder.map((id, index) => [id, index]));
@@ -42,8 +42,8 @@ export default function CodeCards({
       (ranks.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (ranks.get(b.id) ?? Number.MAX_SAFE_INTEGER),
     )
     : cards;
-  const visibleCards = favoritesOnly
-    ? orderedCards.filter((card) => savedCodes.includes(card.id))
+  const displayCards = groupSaved
+    ? groupFavorites(orderedCards, new Set(savedCodes))
     : orderedCards;
 
   useEffect(() => {
@@ -65,20 +65,19 @@ export default function CodeCards({
     });
     observer.observe(element);
     return () => observer.disconnect();
-  }, [favoritesOnly]);
+  }, [groupSaved]);
 
   function toggleSaved(code: string) {
     const nextSaved = savedCodes.includes(code)
       ? savedCodes.filter((item) => item !== code)
       : [...savedCodes, code];
     setSavedCodes(nextSaved);
-    if (nextSaved.length === 0) setFavoritesOnly(false);
+    if (nextSaved.length === 0) setGroupSaved(false);
   }
 
   function shuffleAllCards() {
     const shuffled = shuffleWithFavorites(orderedCards, new Set(savedCodes));
     setCardOrder(shuffled.map((card) => card.id));
-    setFavoritesOnly(false);
   }
 
   return (
@@ -91,13 +90,13 @@ export default function CodeCards({
           <button
             className="gallery-favorites"
             type="button"
-            aria-label="Show saved cards"
-            aria-pressed={favoritesOnly}
+            aria-label="Group saved cards"
+            aria-pressed={groupSaved}
             disabled={!hasSavedCards}
-            onClick={() => setFavoritesOnly((current) => !current)}
+            onClick={() => setGroupSaved((current) => !current)}
           >
             <img
-              src={hasSavedCards ? "/gallery/heart-pink.svg" : "/gallery/heart.svg"}
+              src={groupSaved ? "/gallery/heart-pink.svg" : "/gallery/heart.svg"}
               alt=""
               width={19}
               height={16}
@@ -130,11 +129,11 @@ export default function CodeCards({
           className="slider-fade slider-fade-right"
         />
         <div className="code-gallery-viewport" ref={viewport}>
-          {visibleCards.length === 0 ? (
-            <p className="code-gallery-empty" role="status">Save a card with its heart to see it here.</p>
+          {displayCards.length === 0 ? (
+            <p className="code-gallery-empty" role="status">No cards available yet.</p>
           ) : (
             <div className="code-gallery-track">
-              {visibleCards.map((card, index) => {
+              {displayCards.map((card, index) => {
                 const isSaved = savedCodes.includes(card.id);
                 const position = startIndex + index;
                 const appearance = {

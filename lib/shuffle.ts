@@ -36,3 +36,16 @@ export function shuffleWithFavorites<T extends { id: string }>(
 
   return result;
 }
+
+/** Keep the full list, placing saved cards together near its center. */
+export function groupFavorites<T extends { id: string }>(
+  items: readonly T[],
+  savedIds: ReadonlySet<string>,
+): T[] {
+  const favorites = items.filter((item) => savedIds.has(item.id));
+  if (favorites.length === 0 || favorites.length === items.length) return [...items];
+
+  const others = items.filter((item) => !savedIds.has(item.id));
+  const position = Math.floor(others.length / 2);
+  return [...others.slice(0, position), ...favorites, ...others.slice(position)];
+}

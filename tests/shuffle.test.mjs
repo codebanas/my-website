@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { shuffle, shuffleWithFavorites } from "../lib/shuffle.ts";
+import { groupFavorites, shuffle, shuffleWithFavorites } from "../lib/shuffle.ts";
 
 test("shuffle preserves every card without mutating the source", () => {
   const cards = ["a", "b", "c", "d"];
@@ -53,4 +53,22 @@ test("shuffle always changes an unchanged draw when multiple cards exist", () =>
   assert.notDeepEqual(shuffle(cards, () => 0.999), cards);
   assert.deepEqual(shuffle([]), []);
   assert.deepEqual(shuffle(["a"]), ["a"]);
+});
+
+test("saved grouping keeps all cards and places the saved group near the center", () => {
+  const cards = ["a", "b", "c", "d", "e", "f", "g"].map((id) => ({ id }));
+  const result = groupFavorites(cards, new Set(["a", "d", "g"]));
+  assert.deepEqual(result.map((card) => card.id), ["b", "c", "a", "d", "g", "e", "f"]);
+  assert.deepEqual(cards.map((card) => card.id), ["a", "b", "c", "d", "e", "f", "g"]);
+  assert.deepEqual(groupFavorites(result, new Set(["a", "d", "g"])), result);
+});
+
+test("grouping never filters cards with no, one, all, or stale saved IDs", () => {
+  const cards = ["a", "b", "c"].map((id) => ({ id }));
+  for (const saved of [new Set(), new Set(["a"]), new Set(["a", "b", "c"]), new Set(["missing"])]) {
+    const result = groupFavorites(cards, saved);
+    assert.equal(result.length, cards.length);
+    assert.deepEqual(result.map((card) => card.id).sort(), ["a", "b", "c"]);
+  }
+  assert.deepEqual(groupFavorites([], new Set(["a"])), []);
 });
