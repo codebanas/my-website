@@ -34,7 +34,13 @@ export default function CodeCards({ cards = sampleCards }: { cards?: CodeCardDat
       element.scrollLeft = (element.scrollWidth - element.clientWidth) / 2;
     };
 
-    const observer = new ResizeObserver(centerCards);
+    let previousWidth: number | undefined;
+    const observer = new ResizeObserver(([entry]) => {
+      const width = entry.contentRect.width;
+      if (width === previousWidth) return;
+      previousWidth = width;
+      centerCards();
+    });
     observer.observe(element);
     return () => observer.disconnect();
   }, []);
