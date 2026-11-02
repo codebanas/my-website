@@ -98,20 +98,28 @@ a:focus-visible {
   line-height: 20px;
   white-space: nowrap;
   cursor: pointer;
-  transform-origin: left center;
   transition:
-    gap 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    letter-spacing 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
     transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
     background-color 220ms ease;
 }
 
+.profile-button span,
+.profile-button img {
+  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 @media (hover: hover) {
   .profile-button:hover {
-    gap: 12px;
     background: #242424;
-    letter-spacing: 0.15px;
     transform: translateY(-1px);
+  }
+
+  .profile-button:hover span {
+    transform: translateX(-2px);
+  }
+
+  .profile-button:hover img {
+    transform: translateX(2px);
   }
 }
 
@@ -179,7 +187,11 @@ a:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .profile-button,
-  .profile-button:hover {
+  .profile-button span,
+  .profile-button img,
+  .profile-button:hover,
+  .profile-button:hover span,
+  .profile-button:hover img {
     transition: none;
     transform: none;
   }
