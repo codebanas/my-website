@@ -237,7 +237,7 @@ a:focus-visible {
   color: #0d0d0d;
   scroll-snap-align: center;
   transform: rotate(var(--card-rotation));
-  transition: height 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .code-card:nth-child(even) {
@@ -313,7 +313,7 @@ a:focus-visible {
 }
 
 .code-card-save[aria-pressed="true"] {
-  background: #f3c3e9;
+  background: #f4edf2;
 }
 
 .code-card-save:focus-visible {
@@ -357,12 +357,12 @@ a:focus-visible {
 }
 
 .code-card:focus-within {
-  height: 352px;
+  transform: translateY(-8px) rotate(var(--card-rotation));
 }
 
 @media (hover: hover) {
   .code-card:hover {
-    height: 352px;
+    transform: translateY(-8px) rotate(var(--card-rotation));
   }
 }
 
@@ -373,6 +373,11 @@ a:focus-visible {
 
   .code-card {
     transition: none;
+  }
+
+  .code-card:hover,
+  .code-card:focus-within {
+    transform: rotate(var(--card-rotation));
   }
 
   .profile-button {
