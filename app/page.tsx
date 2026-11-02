@@ -8,7 +8,7 @@ export default function Home() {
               <img src="/nav/profile-logo.svg" alt="" width={42} height={12} />
             </a>
             <button className="profile-button" type="button">
-              <span>Setup a Profile</span>
+              <span>Create an Account</span>
               <img src="/nav/arrow-white-circle.svg" alt="" width={16} height={16} />
             </button>
           </div>
