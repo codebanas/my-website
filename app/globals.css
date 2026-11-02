@@ -1,3 +1,13 @@
+:root {
+  --card-blue: #7596f0;
+  --card-orange: #fa9507;
+  --card-green: #cef297;
+  --card-pink: #ec79d9;
+  --card-yellow: #f0cd75;
+  --card-purple: #bb97f2;
+  --card-teal: #d8f9f7;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -306,38 +316,24 @@ a:focus-visible {
 }
 
 .code-card-art {
+  position: relative;
   display: block;
   width: 272px;
   height: 192px;
+  overflow: hidden;
   border-radius: 16px;
+  isolation: isolate;
 }
 
-.code-card-art-amber {
-  background: #dca34c;
-}
-
-.code-card-art-blue {
-  background: #90a7f4;
-}
-
-.code-card-art-green {
-  background: #b7c893;
-}
-
-.code-card-art-pink {
-  background: #e984d7;
-}
-
-.code-card-art-yellow {
-  background: #f1d36f;
-}
-
-.code-card-art-purple {
-  background: #b28ce3;
-}
-
-.code-card-art-teal {
-  background: #91bdb3;
+.code-card-texture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
 }
 
 .code-card:focus-within {
@@ -355,6 +351,10 @@ a:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .code-card-texture {
+    display: none;
+  }
+
   .code-card {
     transition: none;
   }
