@@ -80,6 +80,9 @@ a:focus-visible {
   background:
     linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%),
     linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%),
+    linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%),
+    linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%),
+    linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%),
     linear-gradient(to bottom, #0d0d0d 0%, rgb(13 13 13 / 0%) 100%);
   pointer-events: none;
 }
@@ -270,6 +273,16 @@ a:focus-visible {
 
 .hero-ending-measure {
   visibility: hidden;
+}
+
+.hero-description {
+  max-width: 760px;
+  margin: 24px auto 0;
+  color: var(--color-white);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  line-height: 150%;
+  letter-spacing: 0;
 }
 
 .code-gallery {

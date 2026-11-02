@@ -39,6 +39,10 @@ export default function HeroText() {
           </span>
         </span>
       </h1>
+      <p className="hero-description">
+        Support what we&apos;re building and discover opportunities to receive something back from the
+        community you help grow.
+      </p>
     </section>
   );
 }
