@@ -114,10 +114,10 @@ a:focus-visible {
   border-radius: 999px;
   background: #191919;
   color: #f5f5f5;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: var(--font-weight-bold);
   letter-spacing: 0;
-  line-height: 20px;
+  line-height: 100%;
   white-space: nowrap;
   cursor: pointer;
   transition:
@@ -281,7 +281,8 @@ a:focus-visible {
   margin: 0;
   font-size: 14px;
   font-weight: var(--font-weight-bold);
-  line-height: 20px;
+  letter-spacing: 0;
+  line-height: 100%;
 }
 
 .code-card-actions {
@@ -335,8 +336,8 @@ a:focus-visible {
 .code-card-numbers {
   margin-top: auto;
   font-size: 20px;
-  font-weight: var(--font-weight-bold);
-  line-height: 24px;
+  font-weight: var(--font-weight-heavy);
+  line-height: 86%;
 }
 
 .code-card-rate {

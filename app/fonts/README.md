@@ -21,8 +21,9 @@ Italic versions use the same weight with `font-style: italic`. Figma's unqualifi
 
 Use Figma's font size in CSS pixels. Match its weight, line height, and letter
 spacing separately; do not resize text to compensate for a different weight.
-The existing card price and percentage remain 20px Bold, using the actual Bold
-font file.
+The card code uses 14px Bold with 100% line height. The account button label uses
+13px Bold with 100% line height. Card prices and percentages use 20px Heavy with
+86% line height, matching the supplied Figma typography references.
 
 ```css
 .example {
