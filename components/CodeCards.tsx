@@ -84,7 +84,7 @@ export default function CodeCards({
     <section className="code-gallery" aria-labelledby="gallery-title">
       <div className="gallery-toolbar">
         <h2 className="gallery-title" id="gallery-title">
-          [ / Friends with Benefits ]
+          [ / Supporter Benefits ]
         </h2>
         <div className="gallery-toolbar-actions">
           <button
