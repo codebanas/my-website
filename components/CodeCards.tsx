@@ -1,16 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 
 const cards = [
-  { code: "KX7M2", price: 79, rate: "0.3%", artwork: "yellow", color: "amber" },
-  { code: "VR9Q4", price: 99, rate: "0.2%", artwork: "blue", color: "blue" },
-  { code: "NL6P8", price: 149, rate: "0.5%", artwork: "green", color: "green" },
-  { code: "JW3T5", price: 89, rate: "0.4%", artwork: "pink", color: "pink" },
-  { code: "ZX8H1", price: 129, rate: "0.7%", artwork: "yellow", color: "yellow" },
-  { code: "BQ4R7", price: 169, rate: "0.6%", artwork: "purple", color: "purple" },
-  { code: "FD2K9", price: 109, rate: "0.9%", artwork: "purple", color: "teal" },
+  { code: "KX7M2", price: 79, rate: "0.3%", color: "amber" },
+  { code: "VR9Q4", price: 99, rate: "0.2%", color: "blue" },
+  { code: "NL6P8", price: 149, rate: "0.5%", color: "green" },
+  { code: "JW3T5", price: 89, rate: "0.4%", color: "pink" },
+  { code: "ZX8H1", price: 129, rate: "0.7%", color: "yellow" },
+  { code: "BQ4R7", price: 169, rate: "0.6%", color: "purple" },
+  { code: "FD2K9", price: 109, rate: "0.9%", color: "teal" },
 ];
 
 export default function CodeCards() {
@@ -69,14 +68,9 @@ export default function CodeCards() {
                     <span className="code-card-rate">{card.rate}</span>
                   </div>
                 </div>
-                <Image
+                <div
                   className={`code-card-art code-card-art-${card.color}`}
-                  src={`/cards/art-${card.artwork}.png`}
-                  alt=""
-                  width={272}
-                  height={192}
-                  sizes="272px"
-                  draggable={false}
+                  aria-hidden="true"
                 />
               </article>
             );

@@ -316,16 +316,34 @@ a:focus-visible {
   width: 272px;
   height: 192px;
   border-radius: 16px;
-  object-fit: cover;
-  user-select: none;
 }
 
 .code-card-art-amber {
-  filter: hue-rotate(-20deg) saturate(1.3);
+  background: #dca34c;
+}
+
+.code-card-art-blue {
+  background: #90a7f4;
+}
+
+.code-card-art-green {
+  background: #b7c893;
+}
+
+.code-card-art-pink {
+  background: #e984d7;
+}
+
+.code-card-art-yellow {
+  background: #f1d36f;
+}
+
+.code-card-art-purple {
+  background: #b28ce3;
 }
 
 .code-card-art-teal {
-  filter: hue-rotate(-100deg) saturate(0.55);
+  background: #91bdb3;
 }
 
 .code-card:focus-within {
