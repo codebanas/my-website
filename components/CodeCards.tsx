@@ -37,7 +37,9 @@ export default function CodeCards({
     if (!element) return;
 
     const centerCards = () => {
-      element.scrollLeft = (element.scrollWidth - element.clientWidth) / 2;
+      const pixelRatio = window.devicePixelRatio || 1;
+      const center = (element.scrollWidth - element.clientWidth) / 2;
+      element.scrollLeft = Math.round(center * pixelRatio) / pixelRatio;
     };
 
     let previousWidth: number | undefined;
@@ -71,6 +73,14 @@ export default function CodeCards({
 
             return (
               <article className="code-card" key={card.id} aria-labelledby={`code-${card.id}`}>
+                <div className="code-card-surface" aria-hidden="true">
+                  <div
+                    className="code-card-art"
+                    style={{ backgroundColor: `var(--card-${appearance.color})` }}
+                  >
+                    <CardTexture appearance={appearance} />
+                  </div>
+                </div>
                 <div className="code-card-details">
                   <div className="code-card-header">
                     <h2 className="code-card-name" id={`code-${card.id}`}>
@@ -94,13 +104,6 @@ export default function CodeCards({
                     <span>${card.price}</span>
                     <span className="code-card-rate">{card.rate}</span>
                   </div>
-                </div>
-                <div
-                  className="code-card-art"
-                  style={{ backgroundColor: `var(--card-${appearance.color})` }}
-                  aria-hidden="true"
-                >
-                  <CardTexture appearance={appearance} />
                 </div>
               </article>
             );

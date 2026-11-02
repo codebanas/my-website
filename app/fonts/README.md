@@ -32,3 +32,17 @@ The card code uses 14px Bold with 100% line height. The account button label use
   line-height: 24px;
 }
 ```
+
+## Browser rendering
+
+Card text is drawn upright on an opaque background. Only the decorative card
+surface and texture are rotated; the text does not inherit that transform. The
+8px hover lift uses relative positioning so it does not transform the text or
+move neighboring cards. The slider fades use edge overlays rather than a mask
+on the entire text-bearing scroll layer. Initial scrolling is aligned to a
+device pixel.
+
+These choices reduce rendering effects that can change text antialiasing.
+Browser and Figma rasterization can still differ. See Chromium's
+[LCD text eligibility logic](https://chromium.googlesource.com/chromium/src/+/master/cc/layers/picture_layer_impl.cc)
+and [Chrome's text antialiasing explanation](https://web.dev/articles/antialiasing-101).

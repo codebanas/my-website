@@ -209,7 +209,30 @@ a:focus-visible {
 }
 
 .code-gallery {
+  position: relative;
   min-width: 0;
+}
+
+/* Fade only the edges instead of masking the text-bearing scroll layer. */
+.code-gallery::before,
+.code-gallery::after {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  width: 32px;
+  pointer-events: none;
+  content: "";
+}
+
+.code-gallery::before {
+  left: 0;
+  background: linear-gradient(to right, #0d0d0d, transparent);
+}
+
+.code-gallery::after {
+  right: 0;
+  background: linear-gradient(to left, #0d0d0d, transparent);
 }
 
 .code-gallery-viewport {
@@ -217,7 +240,6 @@ a:focus-visible {
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   scroll-snap-type: x proximity;
-  mask-image: linear-gradient(to right, transparent, black 32px, black calc(100% - 32px), transparent);
 }
 
 .code-gallery-viewport::-webkit-scrollbar {
@@ -237,30 +259,43 @@ a:focus-visible {
 .code-card {
   --card-rotation: -0.8deg;
   position: relative;
+  top: 0;
   display: flex;
   flex-direction: column;
   flex: 0 0 272px;
   width: 272px;
   height: 332px;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #f5f5f5;
   color: #0d0d0d;
   scroll-snap-align: center;
-  transform: rotate(var(--card-rotation));
-  transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: top 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .code-card:nth-child(even) {
   --card-rotation: 0.8deg;
 }
 
-.code-card-details {
+/* Keep decorative rotation separate from the opaque, untransformed text. */
+.code-card-surface {
+  position: absolute;
+  inset: 0;
   display: flex;
-  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #f5f5f5;
+  transform: rotate(var(--card-rotation));
+  pointer-events: none;
+}
+
+.code-card-details {
+  position: relative;
+  display: flex;
+  flex: 0 0 108px;
   flex-direction: column;
   min-height: 0;
-  padding: 16px;
+  margin: 16px;
+  background: #f5f5f5;
 }
 
 .code-card-header,
@@ -369,12 +404,12 @@ a:focus-visible {
 }
 
 .code-card:focus-within {
-  transform: translateY(-8px) rotate(var(--card-rotation));
+  top: -8px;
 }
 
 @media (hover: hover) {
   .code-card:hover {
-    transform: translateY(-8px) rotate(var(--card-rotation));
+    top: -8px;
   }
 }
 
@@ -389,7 +424,7 @@ a:focus-visible {
 
   .code-card:hover,
   .code-card:focus-within {
-    transform: rotate(var(--card-rotation));
+    top: 0;
   }
 
   .profile-button {
