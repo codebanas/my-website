@@ -502,8 +502,16 @@ a:focus-visible {
 
 .art-at {
   --art-delay: 100ms;
-  top: 32px;
+  top: 36.2px;
   left: 110px;
+  width: 262px;
+  height: 220px;
+}
+
+.art-at img {
+  display: block;
+  transform: scale(0.8);
+  transform-origin: top center;
 }
 
 .art-hands {

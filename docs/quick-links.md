@@ -21,3 +21,8 @@ Artwork uses a 720ms upward entrance and a matching downward exit with mirrored
 easing and reversed stagger order. Travel is based on the cropped layer height
 and scale, so it leaves smoothly on every screen size rather than jumping a
 full viewport out of sight. Reduced-motion mode skips these transitions.
+
+The BANAS sticker uses `banas-yellow-box.svg`; the hands use
+`white-box-black-hands.svg`. The blue @ sticker displays at 80% of its original
+size inside a separate animated wrapper, preserving its visible top alignment
+and the shared entrance/exit movement.
