@@ -6,29 +6,30 @@ progressive blur from 16px at the outer edge to clear at the inner edge. Both
 standard and WebKit-prefixed mask/backdrop-filter properties are supplied.
 
 The top overlay stays fixed at 160px high with six darkening gradient layers.
-The slider overlays mirror each other and use two darkening gradient layers
-each at one-third tint opacity (33.33%). Their blur tapers
-from a softer 10px at the outer edge to clear, while the inner edge stays fully
-transparent.
-They are centered vertically over the slider at 264.88px wide by 430px high. This
-matches the visible footprint of the 430px by 264.88px Figma layer rotated 90
-degrees. Their height extends beyond the cards to cover the whole outer card;
+
+The slider uses the user's original Figma exports, stored unchanged at
+`public/gallery/blur-left.png` and `public/gallery/blur-right.png`. Both files
+are 1060 by 1720 pixels with alpha transparency. They render at 265px wide by
+430px high on desktop, matching the exports at one-quarter scale, centered
+vertically and anchored to their respective screen edges. The images replace
+the slider's generated gradient and backdrop-blur bands; the top navigation
+still uses `ProgressiveFade`.
+
+The overlay height extends beyond the cards to cover the whole outer card;
 the toolbar sits above the overlays so its text and buttons stay crisp. On
-mobile and tablet screens below 1024px, each side fade is 32px wide, with a
-gentler maximum blur of 4px and tint opacity of 26.67% (one third of 80%). These overrides are scoped
-to the slider fades. An eased tint curve and the blur masks both reach zero
-opacity by 80% of each side overlay, leaving its final 20% fully transparent.
-This clear buffer avoids ending the effect against the rectangular layer edge.
-Overlay pointer events are disabled so the slider controls remain usable.
+mobile and tablet screens below 1024px, each image compresses horizontally to
+32px, preserving the existing narrow side treatment. PNG transparency supplies
+the fading directly, without extra tint layers or opacity adjustments. Overlay
+pointer events and image dragging are disabled so the slider remains usable.
 
 The card slider spans the full viewport width, including the side overlays.
 Only the hero and gallery toolbar use the centered 1393px content container.
 The slider therefore reveals the partial outer cards beyond the toolbar edges,
 and the side fades end at the screen edges rather than at the content container.
 
-This is a browser approximation of Figma's progressive blur, rather than a
-native variable-radius CSS filter. If backdrop filtering is unsupported, the
-darkening gradients remain visible.
+The top overlay is a browser approximation of Figma's progressive blur, rather
+than a native variable-radius CSS filter. If backdrop filtering is unsupported,
+its darkening gradients remain visible. The side images are static overlays.
 
 References:
 

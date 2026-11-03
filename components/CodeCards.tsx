@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import CardTexture from "@/components/CardTexture";
-import ProgressiveFade from "@/components/ProgressiveFade";
 import { getCardAppearance, getCardColor, type CardAppearance } from "@/lib/card-styles";
 import { groupFavorites, shuffle, shuffleWithFavorites } from "@/lib/shuffle";
 
@@ -167,18 +166,22 @@ export default function CodeCards({
         </div>
       </div>
       <div className="code-slider">
-        <ProgressiveFade
-          edge="left"
-          strength={2}
-          maxBlur={10}
-          tintOpacity={1 / 3}
+        <img
+          src="/gallery/blur-left.png"
+          alt=""
+          aria-hidden="true"
+          width={1060}
+          height={1720}
+          draggable={false}
           className="slider-fade slider-fade-left"
         />
-        <ProgressiveFade
-          edge="right"
-          strength={2}
-          maxBlur={10}
-          tintOpacity={1 / 3}
+        <img
+          src="/gallery/blur-right.png"
+          alt=""
+          aria-hidden="true"
+          width={1060}
+          height={1720}
+          draggable={false}
           className="slider-fade slider-fade-right"
         />
         <div

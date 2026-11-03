@@ -9,7 +9,7 @@
   --container-width: 1393px;
   --page-gutter: 16px;
   --slider-bleed: 12px;
-  --slider-fade-width: 264.88px;
+  --slider-fade-width: 265px;
   --slider-fade-height: 430px;
 
   --font-weight-ultra-light: 100;
@@ -553,13 +553,17 @@ a:focus-visible {
   min-width: 0;
 }
 
-/* Blur only the edge overlays, leaving the central text outside their masks. */
+/* Original Figma PNG overlays, anchored to the screen edges. */
 .slider-fade {
   position: absolute;
   z-index: 2;
   top: calc(50% - var(--slider-fade-height) / 2);
   width: min(var(--slider-fade-width), 40%);
   height: var(--slider-fade-height);
+  display: block;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
 }
 
 .slider-fade-left {
@@ -576,8 +580,6 @@ a:focus-visible {
   }
 
   .slider-fade {
-    --progressive-blur-scale: 0.4;
-    --progressive-tint-opacity: calc(0.8 / 3);
     width: 32px;
   }
 }
