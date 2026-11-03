@@ -267,6 +267,10 @@ a:focus-visible {
     --page-gutter: 64px;
   }
 
+  .nav-fade {
+    opacity: 0.6;
+  }
+
   .nav-brand {
     gap: 32px;
   }

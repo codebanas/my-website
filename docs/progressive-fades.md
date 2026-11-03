@@ -2,13 +2,15 @@
 
 The page uses the user's original Figma PNG exports, stored unchanged with
 their alpha transparency. These static overlays replace the generated
-gradients and backdrop-blur bands. No extra tint is applied; mobile side images
-use reduced opacity as described below.
+gradients and backdrop-blur bands. No extra tint is applied; desktop navigation
+and mobile side images use reduced opacity as described below.
 
 The top image is `public/nav/blur-top.png`, a 7680 by 720 pixel export. It stays
 fixed across the full viewport width at the existing 160px height, behind the
 navigation. Its z-index is 10; the navigation is 20 and the sticky quick-links
-menu is 11, keeping those controls above the fade.
+menu is 11, keeping those controls above the fade. On desktop at 1024px and
+above, the top image renders at 60% opacity for a gentler scroll fade. Mobile
+and tablet keep the original image opacity.
 
 The top PNG is the earlier, lighter export. Each hero heading line, the hero
 description, and the gallery toolbar also fade independently on page scroll.
