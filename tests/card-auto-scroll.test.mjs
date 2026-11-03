@@ -5,11 +5,7 @@ import { startCardAutoScroll, wrapCardScroll } from "../lib/card-auto-scroll.ts"
 
 function setup(t, options = {}) {
   const windowTarget = new EventTarget();
-  const documentTarget = Object.assign(new EventTarget(), {
-    hidden: false,
-    atQuickLinksEnd: false,
-    querySelector: () => documentTarget.atQuickLinksEnd ? {} : null,
-  });
+  const documentTarget = Object.assign(new EventTarget(), { hidden: false });
   const motion = Object.assign(new EventTarget(), { matches: options.reducedMotion ?? false });
   const area = Object.assign(new EventTarget(), { hovered: options.hovered ?? false, focusVisible: false });
   area.matches = (selector) => selector === ":hover" ? area.hovered : area.focusVisible;
@@ -33,7 +29,7 @@ function setup(t, options = {}) {
   let intersection;
   const observers = [];
   Object.assign(windowTarget, {
-    matchMedia: (query) => query.includes("reduced-motion") ? motion : { matches: true },
+    matchMedia: (query) => query.includes("reduced-motion") ? motion : { matches: options.hoverCapable ?? true },
     requestAnimationFrame: (callback) => { frames.set(++nextFrame, callback); return nextFrame; },
     cancelAnimationFrame: (id) => frames.delete(id),
     setTimeout: (callback, delay) => { timers.set(++nextTimer, { callback, at: now + delay }); return nextTimer; },
@@ -61,10 +57,7 @@ function setup(t, options = {}) {
   const emit = (target, type, properties = {}) => {
     if (target === area && type === "pointerenter") area.hovered = true;
     if (target === area && type === "pointerleave") area.hovered = false;
-    const { target: origin, ...details } = properties;
-    const event = Object.assign(new Event(type), details);
-    if (origin) Object.defineProperty(event, "target", { value: origin });
-    return target.dispatchEvent(event);
+    return target.dispatchEvent(Object.assign(new Event(type), properties));
   };
   const visible = (value) => intersection([{ isIntersecting: value }]);
   function advance(milliseconds) {
@@ -125,8 +118,9 @@ for (const action of ["wheel", "scroll", "click"]) {
     const env = setup(t);
     env.frame(0);
     env.frame(16);
+    if (action === "scroll") env.viewport.scrollLeft += 10;
     const pausedAt = env.viewport.scrollLeft;
-    env.emit(env.windowTarget, action);
+    env.emit(action === "scroll" ? env.viewport : env.area, action);
     env.emit(env.area, "pointerleave", { pointerType: "mouse" });
     env.advance(1199);
     assert.equal(env.viewport.scrollLeft, pausedAt);
@@ -142,7 +136,7 @@ for (const action of ["wheel", "scroll", "click"]) {
 
 test("a held pointer or drag keeps autoplay paused until release and idle", (t) => {
   const env = setup(t);
-  env.emit(env.windowTarget, "pointerdown", { pointerId: 1 });
+  env.emit(env.area, "pointerdown", { pointerId: 1 });
   env.advance(5000);
   assert.equal(env.frames.size, 0);
   env.emit(env.windowTarget, "pointerup", { pointerId: 1 });
@@ -155,7 +149,7 @@ test("a held pointer or drag keeps autoplay paused until release and idle", (t) 
 test("hover and clicking must both finish before autoplay resumes", (t) => {
   const env = setup(t);
   env.emit(env.area, "pointerenter", { pointerType: "mouse" });
-  env.emit(env.windowTarget, "click");
+  env.emit(env.area, "click");
   env.advance(1200);
   assert.equal(env.frames.size, 0);
   env.emit(env.area, "pointerleave", { pointerType: "mouse" });
@@ -164,7 +158,7 @@ test("hover and clicking must both finish before autoplay resumes", (t) => {
 
 test("horizontal touch momentum extends the pause after pointer cancellation", (t) => {
   const env = setup(t);
-  env.emit(env.windowTarget, "pointerdown", { pointerId: 2 });
+  env.emit(env.area, "pointerdown", { pointerId: 2, pointerType: "touch" });
   env.emit(env.windowTarget, "pointercancel", { pointerId: 2 });
   env.advance(1000);
   env.viewport.scrollLeft += 100;
@@ -179,28 +173,42 @@ test("horizontal touch momentum extends the pause after pointer cancellation", (
   assert.equal(env.frames.size, 1);
 });
 
+test("touch devices resume after release without a sticky hover pause", (t) => {
+  const env = setup(t, { hoverCapable: false });
+  env.emit(env.area, "pointerenter", { pointerType: "touch" });
+  assert.equal(env.frames.size, 1);
+  env.emit(env.area, "pointerdown", { pointerType: "touch", pointerId: 3 });
+  assert.equal(env.frames.size, 0);
+  env.emit(env.windowTarget, "pointerup", { pointerType: "touch", pointerId: 3 });
+  env.advance(1200);
+  assert.equal(env.frames.size, 1);
+  env.frame(0);
+  env.frame(1216);
+  assert.ok(env.viewport.scrollLeft > 1000);
+});
+
 test("keyboard navigation pauses temporarily without treating modifier keys as scrolling", (t) => {
   const env = setup(t);
-  env.emit(env.windowTarget, "keydown", { key: "Shift" });
+  env.emit(env.area, "keydown", { key: "Shift" });
   assert.equal(env.frames.size, 1);
-  env.emit(env.windowTarget, "keydown", { key: "ArrowRight" });
+  env.emit(env.area, "keydown", { key: "ArrowRight" });
   assert.equal(env.frames.size, 0);
   env.advance(1200);
   assert.equal(env.frames.size, 1);
 });
 
-test("quick-link wheel, touch, click, and keyboard input keep autoplay running", (t) => {
+test("interactions anywhere outside the gallery keep autoplay running", (t) => {
   const env = setup(t);
-  const link = { closest: (selector) => selector === ".quick-links-section" ? {} : null };
   env.frame(0);
   for (const [type, details] of [
     ["wheel", {}],
+    ["scroll", {}],
     ["pointerdown", { pointerId: 7, pointerType: "touch" }],
     ["pointerup", { pointerId: 7, pointerType: "touch" }],
     ["click", {}],
     ["keydown", { key: "ArrowDown" }],
   ]) {
-    env.emit(env.windowTarget, type, { target: link, ...details });
+    env.emit(env.windowTarget, type, details);
     assert.equal(env.frames.size, 1);
     assert.equal(env.timers.size, 0);
   }
@@ -208,27 +216,21 @@ test("quick-link wheel, touch, click, and keyboard input keep autoplay running",
   assert.ok(env.viewport.scrollLeft > 1000);
 });
 
-test("full-screen link gestures at the page end do not pause cards, but card input does", (t) => {
+test("outside input cannot extend a gallery pause or hold a pointer after release", (t) => {
   const env = setup(t);
-  env.documentTarget.atQuickLinksEnd = true;
-  env.frame(0);
-  for (const type of ["wheel", "scroll", "click", "pointerdown", "pointerup", "keydown"]) {
-    env.emit(env.windowTarget, type, { pointerId: 7, key: "ArrowDown" });
-    assert.equal(env.frames.size, 1);
-    assert.equal(env.timers.size, 0);
-  }
-  env.frame(16);
-  assert.ok(env.viewport.scrollLeft > 1000);
-  env.emit(env.windowTarget, "pointerdown", { target: env.area, pointerId: 8 });
+  env.emit(env.area, "pointerdown", { pointerId: 8 });
   assert.equal(env.frames.size, 0);
   env.advance(1500);
   assert.equal(env.frames.size, 0);
   env.emit(env.windowTarget, "pointerup", { pointerId: 8 });
-  env.advance(1200);
+  env.advance(1000);
+  for (const type of ["wheel", "scroll", "click", "pointerdown", "keydown"]) {
+    env.emit(env.windowTarget, type, { pointerId: 9, key: "ArrowDown" });
+  }
+  env.advance(200);
   assert.equal(env.frames.size, 1);
-  env.documentTarget.atQuickLinksEnd = false;
   env.emit(env.windowTarget, "scroll");
-  assert.equal(env.frames.size, 0);
+  assert.equal(env.frames.size, 1);
 });
 
 test("pointer focus does not keep autoplay stopped after the interaction ends", (t) => {
@@ -251,7 +253,7 @@ test("keyboard focus holds the pause until focus leaves the gallery", (t) => {
 
 test("window blur clears a lost pointer so returning does not leave autoplay stuck", (t) => {
   const env = setup(t);
-  env.emit(env.windowTarget, "pointerdown", { pointerId: 1 });
+  env.emit(env.area, "pointerdown", { pointerId: 1 });
   env.emit(env.windowTarget, "blur");
   env.advance(5000);
   assert.equal(env.frames.size, 0);
@@ -348,7 +350,7 @@ test("the old permanent-stop flag no longer prevents autoplay from resuming", (t
 
 test("cleanup removes animation, listeners, and observers", (t) => {
   const env = setup(t);
-  env.emit(env.windowTarget, "wheel");
+  env.emit(env.area, "wheel");
   assert.equal(env.timers.size, 1);
   env.dispose();
   assert.equal(env.frames.size, 0);
@@ -357,8 +359,9 @@ test("cleanup removes animation, listeners, and observers", (t) => {
   for (const name of ["wheel", "scroll", "pointerdown", "pointerup", "pointercancel", "click", "keydown", "blur", "focus"]) {
     assert.equal(getEventListeners(env.windowTarget, name).length, 0);
   }
-  assert.equal(getEventListeners(env.area, "pointerenter").length, 0);
-  assert.equal(getEventListeners(env.area, "focusout").length, 0);
+  for (const name of ["pointerenter", "pointerleave", "focusin", "focusout", "wheel", "pointerdown", "click", "keydown"]) {
+    assert.equal(getEventListeners(env.area, name).length, 0);
+  }
   assert.equal(getEventListeners(env.viewport, "scroll").length, 0);
   assert.equal(getEventListeners(env.motion, "change").length, 0);
   assert.ok(env.observers.every((observer) => observer.disconnected));

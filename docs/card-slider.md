@@ -8,8 +8,9 @@ at the screen edges. The toolbar sits 32px above the resting cards; the hero and
 toolbar retain their original container and vertical spacing.
 
 When visible, the cards drift left at 24 CSS pixels per second. Hover pauses
-until the pointer leaves. Wheel input, page or slider scrolling, clicking,
-pointer presses, and keyboard navigation pause temporarily. Autoplay resumes
+until the pointer leaves. Wheel input, clicking, pointer presses, and keyboard
+navigation inside the gallery parent (cards and toolbar), plus manual slider
+scrolling, pause temporarily. Autoplay resumes
 after 1.2 seconds without interaction, once no pointer is held, hover has ended,
 and keyboard focus has left the gallery. Pointer-click focus alone does not
 leave it paused. Horizontal touch momentum extends the idle delay until scrolling
@@ -21,10 +22,10 @@ offset by one complete run, preserving the card positions, 16px gaps, texture
 choices, and repeating color order. Dragging adjusts its starting offset during
 that shift so it continues naturally across the boundary.
 
-Quick-link interactions do not pause autoplay. This includes wheel, touch,
-click, and keyboard input in the link section, and full-screen link gestures
-at the final scroll position. Direct card interactions still pause normally.
-This behavior is shared across desktop, tablet, and mobile.
+Interactions outside the gallery parent do not pause autoplay or extend an
+existing pause. This includes page scrolling, quick links, and the navigation.
+A drag started inside the gallery remains paused until its pointer is released,
+even outside the gallery. This behavior is shared across desktop, tablet, and mobile.
 
 Autoplay pauses offscreen and in hidden tabs, and respects reduced-motion
 preferences. Existing shuffle, favorites grouping, centering, artwork, and

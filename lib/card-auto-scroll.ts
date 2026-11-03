@@ -73,16 +73,7 @@ export function startCardAutoScroll(
     frame = window.requestAnimationFrame(tick);
   }
 
-  function isQuickLinksInteraction(event: Event) {
-    const target = event.target as Element | null;
-    // Direct card interactions still pause, including during the final scene.
-    if (target && interactionArea.contains(target)) return false;
-    return !!target?.closest?.(".quick-links-section")
-      || !!document.querySelector('.quick-links-end-content[data-at-end="true"]');
-  }
-
-  function pauseForInteraction(event?: Event) {
-    if (event && isQuickLinksInteraction(event)) return;
+  function pauseForInteraction() {
     idle = true;
     if (idleTimer !== undefined) window.clearTimeout(idleTimer);
     idleTimer = window.setTimeout(() => {
@@ -101,7 +92,6 @@ export function startCardAutoScroll(
   }
 
   function onPointerDown(event: PointerEvent) {
-    if (isQuickLinksInteraction(event)) return;
     pressedPointers.add(event.pointerId);
     keyboardFocused = false;
     pauseForInteraction();
@@ -150,7 +140,6 @@ export function startCardAutoScroll(
   }
 
   function onKeyDown(event: KeyboardEvent) {
-    if (isQuickLinksInteraction(event)) return;
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(event.key)) {
       keyboardFocused = !!document.activeElement && interactionArea.contains(document.activeElement);
       pauseForInteraction();
@@ -170,13 +159,12 @@ export function startCardAutoScroll(
   interactionArea.addEventListener("focusin", onFocusIn);
   interactionArea.addEventListener("focusout", onFocusOut);
   viewport.addEventListener("scroll", onViewportScroll, { passive: true });
-  window.addEventListener("wheel", pauseForInteraction, { passive: true });
-  window.addEventListener("scroll", pauseForInteraction, { passive: true });
-  window.addEventListener("pointerdown", onPointerDown, { passive: true });
+  interactionArea.addEventListener("wheel", pauseForInteraction, { passive: true });
+  interactionArea.addEventListener("pointerdown", onPointerDown, { passive: true });
   window.addEventListener("pointerup", onPointerEnd, { passive: true });
   window.addEventListener("pointercancel", onPointerEnd, { passive: true });
-  window.addEventListener("click", pauseForInteraction);
-  window.addEventListener("keydown", onKeyDown);
+  interactionArea.addEventListener("click", pauseForInteraction);
+  interactionArea.addEventListener("keydown", onKeyDown);
   window.addEventListener("blur", onWindowBlur);
   window.addEventListener("focus", onWindowFocus);
   document.addEventListener("visibilitychange", sync);
@@ -192,13 +180,12 @@ export function startCardAutoScroll(
     interactionArea.removeEventListener("focusin", onFocusIn);
     interactionArea.removeEventListener("focusout", onFocusOut);
     viewport.removeEventListener("scroll", onViewportScroll);
-    window.removeEventListener("wheel", pauseForInteraction);
-    window.removeEventListener("scroll", pauseForInteraction);
-    window.removeEventListener("pointerdown", onPointerDown);
+    interactionArea.removeEventListener("wheel", pauseForInteraction);
+    interactionArea.removeEventListener("pointerdown", onPointerDown);
     window.removeEventListener("pointerup", onPointerEnd);
     window.removeEventListener("pointercancel", onPointerEnd);
-    window.removeEventListener("click", pauseForInteraction);
-    window.removeEventListener("keydown", onKeyDown);
+    interactionArea.removeEventListener("click", pauseForInteraction);
+    interactionArea.removeEventListener("keydown", onKeyDown);
     window.removeEventListener("blur", onWindowBlur);
     window.removeEventListener("focus", onWindowFocus);
     document.removeEventListener("visibilitychange", sync);
