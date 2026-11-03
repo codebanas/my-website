@@ -285,7 +285,7 @@ a:focus-visible {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 64px;
+  gap: calc(48px - var(--slider-bleed));
   width: 100%;
   min-width: 0;
   padding-top: var(--hero-top);
@@ -341,13 +341,15 @@ a:focus-visible {
   letter-spacing: normal;
 }
 
-.supporter-content {
+.home-intro {
   display: flex;
-  flex-grow: 1;
   flex-direction: column;
-  gap: calc(48px - var(--slider-bleed));
+  justify-content: space-between;
+  gap: 64px;
   width: 100%;
   min-width: 0;
+  /* Keep the cue below the initial screen, with 48px below the card surfaces. */
+  min-height: calc(100dvh - var(--hero-top) - 48px + var(--slider-bleed));
 }
 
 .quick-links-cue {

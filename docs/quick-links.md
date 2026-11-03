@@ -5,7 +5,10 @@ The final screen contains the three-row link window and a centered
 The page's navigation and card side fades remain separate.
 
 The "Scrollable Quick Links" label uses 13px Helvetica Neue Medium with normal
-letter spacing. A full-width cue row starts 48px below the resting card bottoms.
+letter spacing. The intro occupies at least the initial viewport, ending with
+48px below the resting card bottoms; the full-width cue begins below that
+screen and enters naturally on scroll. On shorter screens the intro grows to
+fit its content instead of squeezing the hero or cards.
 The label and expanding arrow stay centered together as the arrow draws on scroll,
 retracts when the page reaches the terms, then reveals the supplied circular
 up-arrow icon in the same spot while the label fades out. The button has a 44px hit area and smoothly

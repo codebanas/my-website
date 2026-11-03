@@ -39,14 +39,14 @@ export default function Home() {
         </nav>
       </header>
       <HomeContent>
-        <HeroText />
-        <div className="supporter-content">
+        <div className="home-intro">
+          <HeroText />
           <CodeCards />
-          <div className="quick-links-section">
-            <QuickLinksCue />
-            <div className="quick-links-sticky-track">
-              <QuickLinks />
-            </div>
+        </div>
+        <div className="quick-links-section">
+          <QuickLinksCue />
+          <div className="quick-links-sticky-track">
+            <QuickLinks />
           </div>
         </div>
       </HomeContent>
