@@ -7,7 +7,9 @@ function setup(t, options = {}) {
   const windowTarget = new EventTarget();
   const documentTarget = Object.assign(new EventTarget(), { hidden: false });
   const motion = Object.assign(new EventTarget(), { matches: options.reducedMotion ?? false });
-  const area = Object.assign(new EventTarget(), { matches: () => options.hovered ?? false });
+  const area = Object.assign(new EventTarget(), { hovered: options.hovered ?? false, focusVisible: false });
+  area.matches = (selector) => selector === ":hover" ? area.hovered : area.focusVisible;
+  area.contains = (target) => target === area;
   const viewport = Object.assign(new EventTarget(), {
     dataset: options.alreadyStopped ? { autoScrollStopped: "true" } : {},
     clientWidth: 1000,
@@ -20,6 +22,9 @@ function setup(t, options = {}) {
     set: (value) => { position = options.quantized ? Math.round(value) : value; },
   });
   const frames = new Map();
+  const timers = new Map();
+  let now = 0;
+  let nextTimer = 0;
   let nextFrame = 0;
   let intersection;
   const observers = [];
@@ -27,6 +32,8 @@ function setup(t, options = {}) {
     matchMedia: (query) => query.includes("reduced-motion") ? motion : { matches: true },
     requestAnimationFrame: (callback) => { frames.set(++nextFrame, callback); return nextFrame; },
     cancelAnimationFrame: (id) => frames.delete(id),
+    setTimeout: (callback, delay) => { timers.set(++nextTimer, { callback, at: now + delay }); return nextTimer; },
+    clearTimeout: (id) => timers.delete(id),
   });
   const globals = {
     window: windowTarget,
@@ -47,12 +54,25 @@ function setup(t, options = {}) {
     Object.defineProperty(globalThis, key, { value, writable: true, configurable: true });
   }
   const cleanup = startCardAutoScroll(viewport, area, () => options.loopWidth ?? 0);
-  const emit = (target, type, properties = {}) => target.dispatchEvent(Object.assign(new Event(type), properties));
+  const emit = (target, type, properties = {}) => {
+    if (target === area && type === "pointerenter") area.hovered = true;
+    if (target === area && type === "pointerleave") area.hovered = false;
+    return target.dispatchEvent(Object.assign(new Event(type), properties));
+  };
   const visible = (value) => intersection([{ isIntersecting: value }]);
+  function advance(milliseconds) {
+    now += milliseconds;
+    const due = [...timers].filter(([, timer]) => timer.at <= now);
+    for (const [id, timer] of due) {
+      timers.delete(id);
+      timer.callback();
+    }
+  }
   function frame(time) {
+    if (time !== undefined && time > now) advance(time - now);
     const callbacks = [...frames.values()];
     frames.clear();
-    callbacks.forEach((callback) => callback(time));
+    callbacks.forEach((callback) => callback(now));
   }
   let disposed = false;
   function dispose() {
@@ -66,7 +86,7 @@ function setup(t, options = {}) {
   }
   t.after(dispose);
   visible(true);
-  return { viewport, area, motion, frames, observers, windowTarget, documentTarget, emit, visible, frame, dispose };
+  return { viewport, area, motion, frames, timers, observers, windowTarget, documentTarget, emit, visible, frame, advance, dispose };
 }
 
 test("cards drift left even when the browser rounds small scroll increments", (t) => {
@@ -76,6 +96,7 @@ test("cards drift left even when the browser rounds small scroll increments", (t
   env.emit(env.viewport, "scroll");
   assert.equal(env.viewport.dataset.autoScrollStopped, undefined);
   assert.equal(env.frames.size, 1);
+  assert.equal(env.timers.size, 0);
 });
 
 test("hover pauses and leaving resumes without a jump or catch-up movement", (t) => {
@@ -92,35 +113,102 @@ test("hover pauses and leaving resumes without a jump or catch-up movement", (t)
   assert.ok(env.viewport.scrollLeft > pausedAt && env.viewport.scrollLeft < pausedAt + 1);
 });
 
-for (const action of ["wheel", "scroll", "pointerdown", "click"]) {
-  test(`${action} stops autoplay for the visit, including after hover ends`, (t) => {
+for (const action of ["wheel", "scroll", "click"]) {
+  test(`${action} pauses autoplay and resumes after interaction settles`, (t) => {
     const env = setup(t);
     env.frame(0);
     env.frame(16);
     const pausedAt = env.viewport.scrollLeft;
     env.emit(env.windowTarget, action);
     env.emit(env.area, "pointerleave", { pointerType: "mouse" });
-    env.frame(1000);
+    env.advance(1199);
     assert.equal(env.viewport.scrollLeft, pausedAt);
     assert.equal(env.frames.size, 0);
-    assert.equal(env.viewport.dataset.autoScrollStopped, "true");
+    env.advance(1);
+    assert.equal(env.frames.size, 1);
+    env.frame();
+    assert.equal(env.viewport.scrollLeft, pausedAt);
+    env.frame(1232);
+    assert.ok(env.viewport.scrollLeft > pausedAt);
   });
 }
 
-test("keyboard navigation stops autoplay without treating modifier keys as scrolling", (t) => {
+test("a held pointer or drag keeps autoplay paused until release and idle", (t) => {
+  const env = setup(t);
+  env.emit(env.windowTarget, "pointerdown", { pointerId: 1 });
+  env.advance(5000);
+  assert.equal(env.frames.size, 0);
+  env.emit(env.windowTarget, "pointerup", { pointerId: 1 });
+  env.advance(1199);
+  assert.equal(env.frames.size, 0);
+  env.advance(1);
+  assert.equal(env.frames.size, 1);
+});
+
+test("hover and clicking must both finish before autoplay resumes", (t) => {
+  const env = setup(t);
+  env.emit(env.area, "pointerenter", { pointerType: "mouse" });
+  env.emit(env.windowTarget, "click");
+  env.advance(1200);
+  assert.equal(env.frames.size, 0);
+  env.emit(env.area, "pointerleave", { pointerType: "mouse" });
+  assert.equal(env.frames.size, 1);
+});
+
+test("horizontal touch momentum extends the pause after pointer cancellation", (t) => {
+  const env = setup(t);
+  env.emit(env.windowTarget, "pointerdown", { pointerId: 2 });
+  env.emit(env.windowTarget, "pointercancel", { pointerId: 2 });
+  env.advance(1000);
+  env.viewport.scrollLeft += 100;
+  env.emit(env.viewport, "scroll");
+  env.advance(1000);
+  assert.equal(env.frames.size, 0);
+  env.viewport.scrollLeft += 50;
+  env.emit(env.viewport, "scroll");
+  env.advance(1199);
+  assert.equal(env.frames.size, 0);
+  env.advance(1);
+  assert.equal(env.frames.size, 1);
+});
+
+test("keyboard navigation pauses temporarily without treating modifier keys as scrolling", (t) => {
   const env = setup(t);
   env.emit(env.windowTarget, "keydown", { key: "Shift" });
   assert.equal(env.frames.size, 1);
   env.emit(env.windowTarget, "keydown", { key: "ArrowRight" });
   assert.equal(env.frames.size, 0);
-  assert.equal(env.viewport.dataset.autoScrollStopped, "true");
+  env.advance(1200);
+  assert.equal(env.frames.size, 1);
 });
 
-test("focusing a card stops autoplay", (t) => {
+test("pointer focus does not keep autoplay stopped after the interaction ends", (t) => {
   const env = setup(t);
   env.emit(env.area, "focusin");
   assert.equal(env.frames.size, 0);
-  assert.equal(env.viewport.dataset.autoScrollStopped, "true");
+  env.advance(1200);
+  assert.equal(env.frames.size, 1);
+});
+
+test("keyboard focus holds the pause until focus leaves the gallery", (t) => {
+  const env = setup(t);
+  env.area.focusVisible = true;
+  env.emit(env.area, "focusin");
+  env.advance(1200);
+  assert.equal(env.frames.size, 0);
+  env.emit(env.area, "focusout", { relatedTarget: null });
+  assert.equal(env.frames.size, 1);
+});
+
+test("window blur clears a lost pointer so returning does not leave autoplay stuck", (t) => {
+  const env = setup(t);
+  env.emit(env.windowTarget, "pointerdown", { pointerId: 1 });
+  env.emit(env.windowTarget, "blur");
+  env.advance(5000);
+  assert.equal(env.frames.size, 0);
+  env.emit(env.windowTarget, "focus");
+  env.advance(1200);
+  assert.equal(env.frames.size, 1);
 });
 
 test("reduced motion disables autoplay and follows preference changes", (t) => {
@@ -203,20 +291,26 @@ test("external centering is preserved instead of being overwritten next frame", 
   assert.ok(env.viewport.scrollLeft >= 2500 && env.viewport.scrollLeft < 2501);
 });
 
-test("a prior visitor interaction remains stopped after data updates", (t) => {
+test("the old permanent-stop flag no longer prevents autoplay from resuming", (t) => {
   const env = setup(t, { alreadyStopped: true });
-  assert.equal(env.frames.size, 0);
+  assert.equal(env.frames.size, 1);
+  assert.equal(env.viewport.dataset.autoScrollStopped, undefined);
 });
 
 test("cleanup removes animation, listeners, and observers", (t) => {
   const env = setup(t);
+  env.emit(env.windowTarget, "wheel");
+  assert.equal(env.timers.size, 1);
   env.dispose();
   assert.equal(env.frames.size, 0);
+  assert.equal(env.timers.size, 0);
   assert.equal(env.viewport.dataset.autoScroll, undefined);
-  for (const name of ["wheel", "scroll", "pointerdown", "click", "keydown"]) {
+  for (const name of ["wheel", "scroll", "pointerdown", "pointerup", "pointercancel", "click", "keydown", "blur", "focus"]) {
     assert.equal(getEventListeners(env.windowTarget, name).length, 0);
   }
   assert.equal(getEventListeners(env.area, "pointerenter").length, 0);
+  assert.equal(getEventListeners(env.area, "focusout").length, 0);
+  assert.equal(getEventListeners(env.viewport, "scroll").length, 0);
   assert.equal(getEventListeners(env.motion, "change").length, 0);
   assert.ok(env.observers.every((observer) => observer.disconnected));
 });

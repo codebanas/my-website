@@ -8,9 +8,13 @@ at the screen edges. The toolbar sits 32px above the resting cards; the hero and
 toolbar retain their original container and vertical spacing.
 
 When visible, the cards drift left at 24 CSS pixels per second. Hover pauses
-temporarily. Wheel input, page scrolling, clicking, pointer presses, or keyboard
-navigation stop autoplay for the visit; manual dragging and swiping remain
-available. Stopping holds the current position without a snap jump. The strip
+until the pointer leaves. Wheel input, page or slider scrolling, clicking,
+pointer presses, and keyboard navigation pause temporarily. Autoplay resumes
+after 1.2 seconds without interaction, once no pointer is held, hover has ended,
+and keyboard focus has left the gallery. Pointer-click focus alone does not
+leave it paused. Horizontal touch momentum extends the idle delay until scrolling
+settles. Manual dragging and swiping remain available, and resuming holds the
+current position without a snap jump or catch-up movement. The strip
 loops without a visible reset in either direction. Three matching runs keep
 cards ready beyond both screen edges. Crossing a run boundary shifts the scroll
 offset by one complete run, preserving the card positions, 16px gaps, texture

@@ -5,15 +5,20 @@ export function wrapCardScroll(position: number, cycleWidth: number): number {
   return cycleWidth + ((position - cycleWidth) % cycleWidth + cycleWidth) % cycleWidth;
 }
 
-/** Drift cards left until the visitor interacts; hover alone pauses temporarily. */
+/** Drift left whenever the slider is visible and no visitor interaction is active. */
 export function startCardAutoScroll(
   viewport: HTMLElement,
   interactionArea: HTMLElement,
   getLoopWidth: () => number = () => 0,
 ) {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  let stopped = viewport.dataset.autoScrollStopped === "true";
+  delete viewport.dataset.autoScrollStopped;
   let hovered = window.matchMedia("(hover: hover)").matches && interactionArea.matches(":hover");
+  let keyboardFocused = false;
+  let windowActive = true;
+  let idle = false;
+  let idleTimer: number | undefined;
+  const pressedPointers = new Set<number>();
   let onScreen = false;
   let frame = 0;
   let previousTime: number | undefined;
@@ -21,8 +26,10 @@ export function startCardAutoScroll(
   let lastWritten = position;
 
   function canRun() {
-    return !stopped && !hovered && onScreen && !document.hidden && !reducedMotion.matches
-      && viewport.scrollWidth > viewport.clientWidth;
+    const end = viewport.scrollWidth - viewport.clientWidth;
+    return !hovered && !keyboardFocused && !idle && pressedPointers.size === 0
+      && windowActive && onScreen && !document.hidden && !reducedMotion.matches && end > 0
+      && (getLoopWidth() > 0 || viewport.scrollLeft < end);
   }
 
   function sync() {
@@ -60,17 +67,64 @@ export function startCardAutoScroll(
     viewport.scrollLeft = position;
     lastWritten = viewport.scrollLeft;
     if (loopWidth <= 0 && position >= end) {
-      stopped = true;
       sync();
       return;
     }
     frame = window.requestAnimationFrame(tick);
   }
 
-  function stop() {
-    stopped = true;
-    viewport.dataset.autoScrollStopped = "true";
+  function pauseForInteraction() {
+    idle = true;
+    if (idleTimer !== undefined) window.clearTimeout(idleTimer);
+    idleTimer = window.setTimeout(() => {
+      idleTimer = undefined;
+      idle = false;
+      sync();
+    }, 1200);
     sync();
+  }
+
+  function onViewportScroll() {
+    // Autoplay's own scroll events must not restart the interaction timeout.
+    if (viewport.scrollLeft === lastWritten) return;
+    lastWritten = viewport.scrollLeft;
+    pauseForInteraction();
+  }
+
+  function onPointerDown(event: PointerEvent) {
+    pressedPointers.add(event.pointerId);
+    keyboardFocused = false;
+    pauseForInteraction();
+  }
+
+  function onPointerEnd(event: PointerEvent) {
+    if (!pressedPointers.delete(event.pointerId)) return;
+    pauseForInteraction();
+  }
+
+  function onFocusIn(event: FocusEvent) {
+    const target = event.target as HTMLElement | null;
+    keyboardFocused = !!target?.matches(":focus-visible");
+    pauseForInteraction();
+  }
+
+  function onFocusOut(event: FocusEvent) {
+    const target = event.relatedTarget as HTMLElement | null;
+    keyboardFocused = !!target && interactionArea.contains(target) && target.matches(":focus-visible");
+    sync();
+  }
+
+  function onWindowBlur() {
+    windowActive = false;
+    pressedPointers.clear();
+    hovered = false;
+    sync();
+  }
+
+  function onWindowFocus() {
+    windowActive = true;
+    hovered = window.matchMedia("(hover: hover)").matches && interactionArea.matches(":hover");
+    pauseForInteraction();
   }
 
   function enter(event: PointerEvent) {
@@ -86,7 +140,10 @@ export function startCardAutoScroll(
   }
 
   function onKeyDown(event: KeyboardEvent) {
-    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(event.key)) stop();
+    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(event.key)) {
+      keyboardFocused = !!document.activeElement && interactionArea.contains(document.activeElement);
+      pauseForInteraction();
+    }
   }
 
   const visibilityObserver = new IntersectionObserver(([entry]) => {
@@ -99,27 +156,40 @@ export function startCardAutoScroll(
   if (viewport.firstElementChild) sizeObserver.observe(viewport.firstElementChild);
   interactionArea.addEventListener("pointerenter", enter);
   interactionArea.addEventListener("pointerleave", leave);
-  interactionArea.addEventListener("focusin", stop);
-  window.addEventListener("wheel", stop, { passive: true });
-  window.addEventListener("scroll", stop, { passive: true });
-  window.addEventListener("pointerdown", stop, { passive: true });
-  window.addEventListener("click", stop);
+  interactionArea.addEventListener("focusin", onFocusIn);
+  interactionArea.addEventListener("focusout", onFocusOut);
+  viewport.addEventListener("scroll", onViewportScroll, { passive: true });
+  window.addEventListener("wheel", pauseForInteraction, { passive: true });
+  window.addEventListener("scroll", pauseForInteraction, { passive: true });
+  window.addEventListener("pointerdown", onPointerDown, { passive: true });
+  window.addEventListener("pointerup", onPointerEnd, { passive: true });
+  window.addEventListener("pointercancel", onPointerEnd, { passive: true });
+  window.addEventListener("click", pauseForInteraction);
   window.addEventListener("keydown", onKeyDown);
+  window.addEventListener("blur", onWindowBlur);
+  window.addEventListener("focus", onWindowFocus);
   document.addEventListener("visibilitychange", sync);
   reducedMotion.addEventListener("change", sync);
 
   return () => {
     window.cancelAnimationFrame(frame);
+    if (idleTimer !== undefined) window.clearTimeout(idleTimer);
     visibilityObserver.disconnect();
     sizeObserver.disconnect();
     interactionArea.removeEventListener("pointerenter", enter);
     interactionArea.removeEventListener("pointerleave", leave);
-    interactionArea.removeEventListener("focusin", stop);
-    window.removeEventListener("wheel", stop);
-    window.removeEventListener("scroll", stop);
-    window.removeEventListener("pointerdown", stop);
-    window.removeEventListener("click", stop);
+    interactionArea.removeEventListener("focusin", onFocusIn);
+    interactionArea.removeEventListener("focusout", onFocusOut);
+    viewport.removeEventListener("scroll", onViewportScroll);
+    window.removeEventListener("wheel", pauseForInteraction);
+    window.removeEventListener("scroll", pauseForInteraction);
+    window.removeEventListener("pointerdown", onPointerDown);
+    window.removeEventListener("pointerup", onPointerEnd);
+    window.removeEventListener("pointercancel", onPointerEnd);
+    window.removeEventListener("click", pauseForInteraction);
     window.removeEventListener("keydown", onKeyDown);
+    window.removeEventListener("blur", onWindowBlur);
+    window.removeEventListener("focus", onWindowFocus);
     document.removeEventListener("visibilitychange", sync);
     reducedMotion.removeEventListener("change", sync);
     delete viewport.dataset.autoScroll;
