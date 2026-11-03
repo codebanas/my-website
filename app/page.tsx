@@ -1,6 +1,7 @@
 import CodeCards from "@/components/CodeCards";
 import HeroText from "@/components/HeroText";
 import ProgressiveFade from "@/components/ProgressiveFade";
+import QuickLinksCue from "@/components/QuickLinksCue";
 
 export default function Home() {
   return (
@@ -30,7 +31,10 @@ export default function Home() {
       </header>
       <main className="home-content" aria-label="Codebanas">
         <HeroText />
-        <CodeCards />
+        <div className="supporter-content">
+          <CodeCards />
+          <QuickLinksCue />
+        </div>
       </main>
     </>
   );
