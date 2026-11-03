@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import CardTexture from "@/components/CardTexture";
 import ProgressiveFade from "@/components/ProgressiveFade";
 import { getCardAppearance, getCardColor, type CardAppearance } from "@/lib/card-styles";
@@ -32,6 +32,13 @@ export default function CodeCards({
   startIndex?: number;
 }) {
   const viewport = useRef<HTMLDivElement>(null);
+  const mouseDrag = useRef<{
+    pointerId: number;
+    startX: number;
+    scrollLeft: number;
+    active: boolean;
+  } | null>(null);
+  const suppressDragClick = useRef(false);
   const [savedCodes, setSavedCodes] = useState<string[]>([]);
   const [groupSaved, setGroupSaved] = useState(false);
   const hasSavedCards = savedCodes.length > 0;
@@ -68,6 +75,47 @@ export default function CodeCards({
     observer.observe(element);
     return () => observer.disconnect();
   }, [groupSaved, centerSlider]);
+
+  function startMouseDrag(event: PointerEvent<HTMLDivElement>) {
+    suppressDragClick.current = false;
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
+    mouseDrag.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      scrollLeft: event.currentTarget.scrollLeft,
+      active: false,
+    };
+  }
+
+  function moveMouseDrag(event: PointerEvent<HTMLDivElement>) {
+    const drag = mouseDrag.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    if (!(event.buttons & 1)) {
+      finishMouseDrag(event);
+      return;
+    }
+
+    const distance = event.clientX - drag.startX;
+    // Leave small movements as clicks so the card hearts still work normally.
+    if (!drag.active && Math.abs(distance) < 6) return;
+    if (!drag.active) {
+      drag.active = true;
+      suppressDragClick.current = true;
+      event.currentTarget.dataset.dragging = "true";
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    event.preventDefault();
+    event.currentTarget.scrollLeft = drag.scrollLeft - distance;
+  }
+
+  function finishMouseDrag(event: PointerEvent<HTMLDivElement>) {
+    if (mouseDrag.current?.pointerId !== event.pointerId) return;
+    mouseDrag.current = null;
+    delete event.currentTarget.dataset.dragging;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  }
 
   function toggleSaved(code: string) {
     const nextSaved = savedCodes.includes(code)
@@ -133,7 +181,26 @@ export default function CodeCards({
           tintOpacity={1 / 3}
           className="slider-fade slider-fade-right"
         />
-        <div className="code-gallery-viewport" ref={viewport}>
+        <div
+          className="code-gallery-viewport"
+          ref={viewport}
+          onPointerDown={startMouseDrag}
+          onPointerMove={moveMouseDrag}
+          onPointerUp={finishMouseDrag}
+          onPointerCancel={finishMouseDrag}
+          onLostPointerCapture={finishMouseDrag}
+          onPointerLeave={(event) => {
+            if (!mouseDrag.current?.active) finishMouseDrag(event);
+          }}
+          onDragStart={(event) => event.preventDefault()}
+          onClickCapture={(event) => {
+            if (suppressDragClick.current && event.detail > 0) {
+              event.preventDefault();
+              event.stopPropagation();
+              suppressDragClick.current = false;
+            }
+          }}
+        >
           {displayCards.length === 0 ? (
             <p className="code-gallery-empty" role="status">No cards available yet.</p>
           ) : (

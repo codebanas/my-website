@@ -443,6 +443,22 @@ a:focus-visible {
   display: none;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .code-gallery-viewport {
+    cursor: grab;
+    user-select: none;
+  }
+}
+
+.code-gallery-viewport[data-dragging="true"] {
+  scroll-snap-type: none;
+}
+
+.code-gallery-viewport[data-dragging="true"],
+.code-gallery-viewport[data-dragging="true"] * {
+  cursor: grabbing;
+}
+
 .code-gallery-track {
   display: flex;
   align-items: center;
