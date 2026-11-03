@@ -1,19 +1,20 @@
-# Progressive fades
+# Figma fade overlays
 
-`ProgressiveFade` renders decorative overlays without applying filters or masks
-to the content container. Eight masked backdrop-filter bands approximate a
-progressive blur from 16px at the outer edge to clear at the inner edge. Both
-standard and WebKit-prefixed mask/backdrop-filter properties are supplied.
+The page uses the user's original Figma PNG exports, stored unchanged with
+their alpha transparency. These static overlays replace the generated
+gradients and backdrop-blur bands. No extra tint or opacity is applied.
 
-The top overlay stays fixed at 160px high with six darkening gradient layers.
+The top image is `public/nav/blur-top.png`, a 7680 by 720 pixel export. It stays
+fixed across the full viewport width at the existing 160px height, behind the
+navigation. Its z-index is 10; the navigation is 20 and the sticky quick-links
+menu is 11, keeping those controls above the fade.
 
 The slider uses the user's original Figma exports, stored unchanged at
 `public/gallery/blur-left.png` and `public/gallery/blur-right.png`. Both files
 are 1060 by 1720 pixels with alpha transparency. They render at 265px wide by
 430px high on desktop, matching the exports at one-quarter scale, centered
 vertically and anchored to their respective screen edges. The images replace
-the slider's generated gradient and backdrop-blur bands; the top navigation
-still uses `ProgressiveFade`.
+the slider's generated gradient and backdrop-blur bands.
 
 The overlay height extends beyond the cards to cover the whole outer card;
 the toolbar sits above the overlays so its text and buttons stay crisp. On
@@ -27,9 +28,8 @@ Only the hero and gallery toolbar use the centered 1393px content container.
 The slider therefore reveals the partial outer cards beyond the toolbar edges,
 and the side fades end at the screen edges rather than at the content container.
 
-The top overlay is a browser approximation of Figma's progressive blur, rather
-than a native variable-radius CSS filter. If backdrop filtering is unsupported,
-its darkening gradients remain visible. The side images are static overlays.
+`ProgressiveFade` and its helper remain available for reuse, but the current
+page uses the PNG overlays for both the navigation and slider sides.
 
 References:
 

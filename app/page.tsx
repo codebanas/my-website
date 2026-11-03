@@ -1,13 +1,20 @@
 import CodeCards from "@/components/CodeCards";
 import HeroText from "@/components/HeroText";
-import ProgressiveFade from "@/components/ProgressiveFade";
 import QuickLinksCue from "@/components/QuickLinksCue";
 import QuickLinks from "@/components/QuickLinks";
 
 export default function Home() {
   return (
     <>
-      <ProgressiveFade edge="top" strength={6} className="nav-fade" />
+      <img
+        className="nav-fade"
+        src="/nav/blur-top.png"
+        alt=""
+        aria-hidden="true"
+        width={7680}
+        height={720}
+        draggable={false}
+      />
       <header className="site-header">
         <nav className="site-nav" aria-label="Main navigation">
           <div className="nav-brand">
