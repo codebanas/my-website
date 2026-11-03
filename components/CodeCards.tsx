@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import CardTexture from "@/components/CardTexture";
 import ProgressiveFade from "@/components/ProgressiveFade";
 import { getCardAppearance, getCardColor, type CardAppearance } from "@/lib/card-styles";
-import { groupFavorites, shuffleWithFavorites } from "@/lib/shuffle";
+import { groupFavorites, shuffle, shuffleWithFavorites } from "@/lib/shuffle";
 
 export type CodeCardData = {
   id: string;
@@ -78,9 +78,11 @@ export default function CodeCards({
   }
 
   function shuffleAllCards() {
-    const shuffled = shuffleWithFavorites(orderedCards, new Set(savedCodes));
+    const shuffled = groupSaved
+      ? shuffleWithFavorites(orderedCards, new Set(savedCodes))
+      : shuffle(orderedCards);
     setCardOrder(shuffled.map((card) => card.id));
-    if (hasSavedCards) centerSlider();
+    if (groupSaved && hasSavedCards) centerSlider();
   }
 
   return (
