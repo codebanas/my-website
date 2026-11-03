@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getQuickLinkCueState } from "@/lib/quick-links";
 
 export default function QuickLinksCue() {
   const cue = useRef<HTMLDivElement>(null);
+  const [atEnd, setAtEnd] = useState(false);
 
   useEffect(() => {
     const element = cue.current;
@@ -15,14 +17,14 @@ export default function QuickLinksCue() {
       frame = 0;
       if (!element) return;
       const viewportHeight = window.innerHeight;
-      const maximumScroll = Math.max(0, document.documentElement.scrollHeight - viewportHeight);
-      const cueTop = element.getBoundingClientRect().top + window.scrollY;
-      const start = Math.max(0, cueTop + element.offsetHeight - viewportHeight);
-      // Finish even when this is the last section on a short page.
-      const end = Math.min(maximumScroll, start + Math.min(160, viewportHeight * 0.2));
-      const progress = reducedMotion.matches || maximumScroll === 0
-        ? 1
-        : Math.max(0, Math.min(1, (window.scrollY - start) / Math.max(1, end - start)));
+      const { progress, atEnd: finished } = getQuickLinkCueState({
+        scrollTop: window.scrollY,
+        scrollHeight: document.documentElement.scrollHeight,
+        viewportHeight,
+        cueBottom: element.getBoundingClientRect().bottom + window.scrollY,
+        reducedMotion: reducedMotion.matches,
+      });
+      setAtEnd(finished);
 
       // Expand the arrow's layout space from zero so the whole row stays centered.
       const expansion = progress * progress * (3 - 2 * progress);
@@ -53,9 +55,8 @@ export default function QuickLinksCue() {
   }, []);
 
   return (
-    <div className="quick-links-cue" ref={cue}>
+    <div className="quick-links-cue" ref={cue} data-at-end={atEnd}>
       <div className="quick-links-cue-content">
-        <h2>Scrollable Quick Links</h2>
         <span className="quick-links-arrow-slot" aria-hidden="true">
           <svg
             className="quick-links-arrow"
@@ -72,6 +73,19 @@ export default function QuickLinksCue() {
             <path className="quick-links-arrow-head" pathLength="1" d="M91 19L96 24L101 19" />
           </svg>
         </span>
+        <button
+          className="back-to-top"
+          type="button"
+          aria-label="Back to top"
+          aria-hidden={!atEnd}
+          disabled={!atEnd}
+          onClick={() => window.scrollTo({
+            top: 0,
+            behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+          })}
+        >
+          <img src="/nav/circle-up-arrow.svg" alt="" width={20} height={20} />
+        </button>
       </div>
     </div>
   );

@@ -4,6 +4,14 @@ The final screen contains the three-row link window and a centered
 "Terms & Conditions" line below it. It has no GIF, artwork, or local fade layer.
 The page's navigation and card side fades remain separate.
 
+The old "Scrollable Quick Links" label is removed. A full-width cue row starts
+48px below the resting card bottoms. Its centered arrow draws on scroll,
+retracts when the page reaches the terms, then reveals the supplied circular
+up-arrow icon in the same spot. The button has a 44px hit area and smoothly
+returns to the top. Scrolling upward restores the cue. This swap uses fixed
+layout bounds so it cannot change the scroll endpoint. Reduced motion makes
+the swap and return-to-top immediate.
+
 The terms line reuses `hero-description`: 14px Helvetica Neue Medium, normal
 letter spacing, and 150% line height on desktop or 125% below 1024px. It sits
 48px below the menu, with 32px beneath it. No terms destination or agreement

@@ -352,8 +352,7 @@ a:focus-visible {
 
 .quick-links-cue {
   --arrow-slot-width: 104px;
-  --arrow-slot-gap: 22px;
-  width: min(var(--container-width), calc(100% - 2 * var(--page-gutter)));
+  width: 100%;
   margin-inline: auto;
 }
 
@@ -441,12 +440,6 @@ a:focus-visible {
   transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@media (max-width: 767px) {
-  .quick-links-cue {
-    --arrow-slot-gap: 12px;
-  }
-}
-
 .quick-link {
   max-width: 100%;
   background: transparent;
@@ -478,20 +471,12 @@ a:focus-visible {
 }
 
 .quick-links-cue-content {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0;
   height: 48px;
-}
-
-.quick-links-cue h2 {
-  flex-shrink: 0;
-  margin: 0;
-  font-size: 15px;
-  font-weight: var(--font-weight-bold);
-  line-height: 100%;
-  letter-spacing: normal;
 }
 
 .quick-links-arrow-slot {
@@ -500,10 +485,9 @@ a:focus-visible {
   width: calc(var(--arrow-slot-width) * var(--arrow-expansion, 0));
   min-width: 0;
   height: 28px;
-  margin-inline-start: calc(var(--arrow-slot-gap) * var(--arrow-expansion, 0));
   /* Include the stroke and arrowhead inside real bounds. */
   overflow: hidden;
-  transform: translateY(12px);
+  transition: width 240ms ease;
 }
 
 .quick-links-arrow {
@@ -520,6 +504,7 @@ a:focus-visible {
 .quick-links-arrow-line,
 .quick-links-arrow-head {
   stroke-dasharray: 1 1;
+  transition: stroke-dashoffset 240ms ease, opacity 240ms ease;
 }
 
 .quick-links-arrow-line {
@@ -532,16 +517,42 @@ a:focus-visible {
   opacity: var(--arrow-head-visible, 0);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .quick-links-arrow-slot {
-    width: var(--arrow-slot-width);
-    margin-inline-start: var(--arrow-slot-gap);
-  }
+.back-to-top {
+  position: absolute;
+  inset: 2px auto auto 50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(4px);
+  transition: opacity 180ms ease, transform 180ms ease, visibility 180ms;
+}
 
+.back-to-top img {
+  display: block;
+}
+
+.quick-links-cue[data-at-end="true"] .back-to-top {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%);
+  transition-delay: 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quick-links-arrow-slot,
   .quick-links-arrow-line,
-  .quick-links-arrow-head {
-    stroke-dashoffset: 0;
-    opacity: 1;
+  .quick-links-arrow-head,
+  .back-to-top,
+  .quick-links-cue[data-at-end="true"] .back-to-top {
+    transition: none;
   }
 }
 
