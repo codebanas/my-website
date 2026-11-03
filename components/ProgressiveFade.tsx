@@ -24,14 +24,17 @@ export default function ProgressiveFade({
           className="progressive-fade-blur"
           key={radius}
           style={{
-            backdropFilter: `blur(${radius}px)`,
-            WebkitBackdropFilter: `blur(${radius}px)`,
+            backdropFilter: `blur(calc(${radius}px * var(--progressive-blur-scale, 1)))`,
+            WebkitBackdropFilter: `blur(calc(${radius}px * var(--progressive-blur-scale, 1)))`,
             maskImage,
             WebkitMaskImage: maskImage,
           }}
         />
       ))}
-      <span className="progressive-fade-tint" style={{ backgroundImage, opacity: tintOpacity }} />
+      <span
+        className="progressive-fade-tint"
+        style={{ backgroundImage, opacity: `var(--progressive-tint-opacity, ${tintOpacity})` }}
+      />
     </div>
   );
 }

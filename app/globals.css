@@ -408,6 +408,14 @@ a:focus-visible {
   right: 0;
 }
 
+@media (max-width: 1023px) {
+  .slider-fade {
+    --progressive-blur-scale: 0.4;
+    --progressive-tint-opacity: 0.8;
+    width: 32px;
+  }
+}
+
 .code-gallery-viewport {
   overflow-x: auto;
   overscroll-behavior-x: contain;

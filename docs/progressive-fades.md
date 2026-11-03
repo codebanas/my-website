@@ -14,8 +14,9 @@ They are centered vertically over the slider at 264.88px wide by 430px high. Thi
 matches the visible footprint of the 430px by 264.88px Figma layer rotated 90
 degrees. Their height extends beyond the cards to cover the whole outer card;
 the toolbar sits above the overlays so its text and buttons stay crisp. On
-narrow screens their widths are capped at 40% of the slider to retain a clear
-center. Their gradients and blur masks reach zero opacity at the inner edge.
+mobile and tablet screens below 1024px, each side fade is 32px wide, with a
+gentler maximum blur of 4px and tint opacity of 80%. These overrides are scoped
+to the slider fades. Their gradients and blur masks reach zero opacity at the inner edge.
 Overlay pointer events are disabled so the slider controls remain usable.
 
 The card slider spans the full viewport width, including the side overlays.
