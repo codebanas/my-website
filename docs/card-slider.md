@@ -21,6 +21,11 @@ offset by one complete run, preserving the card positions, 16px gaps, texture
 choices, and repeating color order. Dragging adjusts its starting offset during
 that shift so it continues naturally across the boundary.
 
+Quick-link interactions do not pause autoplay. This includes wheel, touch,
+click, and keyboard input in the link section, and full-screen link gestures
+at the final scroll position. Direct card interactions still pause normally.
+This behavior is shared across desktop, tablet, and mobile.
+
 Autoplay pauses offscreen and in hidden tabs, and respects reduced-motion
 preferences. Existing shuffle, favorites grouping, centering, artwork, and
 responsive fade treatments remain in place. Decorative repeat runs are hidden

@@ -5,7 +5,11 @@ import { startCardAutoScroll, wrapCardScroll } from "../lib/card-auto-scroll.ts"
 
 function setup(t, options = {}) {
   const windowTarget = new EventTarget();
-  const documentTarget = Object.assign(new EventTarget(), { hidden: false });
+  const documentTarget = Object.assign(new EventTarget(), {
+    hidden: false,
+    atQuickLinksEnd: false,
+    querySelector: () => documentTarget.atQuickLinksEnd ? {} : null,
+  });
   const motion = Object.assign(new EventTarget(), { matches: options.reducedMotion ?? false });
   const area = Object.assign(new EventTarget(), { hovered: options.hovered ?? false, focusVisible: false });
   area.matches = (selector) => selector === ":hover" ? area.hovered : area.focusVisible;
@@ -57,7 +61,10 @@ function setup(t, options = {}) {
   const emit = (target, type, properties = {}) => {
     if (target === area && type === "pointerenter") area.hovered = true;
     if (target === area && type === "pointerleave") area.hovered = false;
-    return target.dispatchEvent(Object.assign(new Event(type), properties));
+    const { target: origin, ...details } = properties;
+    const event = Object.assign(new Event(type), details);
+    if (origin) Object.defineProperty(event, "target", { value: origin });
+    return target.dispatchEvent(event);
   };
   const visible = (value) => intersection([{ isIntersecting: value }]);
   function advance(milliseconds) {
@@ -180,6 +187,48 @@ test("keyboard navigation pauses temporarily without treating modifier keys as s
   assert.equal(env.frames.size, 0);
   env.advance(1200);
   assert.equal(env.frames.size, 1);
+});
+
+test("quick-link wheel, touch, click, and keyboard input keep autoplay running", (t) => {
+  const env = setup(t);
+  const link = { closest: (selector) => selector === ".quick-links-section" ? {} : null };
+  env.frame(0);
+  for (const [type, details] of [
+    ["wheel", {}],
+    ["pointerdown", { pointerId: 7, pointerType: "touch" }],
+    ["pointerup", { pointerId: 7, pointerType: "touch" }],
+    ["click", {}],
+    ["keydown", { key: "ArrowDown" }],
+  ]) {
+    env.emit(env.windowTarget, type, { target: link, ...details });
+    assert.equal(env.frames.size, 1);
+    assert.equal(env.timers.size, 0);
+  }
+  env.frame(16);
+  assert.ok(env.viewport.scrollLeft > 1000);
+});
+
+test("full-screen link gestures at the page end do not pause cards, but card input does", (t) => {
+  const env = setup(t);
+  env.documentTarget.atQuickLinksEnd = true;
+  env.frame(0);
+  for (const type of ["wheel", "scroll", "click", "pointerdown", "pointerup", "keydown"]) {
+    env.emit(env.windowTarget, type, { pointerId: 7, key: "ArrowDown" });
+    assert.equal(env.frames.size, 1);
+    assert.equal(env.timers.size, 0);
+  }
+  env.frame(16);
+  assert.ok(env.viewport.scrollLeft > 1000);
+  env.emit(env.windowTarget, "pointerdown", { target: env.area, pointerId: 8 });
+  assert.equal(env.frames.size, 0);
+  env.advance(1500);
+  assert.equal(env.frames.size, 0);
+  env.emit(env.windowTarget, "pointerup", { pointerId: 8 });
+  env.advance(1200);
+  assert.equal(env.frames.size, 1);
+  env.documentTarget.atQuickLinksEnd = false;
+  env.emit(env.windowTarget, "scroll");
+  assert.equal(env.frames.size, 0);
 });
 
 test("pointer focus does not keep autoplay stopped after the interaction ends", (t) => {

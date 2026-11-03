@@ -73,7 +73,16 @@ export function startCardAutoScroll(
     frame = window.requestAnimationFrame(tick);
   }
 
-  function pauseForInteraction() {
+  function isQuickLinksInteraction(event: Event) {
+    const target = event.target as Element | null;
+    // Direct card interactions still pause, including during the final scene.
+    if (target && interactionArea.contains(target)) return false;
+    return !!target?.closest?.(".quick-links-section")
+      || !!document.querySelector('.quick-links-end-content[data-at-end="true"]');
+  }
+
+  function pauseForInteraction(event?: Event) {
+    if (event && isQuickLinksInteraction(event)) return;
     idle = true;
     if (idleTimer !== undefined) window.clearTimeout(idleTimer);
     idleTimer = window.setTimeout(() => {
@@ -92,6 +101,7 @@ export function startCardAutoScroll(
   }
 
   function onPointerDown(event: PointerEvent) {
+    if (isQuickLinksInteraction(event)) return;
     pressedPointers.add(event.pointerId);
     keyboardFocused = false;
     pauseForInteraction();
@@ -140,6 +150,7 @@ export function startCardAutoScroll(
   }
 
   function onKeyDown(event: KeyboardEvent) {
+    if (isQuickLinksInteraction(event)) return;
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(event.key)) {
       keyboardFocused = !!document.activeElement && interactionArea.contains(document.activeElement);
       pauseForInteraction();
