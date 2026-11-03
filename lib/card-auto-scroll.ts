@@ -1,5 +1,16 @@
+/** Move a scroll offset into the middle run without changing its visual phase. */
+export function wrapCardScroll(position: number, cycleWidth: number): number {
+  if (!Number.isFinite(position) || !Number.isFinite(cycleWidth) || cycleWidth <= 0) return position;
+  if (position >= cycleWidth && position < cycleWidth * 2) return position;
+  return cycleWidth + ((position - cycleWidth) % cycleWidth + cycleWidth) % cycleWidth;
+}
+
 /** Drift cards left until the visitor interacts; hover alone pauses temporarily. */
-export function startCardAutoScroll(viewport: HTMLElement, interactionArea: HTMLElement) {
+export function startCardAutoScroll(
+  viewport: HTMLElement,
+  interactionArea: HTMLElement,
+  getLoopWidth: () => number = () => 0,
+) {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let stopped = viewport.dataset.autoScrollStopped === "true";
   let hovered = window.matchMedia("(hover: hover)").matches && interactionArea.matches(":hover");
@@ -44,10 +55,11 @@ export function startCardAutoScroll(viewport: HTMLElement, interactionArea: HTML
     }
     previousTime = time;
     const end = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
-    position = Math.min(position, end);
+    const loopWidth = getLoopWidth();
+    position = loopWidth > 0 ? wrapCardScroll(position, loopWidth) : Math.min(position, end);
     viewport.scrollLeft = position;
     lastWritten = viewport.scrollLeft;
-    if (position >= end) {
+    if (loopWidth <= 0 && position >= end) {
       stopped = true;
       sync();
       return;

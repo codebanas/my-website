@@ -551,10 +551,9 @@ a:focus-visible {
 .code-gallery {
   display: flex;
   flex-direction: column;
-  gap: calc(16px - var(--slider-bleed));
+  gap: calc(32px - var(--slider-bleed));
   width: 100%;
   min-width: 0;
-  padding-top: 16px;
 }
 
 .gallery-toolbar {
@@ -648,12 +647,12 @@ html:has(.quick-links-end-content[data-at-end="true"]) .gallery-toolbar {
 
 .code-slider {
   position: relative;
-  width: calc(100% - 2 * var(--page-gutter));
+  width: 100%;
   min-width: 0;
   margin-inline: auto;
 }
 
-/* Original Figma PNG overlays, anchored to the slider edges. */
+/* Original Figma PNG overlays, anchored to the screen edges. */
 .slider-fade {
   position: absolute;
   z-index: 2;
@@ -714,6 +713,7 @@ html:has(.quick-links-end-content[data-at-end="true"]) .gallery-toolbar {
 }
 
 .code-gallery-viewport[data-auto-scroll="true"],
+.code-gallery-viewport[data-looped="true"],
 .code-gallery-viewport[data-dragging="true"] {
   scroll-snap-type: none;
 }
@@ -729,7 +729,7 @@ html:has(.quick-links-end-content[data-at-end="true"]) .gallery-toolbar {
   gap: 16px;
   width: max-content;
   margin-inline: auto;
-  padding: var(--slider-bleed) 0;
+  padding: var(--slider-bleed) 32px;
 }
 
 .code-gallery-empty {

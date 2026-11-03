@@ -20,8 +20,8 @@ stays at 5% beyond that marker and returns to 100% when scrolled back.
 The positions are measured again after resizing, layout changes, or font
 loading. Card contents and the fixed navigation do not use this scroll fade.
 
-The gallery toolbar sits 16px above the cards. It is shifted down 16px from
-its previous position while the card strip stays in place. When the quick-links
+The gallery toolbar is back at its original position, 32px above the cards.
+When the quick-links
 final screen opens at the end of the page, the toolbar becomes fully transparent
 and hidden from interaction. Scrolling back restores its normal scroll fade.
 
@@ -29,7 +29,7 @@ The slider uses the user's original Figma exports, stored unchanged at
 `public/gallery/blur-left.png` and `public/gallery/blur-right.png`. Both files
 are 1060 by 1720 pixels with alpha transparency. They render at 265px wide by
 430px high on desktop, matching the exports at one-quarter scale, centered
-vertically and anchored to their respective slider edges. The images replace
+vertically and anchored to their respective screen edges. The images replace
 the slider's generated gradient and backdrop-blur bands.
 
 The overlay height extends beyond the cards to cover the whole outer card;
@@ -39,9 +39,10 @@ tablet screens from 768px to 1023px, each image compresses horizontally to
 edge. PNG transparency supplies the fading directly, without extra tint layers. Overlay
 pointer events and image dragging are disabled so the slider remains usable.
 
-The card slider is inset by the navigation's responsive page gutter: 16px on
-mobile, 32px on tablet, and 64px on desktop. The side overlays follow these
-slider edges. Hero and gallery toolbar still use the centered 1393px container.
+The card slider spans the full viewport again, revealing partial cards beneath
+the fades at the screen edges. Hero and gallery toolbar still use the centered
+1393px container. Mobile fades remain 12px wide at 50% opacity; tablet stays
+32px and desktop stays 265px.
 
 `ProgressiveFade` and its helper remain available for reuse, but the current
 page uses the PNG overlays for the navigation and slider sides.

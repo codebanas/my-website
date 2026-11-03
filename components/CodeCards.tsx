@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import CardTexture from "@/components/CardTexture";
-import { startCardAutoScroll } from "@/lib/card-auto-scroll";
+import { startCardAutoScroll, wrapCardScroll } from "@/lib/card-auto-scroll";
 import { getCardAppearance, getCardColor, type CardAppearance } from "@/lib/card-styles";
 import { groupFavorites, shuffle, shuffleWithFavorites } from "@/lib/shuffle";
 
@@ -47,6 +47,7 @@ export default function CodeCards({
 }) {
   const gallery = useRef<HTMLElement>(null);
   const viewport = useRef<HTMLDivElement>(null);
+  const loopWidth = useRef(0);
   const mouseDrag = useRef<{
     pointerId: number;
     startX: number;
@@ -71,9 +72,23 @@ export default function CodeCards({
   const centerSlider = useCallback(() => {
     const element = viewport.current;
     if (!element) return;
+    const track = element.querySelector(".code-gallery-track");
+    const first = track?.children[0] as HTMLElement | undefined;
+    const nextRun = track?.children[displayCards.length] as HTMLElement | undefined;
+    loopWidth.current = first && nextRun ? nextRun.offsetLeft - first.offsetLeft : 0;
     const pixelRatio = window.devicePixelRatio || 1;
     const center = (element.scrollWidth - element.clientWidth) / 2;
     element.scrollLeft = Math.round(center * pixelRatio) / pixelRatio;
+  }, [displayCards.length]);
+
+  const wrapSlider = useCallback(() => {
+    const element = viewport.current;
+    if (!element) return;
+    const position = wrapCardScroll(element.scrollLeft, loopWidth.current);
+    const shift = position - element.scrollLeft;
+    if (shift === 0) return;
+    if (mouseDrag.current) mouseDrag.current.scrollLeft += shift;
+    element.scrollLeft = position;
   }, []);
 
   useEffect(() => {
@@ -93,7 +108,7 @@ export default function CodeCards({
 
   useEffect(() => {
     if (!viewport.current || !gallery.current) return;
-    return startCardAutoScroll(viewport.current, gallery.current);
+    return startCardAutoScroll(viewport.current, gallery.current, () => loopWidth.current);
   }, [cards.length]);
 
   function startMouseDrag(event: PointerEvent<HTMLDivElement>) {
@@ -125,7 +140,10 @@ export default function CodeCards({
       event.currentTarget.setPointerCapture(event.pointerId);
     }
     event.preventDefault();
-    event.currentTarget.scrollLeft = drag.scrollLeft - distance;
+    const requested = drag.scrollLeft - distance;
+    const position = wrapCardScroll(requested, loopWidth.current);
+    drag.scrollLeft += position - requested;
+    event.currentTarget.scrollLeft = position;
   }
 
   function finishMouseDrag(event: PointerEvent<HTMLDivElement>) {
@@ -208,6 +226,8 @@ export default function CodeCards({
         <div
           className="code-gallery-viewport"
           ref={viewport}
+          data-looped={displayCards.length > 1}
+          onScroll={wrapSlider}
           onPointerDown={startMouseDrag}
           onPointerMove={moveMouseDrag}
           onPointerUp={finishMouseDrag}
@@ -229,8 +249,18 @@ export default function CodeCards({
             <p className="code-gallery-empty" role="status">No cards available yet.</p>
           ) : (
             <div className="code-gallery-track">
-              {displayCards.map((card, index) => {
+              {(displayCards.length > 1 ? [0, 1, 2] : [1]).flatMap((copy) => displayCards.map((card, index) => {
+                const isClone = copy !== 1;
                 const isSaved = savedCodes.includes(card.id);
+                const headingId = `code-${card.id}-${copy}`;
+                const heart = (
+                  <img
+                    src={isSaved ? "/cards/heart-pink.svg" : "/cards/heart-light-pink.svg"}
+                    alt=""
+                    width={19}
+                    height={16}
+                  />
+                );
                 const position = startIndex + index;
                 const appearance = {
                   ...(card.appearance ?? getCardAppearance(card.id, position)),
@@ -238,7 +268,14 @@ export default function CodeCards({
                 };
 
                 return (
-                  <article className="code-card" key={card.id} aria-labelledby={`code-${card.id}`}>
+                  <article
+                    className="code-card"
+                    key={`${copy}-${card.id}`}
+                    data-card-id={card.id}
+                    data-loop-copy={copy}
+                    aria-labelledby={headingId}
+                    aria-hidden={isClone ? true : undefined}
+                  >
                     <div className="code-card-surface" aria-hidden="true">
                       <div
                         className="code-card-art"
@@ -249,25 +286,24 @@ export default function CodeCards({
                     </div>
                     <div className="code-card-details">
                       <div className="code-card-header">
-                        <h3 className="code-card-name" id={`code-${card.id}`}>
+                        <h3 className="code-card-name" id={headingId}>
                           <img src="/cards/verify.svg" alt="Verified" width={16} height={16} />
                           {card.code}
                         </h3>
                         <div className="code-card-actions">
-                          <button
-                            className="code-card-save"
-                            type="button"
-                            aria-label={`${isSaved ? "Unsave" : "Save"} ${card.code}`}
-                            aria-pressed={isSaved}
-                            onClick={() => toggleSaved(card.id)}
-                          >
-                            <img
-                              src={isSaved ? "/cards/heart-pink.svg" : "/cards/heart-light-pink.svg"}
-                              alt=""
-                              width={19}
-                              height={16}
-                            />
-                          </button>
+                          {isClone ? (
+                            <span className="code-card-save" onClick={() => toggleSaved(card.id)}>{heart}</span>
+                          ) : (
+                            <button
+                              className="code-card-save"
+                              type="button"
+                              aria-label={`${isSaved ? "Unsave" : "Save"} ${card.code}`}
+                              aria-pressed={isSaved}
+                              onClick={() => toggleSaved(card.id)}
+                            >
+                              {heart}
+                            </button>
+                          )}
                           <img src="/cards/arrow-dark-single.svg" alt="" width={12} height={12} />
                         </div>
                       </div>
@@ -278,7 +314,7 @@ export default function CodeCards({
                     </div>
                   </article>
                 );
-              })}
+              }))}
             </div>
           )}
         </div>

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { getEventListeners } from "node:events";
-import { startCardAutoScroll } from "../lib/card-auto-scroll.ts";
+import { startCardAutoScroll, wrapCardScroll } from "../lib/card-auto-scroll.ts";
 
 function setup(t, options = {}) {
   const windowTarget = new EventTarget();
@@ -46,7 +46,7 @@ function setup(t, options = {}) {
   for (const [key, value] of Object.entries(globals)) {
     Object.defineProperty(globalThis, key, { value, writable: true, configurable: true });
   }
-  const cleanup = startCardAutoScroll(viewport, area);
+  const cleanup = startCardAutoScroll(viewport, area, () => options.loopWidth ?? 0);
   const emit = (target, type, properties = {}) => target.dispatchEvent(Object.assign(new Event(type), properties));
   const visible = (value) => intersection([{ isIntersecting: value }]);
   function frame(time) {
@@ -155,6 +155,44 @@ test("autoplay stops at the last card without wrapping or overshooting", (t) => 
   env.frame(16);
   assert.equal(env.viewport.scrollLeft, 3);
   assert.equal(env.frames.size, 0);
+});
+
+test("looped autoplay carries on across the end without resetting its visual phase", (t) => {
+  const cycle = 6048;
+  const env = setup(t, { scrollWidth: cycle * 3, start: cycle * 2 - 0.1, loopWidth: cycle });
+  env.frame(0);
+  env.frame(16);
+  assert.ok(Math.abs(env.viewport.scrollLeft - (cycle + 0.284)) < 1e-8);
+  assert.equal(env.frames.size, 1);
+  assert.equal(env.viewport.dataset.autoScrollStopped, undefined);
+  env.frame(32);
+  assert.ok(env.viewport.scrollLeft > cycle + 0.284);
+});
+
+test("manual sliding wraps in both directions and preserves fractional positions", () => {
+  const cycle = 6048;
+  assert.equal(wrapCardScroll(cycle - 12.5, cycle), cycle * 2 - 12.5);
+  assert.equal(wrapCardScroll(cycle * 2 + 12.5, cycle), cycle + 12.5);
+  assert.equal(wrapCardScroll(cycle + 300.25, cycle), cycle + 300.25);
+  assert.equal(wrapCardScroll(0, cycle), cycle);
+});
+
+test("recycling across many runs keeps the same cards, gaps, and color order", () => {
+  const stride = 288;
+  const cycle = stride * 21;
+  for (const scroll of [-cycle * 10 - 20.25, -1, 0, cycle - 0.5, cycle * 2, cycle * 15 + 12.5]) {
+    const wrapped = wrapCardScroll(scroll, cycle);
+    assert.ok(wrapped >= cycle && wrapped < cycle * 2);
+    assert.ok(Math.abs((wrapped - scroll) / cycle - Math.round((wrapped - scroll) / cycle)) < 1e-8);
+    const oldIndex = Math.floor(scroll / stride);
+    const newIndex = Math.floor(wrapped / stride);
+    assert.equal(((oldIndex % 7) + 7) % 7, newIndex % 7);
+  }
+});
+
+test("an unmeasured loop leaves the scroll offset alone", () => {
+  assert.equal(wrapCardScroll(250, 0), 250);
+  assert.equal(wrapCardScroll(250, Number.NaN), 250);
 });
 
 test("external centering is preserved instead of being overwritten next frame", (t) => {
