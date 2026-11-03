@@ -1,28 +1,25 @@
 # Quick-links final screen
 
-The final screen is arranged from the bottom up: the artwork crop touches the
-viewport bottom, the visible artwork begins 16px below the menu, and the menu
-shows three 44px rows with 12px gaps. Menu position and artwork height share
-the same CSS variables on `.quick-links-sticky-track`.
+The final screen uses the original `GIFER.gif`, copied unchanged to
+`public/gallery/quick-links-background.gif`. It replaces the six decorative
+stickers with a full-width animated background anchored to the viewport bottom.
 
-The desktop crop is 129px high (three-quarters of the previous reveal), scaled
-to 65% on tablet and 45% on mobile.
-Short viewports reduce the crop height first to preserve room below the header.
-Dynamic viewport units keep the bottom alignment when mobile browser chrome
-changes height. The 53px transparent SVG inset is removed from the artwork
-groups when measuring the visible 16px gap.
+The background starts 24px above the menu's top (`--quick-links-art-gap: -24px`),
+so the links sit over its fade. The panel targets 62% of the dynamic viewport
+height, between 240px and 560px, with a further clamp for short screens to leave
+room below the header. The menu still shows three 44px rows with 12px gaps.
+Menu position and background height share CSS variables on
+`.quick-links-sticky-track`, keeping the panel at the real screen bottom.
 
-The artwork reveals at the end of page scrolling. Further vertical wheel or
+The background uses the same `public/nav/blur-top.png` as the navigation across
+its top 160px, including the desktop 60% opacity and full mobile/tablet opacity.
+Screen blending preserves the page background behind the GIF's black pixels.
+
+The background reveals at the end of page scrolling. Further vertical wheel or
 touch gestures anywhere on that screen scroll only the link window. Scrolling
-up from Home returns to the page. Avoid positioning a cropped artwork layer
+up from Home returns to the page. Avoid positioning the background layer
 above the viewport bottom: that leaves the blank strip the design excludes.
 
-Artwork uses a 720ms upward entrance and a matching downward exit with mirrored
-easing and reversed stagger order. Travel is based on the cropped layer height
-and scale, so it leaves smoothly on every screen size rather than jumping a
-full viewport out of sight. Reduced-motion mode skips these transitions.
-
-The BANAS sticker uses `banas-yellow-box.svg`; the hands use
-`white-box-black-hands.svg`. The blue @ sticker displays at 80% of its original
-size inside a separate animated wrapper, preserving its visible top alignment
-and the shared entrance/exit movement.
+The panel uses a 720ms upward entrance and a matching downward exit with
+mirrored easing. Travel is based on its own height. Reduced-motion mode skips
+the transitions and hides the animated GIF.

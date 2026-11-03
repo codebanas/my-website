@@ -12,6 +12,9 @@ menu is 11, keeping those controls above the fade. On desktop at 1024px and
 above, the top image renders at 60% opacity for a gentler scroll fade. Mobile
 and tablet keep the original image opacity.
 
+The quick-links GIF background reuses this PNG across its top edge at the same
+160px height and responsive opacity, letting the menu blend over the animation.
+
 The top PNG is the earlier, lighter export. Each hero heading line, the hero
 description, and the gallery toolbar also fade independently on page scroll.
 Each starts at full opacity at its unscrolled document position and reaches
@@ -45,7 +48,7 @@ The slider therefore reveals the partial outer cards beyond the toolbar edges,
 and the side fades end at the screen edges rather than at the content container.
 
 `ProgressiveFade` and its helper remain available for reuse, but the current
-page uses the PNG overlays for both the navigation and slider sides.
+page uses the PNG overlays for the navigation, slider sides, and GIF background.
 
 References:
 
