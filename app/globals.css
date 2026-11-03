@@ -420,8 +420,8 @@ a:focus-visible {
   z-index: 1;
   top: calc(var(--quick-links-pin-top) + var(--quick-links-menu-height) + 48px);
   right: 0;
-  bottom: 0;
   left: 0;
+  height: calc(172px * var(--art-scale));
   overflow: clip;
   pointer-events: none;
   user-select: none;
