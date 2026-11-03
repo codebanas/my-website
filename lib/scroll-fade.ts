@@ -1,5 +1,5 @@
 const fadeMarker = 32;
-const minimumOpacity = 0.25;
+const minimumOpacity = 0.05;
 
 export function getScrollFadeOpacity(currentTop: number, initialTop: number): number {
   if (currentTop <= fadeMarker) return minimumOpacity;
