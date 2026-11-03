@@ -199,6 +199,15 @@ a:focus-visible {
   justify-content: flex-start;
   width: 164px;
   padding: 0 12px;
+  background: var(--color-white);
+  color: #0d0d0d;
+  transition:
+    gap 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 220ms ease;
+}
+
+.profile-button:active {
+  background: var(--color-white);
 }
 
 .profile-button span {
@@ -212,6 +221,8 @@ a:focus-visible {
 
   .profile-button:hover {
     gap: 12px;
+    background: var(--color-white);
+    opacity: 0.75;
   }
 }
 

@@ -24,7 +24,7 @@ export default function Home() {
             </a>
             <button className="pill-button profile-button" type="button">
               <span>Create an Account</span>
-              <img src="/nav/arrow-white-circle.svg" alt="" width={16} height={16} />
+              <img src="/nav/arrow-dark-circle.svg" alt="" width={16} height={16} />
             </button>
           </div>
 
