@@ -20,6 +20,11 @@ stays at 5% beyond that marker and returns to 100% when scrolled back.
 The positions are measured again after resizing, layout changes, or font
 loading. Card contents and the fixed navigation do not use this scroll fade.
 
+The gallery toolbar sits 16px above the cards. It is shifted down 16px from
+its previous position while the card strip stays in place. When the quick-links
+artwork opens at the end of the page, the toolbar becomes fully transparent
+and hidden from interaction. Scrolling back restores its normal scroll fade.
+
 The slider uses the user's original Figma exports, stored unchanged at
 `public/gallery/blur-left.png` and `public/gallery/blur-right.png`. Both files
 are 1060 by 1720 pixels with alpha transparency. They render at 265px wide by

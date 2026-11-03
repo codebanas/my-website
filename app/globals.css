@@ -653,9 +653,10 @@ a:focus-visible {
 .code-gallery {
   display: flex;
   flex-direction: column;
-  gap: calc(32px - var(--slider-bleed));
+  gap: calc(16px - var(--slider-bleed));
   width: 100%;
   min-width: 0;
+  padding-top: 16px;
 }
 
 .gallery-toolbar {
@@ -668,6 +669,11 @@ a:focus-visible {
   width: min(var(--container-width), calc(100% - 2 * var(--page-gutter)));
   min-height: 44px;
   margin-inline: auto;
+}
+
+html:has(.quick-links-artwork[data-visible="true"]) .gallery-toolbar {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .gallery-title {
