@@ -175,7 +175,7 @@ export default function CodeCards({
     <section className="code-gallery" aria-labelledby="gallery-title" ref={gallery}>
       <div className="gallery-toolbar" data-scroll-fade>
         <h2 className="gallery-title" id="gallery-title">
-          [ / Supporter Benefits ]
+          [ / Benefits Reel ]
         </h2>
         <div className="gallery-toolbar-actions">
           <button
