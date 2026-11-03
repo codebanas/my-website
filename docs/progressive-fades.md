@@ -7,7 +7,7 @@ standard and WebKit-prefixed mask/backdrop-filter properties are supplied.
 
 The top overlay stays fixed at 160px high with six darkening gradient layers.
 The slider overlays mirror each other and use two darkening gradient layers
-each at 100% tint opacity, making the screen edge fully dark. Their blur tapers
+each at one-third tint opacity (33.33%). Their blur tapers
 from a softer 10px at the outer edge to clear, while the inner edge stays fully
 transparent.
 They are centered vertically over the slider at 264.88px wide by 430px high. This
@@ -15,7 +15,7 @@ matches the visible footprint of the 430px by 264.88px Figma layer rotated 90
 degrees. Their height extends beyond the cards to cover the whole outer card;
 the toolbar sits above the overlays so its text and buttons stay crisp. On
 mobile and tablet screens below 1024px, each side fade is 32px wide, with a
-gentler maximum blur of 4px and tint opacity of 80%. These overrides are scoped
+gentler maximum blur of 4px and tint opacity of 26.67% (one third of 80%). These overrides are scoped
 to the slider fades. An eased tint curve and the blur masks both reach zero
 opacity by 80% of each side overlay, leaving its final 20% fully transparent.
 This clear buffer avoids ending the effect against the rectangular layer edge.

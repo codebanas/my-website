@@ -411,7 +411,7 @@ a:focus-visible {
 @media (max-width: 1023px) {
   .slider-fade {
     --progressive-blur-scale: 0.4;
-    --progressive-tint-opacity: 0.8;
+    --progressive-tint-opacity: calc(0.8 / 3);
     width: 32px;
   }
 }

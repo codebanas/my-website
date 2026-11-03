@@ -121,14 +121,14 @@ export default function CodeCards({
           edge="left"
           strength={2}
           maxBlur={10}
-          tintOpacity={1}
+          tintOpacity={1 / 3}
           className="slider-fade slider-fade-left"
         />
         <ProgressiveFade
           edge="right"
           strength={2}
           maxBlur={10}
-          tintOpacity={1}
+          tintOpacity={1 / 3}
           className="slider-fade slider-fade-right"
         />
         <div className="code-gallery-viewport" ref={viewport}>
