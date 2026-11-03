@@ -49,6 +49,7 @@ body {
 html {
   color-scheme: dark;
   scroll-padding-top: var(--nav-fade-height);
+  scroll-snap-type: y proximity;
 }
 
 body {
@@ -281,7 +282,7 @@ a:focus-visible {
   width: 100%;
   min-width: 0;
   padding-top: var(--hero-top);
-  padding-bottom: 48px;
+  padding-bottom: 0;
 }
 
 [data-scroll-fade] {
@@ -356,21 +357,24 @@ a:focus-visible {
 
 .quick-links-sticky-track {
   --quick-links-menu-height: calc(3 * var(--nav-height) + 24px);
+  --quick-links-pin-top: max(
+    calc(var(--nav-top) + var(--nav-height) + 24px),
+    calc((100svh - var(--quick-links-menu-height)) / 2)
+  );
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  /* Give the sticky menu room to stay pinned while the content above scrolls away. */
-  min-height: max(var(--quick-links-menu-height), calc(100svh - var(--nav-fade-height)));
+  /* End page scrolling exactly when the menu reaches its pinned position. */
+  min-height: calc(100svh - var(--quick-links-pin-top));
+  scroll-snap-align: end;
+  scroll-snap-stop: always;
 }
 
 .quick-links {
   position: sticky;
   z-index: 11;
-  top: max(
-    calc(var(--nav-top) + var(--nav-height) + 24px),
-    calc((100svh - var(--quick-links-menu-height)) / 2)
-  );
+  top: var(--quick-links-pin-top);
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
@@ -385,6 +389,23 @@ a:focus-visible {
 .quick-links[data-revealed="true"] {
   opacity: 1;
   transform: none;
+}
+
+.quick-links-viewport {
+  width: 100%;
+  height: var(--quick-links-menu-height);
+  overflow: clip;
+  overflow-clip-margin: 6px;
+}
+
+.quick-links-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  transform: translateY(calc(var(--quick-link-window-start, 0) * (var(--nav-height) + 12px) * -1));
+  transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .quick-links-artwork {
@@ -524,7 +545,7 @@ a:focus-visible {
 }
 
 @media (hover: hover) {
-  .quick-link:hover {
+  .quick-link:not([aria-pressed="true"]):hover {
     background: var(--color-button-rest);
   }
 
@@ -956,6 +977,7 @@ a:focus-visible {
 
   .pill-button,
   .quick-link span,
+  .quick-links-list,
   .quick-links {
     transition: none;
   }

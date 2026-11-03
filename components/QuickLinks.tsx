@@ -1,9 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import QuickLinksArtwork from "@/components/QuickLinksArtwork";
-
-const links = ["Home", "How It Works?", "Buy Me a Coffee"] as const;
+import { getQuickLinkWindow, quickLinks as links } from "@/lib/quick-links";
 
 export default function QuickLinks() {
   const navigation = useRef<HTMLElement>(null);
@@ -11,6 +10,7 @@ export default function QuickLinks() {
   const [active, setActive] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [artworkVisible, setArtworkVisible] = useState(false);
+  const visibleWindow = getQuickLinkWindow(active, links.length);
 
   const selectLink = useCallback((index: number) => {
     activeIndex.current = index;
@@ -104,37 +104,49 @@ export default function QuickLinks() {
 
   return (
     <>
-    <nav
-      className="quick-links"
-      aria-label="Quick links"
-      ref={navigation}
-      data-revealed={revealed}
-      onKeyDown={(event) => {
-        const step = event.key === "ArrowDown" ? 1 : event.key === "ArrowUp" ? -1 : 0;
-        if (!step && event.key !== "Home" && event.key !== "End") return;
-        event.preventDefault();
-        const next = event.key === "Home" ? 0 : event.key === "End" ? links.length - 1
-          : Math.max(0, Math.min(links.length - 1, activeIndex.current + step));
-        selectLink(next);
-        navigation.current?.querySelectorAll("button")[next]?.focus();
-      }}
-    >
-      {links.map((label, index) => (
-        <button
-          className="pill-button quick-link"
-          type="button"
-          key={label}
-          aria-pressed={active === index}
-          onClick={() => selectLink(index)}
-        >
-          <span>{label}</span>
-          {active === index && (
-            <img src="/nav/arrow-white-circle.svg" alt="" width={16} height={16} />
-          )}
-        </button>
-      ))}
-    </nav>
-    <QuickLinksArtwork visible={artworkVisible} anchor={navigation} />
+      <nav
+        className="quick-links"
+        aria-label="Quick links"
+        ref={navigation}
+        data-revealed={revealed}
+        onKeyDown={(event) => {
+          const step = event.key === "ArrowDown" ? 1 : event.key === "ArrowUp" ? -1 : 0;
+          if (!step && event.key !== "Home" && event.key !== "End") return;
+          event.preventDefault();
+          const next = event.key === "Home" ? 0 : event.key === "End" ? links.length - 1
+            : Math.max(0, Math.min(links.length - 1, activeIndex.current + step));
+          selectLink(next);
+          navigation.current?.querySelectorAll("button")[next]?.focus({ preventScroll: true });
+        }}
+      >
+        <div className="quick-links-viewport">
+          <div
+            className="quick-links-list"
+            style={{ "--quick-link-window-start": visibleWindow.start } as CSSProperties}
+          >
+            {links.map((label, index) => {
+              const visible = index >= visibleWindow.start && index < visibleWindow.end;
+              return (
+                <button
+                  className="pill-button quick-link"
+                  type="button"
+                  key={label}
+                  aria-pressed={active === index}
+                  aria-hidden={visible ? undefined : true}
+                  tabIndex={visible ? 0 : -1}
+                  onClick={() => selectLink(index)}
+                >
+                  <span>{label}</span>
+                  {active === index && (
+                    <img src="/nav/arrow-white-circle.svg" alt="" width={16} height={16} />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </nav>
+      <QuickLinksArtwork visible={artworkVisible} anchor={navigation} />
     </>
   );
 }
