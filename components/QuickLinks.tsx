@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import QuickLinksArtwork from "@/components/QuickLinksArtwork";
 import { getQuickLinkWindow, hasReachedPageEnd, quickLinks as links } from "@/lib/quick-links";
 
 export default function QuickLinks() {
@@ -10,7 +9,7 @@ export default function QuickLinks() {
   const activeIndex = useRef(0);
   const [active, setActive] = useState(0);
   const [revealed, setRevealed] = useState(false);
-  const [artworkVisible, setArtworkVisible] = useState(false);
+  const [atPageEnd, setAtPageEnd] = useState(false);
   const visibleWindow = getQuickLinkWindow(active, links.length);
 
   const selectLink = useCallback((index: number) => {
@@ -39,7 +38,7 @@ export default function QuickLinks() {
       const root = document.documentElement;
       const atEnd = hasReachedPageEnd(window.scrollY, root.scrollHeight, root.clientHeight);
       pageAtEnd.current = atEnd;
-      setArtworkVisible(atEnd);
+      setAtPageEnd(atEnd);
     }
 
     function scheduleUpdate() {
@@ -140,7 +139,7 @@ export default function QuickLinks() {
   }, [selectLink]);
 
   return (
-    <>
+    <div className="quick-links-end-content" data-at-end={atPageEnd}>
       <nav
         className="quick-links"
         aria-label="Quick links"
@@ -183,7 +182,7 @@ export default function QuickLinks() {
           </div>
         </div>
       </nav>
-      <QuickLinksArtwork visible={artworkVisible} />
-    </>
+      <p className="hero-description quick-links-terms">Terms &amp; Conditions</p>
+    </div>
   );
 }

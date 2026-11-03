@@ -24,7 +24,7 @@ test("every active link stays visible without empty rows at either end", () => {
   assert.deepEqual(quickLinks.slice(start, end), ["Supporter Stories", "FAQs", "Contact"]);
 });
 
-test("the artwork scene starts only at the end of page scrolling", () => {
+test("the quick-links final screen starts only at the end of page scrolling", () => {
   assert.equal(hasReachedPageEnd(0, 1500, 900), false);
   assert.equal(hasReachedPageEnd(400, 1500, 900), false);
   assert.equal(hasReachedPageEnd(598, 1500, 900), false);

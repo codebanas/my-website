@@ -1,25 +1,18 @@
 # Quick-links final screen
 
-The final screen uses the original `GIFER.gif`, copied unchanged to
-`public/gallery/quick-links-background.gif`. It replaces the six decorative
-stickers with a full-width animated background anchored to the viewport bottom.
+The final screen contains the three-row link window and a centered
+"Terms & Conditions" line below it. It has no GIF, artwork, or local fade layer.
+The page's navigation and card side fades remain separate.
 
-The background starts 24px above the menu's top (`--quick-links-art-gap: -24px`),
-so the links sit over its fade. The panel targets 62% of the dynamic viewport
-height, between 240px and 560px, with a further clamp for short screens to leave
-room below the header. The menu still shows three 44px rows with 12px gaps.
-Menu position and background height share CSS variables on
-`.quick-links-sticky-track`, keeping the panel at the real screen bottom.
+The terms line reuses `hero-description`: 14px Helvetica Neue Medium, normal
+letter spacing, and 150% line height on desktop or 125% below 1024px. It sits
+24px below the menu, with 32px beneath it. No terms destination or agreement
+text has been provided, so this is a plain label rather than a placeholder link.
 
-The background uses the same `public/nav/blur-top.png` as the navigation across
-its top 160px, including the desktop 60% opacity and full mobile/tablet opacity.
-Screen blending preserves the page background behind the GIF's black pixels.
+The menu and terms line form one sticky final block. Its measured row and line
+heights replace the old media panel's reserved space. Dynamic viewport units
+keep the ending compact on desktop, tablet, and mobile.
 
-The background reveals at the end of page scrolling. Further vertical wheel or
-touch gestures anywhere on that screen scroll only the link window. Scrolling
-up from Home returns to the page. Avoid positioning the background layer
-above the viewport bottom: that leaves the blank strip the design excludes.
-
-The panel uses a 720ms upward entrance and a matching downward exit with
-mirrored easing. Travel is based on its own height. Reduced-motion mode skips
-the transitions and hides the animated GIF.
+At the end of page scrolling, vertical wheel or touch gestures anywhere on the
+screen move only the link window. Scrolling up from Home returns to the page.
+The gallery toolbar is fully hidden while this final screen is active.

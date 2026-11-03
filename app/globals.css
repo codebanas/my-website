@@ -52,7 +52,7 @@ html {
   scroll-snap-type: y proximity;
 }
 
-html:has(.quick-links-artwork[data-visible="true"]) {
+html:has(.quick-links-end-content[data-at-end="true"]) {
   overscroll-behavior-y: none;
 }
 
@@ -267,8 +267,7 @@ a:focus-visible {
     --page-gutter: 64px;
   }
 
-  .nav-fade,
-  .quick-links-background-fade {
+  .nav-fade {
     opacity: 0.6;
   }
 
@@ -369,16 +368,18 @@ a:focus-visible {
 }
 
 .quick-links-sticky-track {
-  --quick-links-art-gap: -24px;
   --quick-links-menu-height: calc(3 * var(--nav-height) + 24px);
   --quick-links-top-clearance: calc(var(--nav-top) + var(--nav-height) + 24px);
-  --quick-links-art-height: clamp(
-    0px,
-    calc(100dvh - var(--quick-links-top-clearance) - var(--quick-links-art-gap)),
-    clamp(240px, 62dvh, 560px)
+  --quick-links-terms-height: 21px;
+  --quick-links-terms-gap: 24px;
+  --quick-links-bottom-space: 32px;
+  --quick-links-end-height: calc(
+    var(--quick-links-menu-height) + var(--quick-links-terms-gap)
+    + var(--quick-links-terms-height) + var(--quick-links-bottom-space)
   );
-  --quick-links-pin-top: calc(
-    100dvh - var(--quick-links-art-gap) - var(--quick-links-art-height)
+  --quick-links-pin-top: max(
+    var(--quick-links-top-clearance),
+    calc(100dvh - var(--quick-links-end-height))
   );
   display: flex;
   flex-grow: 1;
@@ -391,10 +392,25 @@ a:focus-visible {
   scroll-snap-stop: always;
 }
 
-.quick-links {
+.quick-links-end-content {
   position: sticky;
   z-index: 11;
   top: var(--quick-links-pin-top);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 100%;
+  padding-bottom: var(--quick-links-bottom-space);
+}
+
+.quick-links-terms {
+  width: min(var(--container-width), calc(100% - 2 * var(--page-gutter)));
+  margin: var(--quick-links-terms-gap) auto 0;
+  text-align: center;
+}
+
+.quick-links {
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
@@ -426,57 +442,6 @@ a:focus-visible {
   width: 100%;
   transform: translateY(calc(var(--quick-link-window-start, 0) * (var(--nav-height) + 12px) * -1));
   transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.quick-links-artwork {
-  position: fixed;
-  z-index: 1;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: var(--quick-links-art-height);
-  overflow: clip;
-  pointer-events: none;
-  user-select: none;
-}
-
-.quick-links-media {
-  position: absolute;
-  inset: 0;
-  background: #0d0d0d;
-  isolation: isolate;
-  opacity: 0;
-  transform: translateY(calc(100% + 8px));
-  transition:
-    transform 720ms cubic-bezier(0.64, 0, 0.78, 0),
-    opacity 720ms cubic-bezier(0.64, 0, 0.78, 0);
-}
-
-.quick-links-artwork[data-visible="true"] .quick-links-media {
-  opacity: 1;
-  transform: none;
-  transition-duration: 720ms, 320ms;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1), ease;
-}
-
-.quick-links-background-gif,
-.quick-links-background-fade {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 100%;
-}
-
-.quick-links-background-gif {
-  height: 100%;
-  object-fit: cover;
-  mix-blend-mode: screen;
-}
-
-.quick-links-background-fade {
-  height: var(--nav-fade-height);
-  object-fit: fill;
 }
 
 @media (max-width: 767px) {
@@ -604,7 +569,7 @@ a:focus-visible {
   margin-inline: auto;
 }
 
-html:has(.quick-links-artwork[data-visible="true"]) .gallery-toolbar {
+html:has(.quick-links-end-content[data-at-end="true"]) .gallery-toolbar {
   opacity: 0;
   visibility: hidden;
 }
@@ -712,6 +677,10 @@ html:has(.quick-links-artwork[data-visible="true"]) .gallery-toolbar {
 @media (max-width: 1023px) {
   .hero-description {
     line-height: 125%;
+  }
+
+  .quick-links-sticky-track {
+    --quick-links-terms-height: 17.5px;
   }
 
   .slider-fade {
@@ -961,19 +930,5 @@ html:has(.quick-links-artwork[data-visible="true"]) .gallery-toolbar {
   .quick-links {
     opacity: 1;
     transform: none;
-  }
-
-  .quick-links-background-gif {
-    display: none;
-  }
-
-  .quick-links-media {
-    transform: none;
-    transition: none;
-  }
-
-  .quick-links-artwork[data-visible="true"] .quick-links-media {
-    transition: none;
-    transition-delay: 0ms;
   }
 }

@@ -12,9 +12,6 @@ menu is 11, keeping those controls above the fade. On desktop at 1024px and
 above, the top image renders at 60% opacity for a gentler scroll fade. Mobile
 and tablet keep the original image opacity.
 
-The quick-links GIF background reuses this PNG across its top edge at the same
-160px height and responsive opacity, letting the menu blend over the animation.
-
 The top PNG is the earlier, lighter export. Each hero heading line, the hero
 description, and the gallery toolbar also fade independently on page scroll.
 Each starts at full opacity at its unscrolled document position and reaches
@@ -25,7 +22,7 @@ loading. Card contents and the fixed navigation do not use this scroll fade.
 
 The gallery toolbar sits 16px above the cards. It is shifted down 16px from
 its previous position while the card strip stays in place. When the quick-links
-artwork opens at the end of the page, the toolbar becomes fully transparent
+final screen opens at the end of the page, the toolbar becomes fully transparent
 and hidden from interaction. Scrolling back restores its normal scroll fade.
 
 The slider uses the user's original Figma exports, stored unchanged at
@@ -47,7 +44,7 @@ mobile, 32px on tablet, and 64px on desktop. The side overlays follow these
 slider edges. Hero and gallery toolbar still use the centered 1393px container.
 
 `ProgressiveFade` and its helper remain available for reuse, but the current
-page uses the PNG overlays for the navigation, slider sides, and GIF background.
+page uses the PNG overlays for the navigation and slider sides.
 
 References:
 
