@@ -36,7 +36,9 @@ export default function Home() {
           <CodeCards />
           <div className="quick-links-section">
             <QuickLinksCue />
-            <QuickLinks />
+            <div className="quick-links-sticky-track">
+              <QuickLinks />
+            </div>
           </div>
         </div>
       </main>

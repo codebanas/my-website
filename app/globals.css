@@ -345,8 +345,25 @@ a:focus-visible {
   width: 100%;
 }
 
-.quick-links {
+.quick-links-sticky-track {
+  --quick-links-menu-height: calc(3 * var(--nav-height) + 24px);
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  /* Give the sticky menu room to stay pinned while the content above scrolls away. */
+  min-height: max(var(--quick-links-menu-height), calc(100svh - var(--nav-fade-height)));
+}
+
+.quick-links {
+  position: sticky;
+  z-index: 11;
+  top: max(
+    calc(var(--nav-top) + var(--nav-height) + 24px),
+    calc((100svh - var(--quick-links-menu-height)) / 2)
+  );
+  display: flex;
+  flex-shrink: 0;
   flex-direction: column;
   align-items: center;
   gap: 12px;
