@@ -49,7 +49,6 @@ body {
 html {
   color-scheme: dark;
   scroll-padding-top: var(--nav-fade-height);
-  scroll-snap-type: y proximity;
 }
 
 html:has(.quick-links-end-content[data-at-end="true"]) {
@@ -371,7 +370,7 @@ a:focus-visible {
   --quick-links-menu-height: calc(3 * var(--nav-height) + 24px);
   --quick-links-top-clearance: calc(var(--nav-top) + var(--nav-height) + 24px);
   --quick-links-terms-height: 21px;
-  --quick-links-terms-gap: 24px;
+  --quick-links-terms-gap: 48px;
   --quick-links-bottom-space: 32px;
   --quick-links-end-height: calc(
     var(--quick-links-menu-height) + var(--quick-links-terms-gap)
@@ -388,8 +387,6 @@ a:focus-visible {
   width: 100%;
   /* End page scrolling exactly when the menu reaches its pinned position. */
   min-height: calc(100dvh - var(--quick-links-pin-top));
-  scroll-snap-align: end;
-  scroll-snap-stop: always;
 }
 
 .quick-links-end-content {

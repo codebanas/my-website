@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { initialScrollScript } from "@/lib/initial-scroll";
 import "./globals.css";
 
 const helveticaNeue = localFont({
@@ -34,6 +35,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: initialScrollScript }} />
+      </head>
       <body className={helveticaNeue.variable}>{children}</body>
     </html>
   );

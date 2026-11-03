@@ -299,7 +299,11 @@ export default function CodeCards({
                               type="button"
                               aria-label={`${isSaved ? "Unsave" : "Save"} ${card.code}`}
                               aria-pressed={isSaved}
-                              onClick={() => toggleSaved(card.id)}
+                              onMouseDown={(event) => event.preventDefault()}
+                              onClick={(event) => {
+                                if (event.detail > 0) event.currentTarget.blur();
+                                toggleSaved(card.id);
+                              }}
                             >
                               {heart}
                             </button>

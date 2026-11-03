@@ -26,3 +26,7 @@ preferences. Existing shuffle, favorites grouping, centering, artwork, and
 responsive fade treatments remain in place. Decorative repeat runs are hidden
 from screen readers and keyboard tabbing; their pointer-clickable hearts share
 the same saved state as the main run. Every heading has a unique DOM ID.
+
+Pointer heart clicks do not retain focus on the button while favorites reorder;
+keyboard activation keeps focus. This prevents pointer-driven focus scrolling
+when removing a saved card from the centered group.
