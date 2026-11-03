@@ -409,7 +409,7 @@ a:focus-visible {
 
 @media (hover: hover) {
   .quick-link:hover {
-    background: var(--color-brand);
+    background: var(--color-button-rest);
   }
 
   .quick-link:hover span {
