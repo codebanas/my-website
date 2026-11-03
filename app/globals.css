@@ -391,7 +391,7 @@ a:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 0;
   height: 48px;
 }
 
@@ -404,13 +404,23 @@ a:focus-visible {
   letter-spacing: normal;
 }
 
+.quick-links-arrow-slot {
+  flex-shrink: 0;
+  width: calc(96px * var(--arrow-expansion, 0));
+  min-width: 0;
+  height: 24px;
+  margin-inline-start: calc(24px * var(--arrow-expansion, 0));
+  overflow: clip;
+  overflow-clip-margin: 6px;
+  transform: translateY(12px);
+}
+
 .quick-links-arrow {
   display: block;
   flex-shrink: 0;
   overflow: visible;
   color: var(--color-white);
   opacity: 0.75;
-  transform: translateY(12px);
 }
 
 .quick-links-arrow-line,
@@ -429,6 +439,11 @@ a:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .quick-links-arrow-slot {
+    width: 96px;
+    margin-inline-start: 24px;
+  }
+
   .quick-links-arrow-line,
   .quick-links-arrow-head {
     stroke-dashoffset: 0;
