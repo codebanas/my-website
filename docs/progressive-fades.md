@@ -16,7 +16,9 @@ degrees. Their height extends beyond the cards to cover the whole outer card;
 the toolbar sits above the overlays so its text and buttons stay crisp. On
 mobile and tablet screens below 1024px, each side fade is 32px wide, with a
 gentler maximum blur of 4px and tint opacity of 80%. These overrides are scoped
-to the slider fades. Their gradients and blur masks reach zero opacity at the inner edge.
+to the slider fades. An eased tint curve and the blur masks both reach zero
+opacity by 80% of each side overlay, leaving its final 20% fully transparent.
+This clear buffer avoids ending the effect against the rectangular layer edge.
 Overlay pointer events are disabled so the slider controls remain usable.
 
 The card slider spans the full viewport width, including the side overlays.

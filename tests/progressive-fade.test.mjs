@@ -26,3 +26,16 @@ test("horizontal fades mirror each other while sharing the same blur range", () 
   assert.ok(right.blurLayers.every((layer) => layer.maskImage.startsWith("linear-gradient(to left,")));
   assert.deepEqual(left.blurLayers.map((layer) => layer.radius), right.blurLayers.map((layer) => layer.radius));
 });
+
+test("side fades end with a fully clear buffer instead of a visible cutoff", () => {
+  for (const edge of ["left", "right"]) {
+    const fade = getProgressiveFade(edge, 2, 10);
+    assert.ok(fade.backgroundImage.includes("rgb(13 13 13 / 0%) 80%, rgb(13 13 13 / 0%) 100%"));
+    for (const layer of fade.blurLayers) {
+      const transparentStops = [...layer.maskImage.matchAll(/transparent ([\d.]+)%/g)];
+      assert.equal(Number(transparentStops.at(-1)[1]), 100);
+      assert.ok(Number(transparentStops.at(-2)[1]) <= 80);
+    }
+  }
+  assert.equal(getProgressiveFade("top", 6).backgroundImage.match(/linear-gradient/g).length, 6);
+});
