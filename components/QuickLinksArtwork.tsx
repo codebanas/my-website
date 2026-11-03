@@ -1,36 +1,6 @@
-"use client";
-
-import { useEffect, useRef, type RefObject } from "react";
-
-export default function QuickLinksArtwork({ visible, anchor }: {
-  visible: boolean;
-  anchor: RefObject<HTMLElement | null>;
-}) {
-  const artwork = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!visible) return;
-    let frame = 0;
-    function updatePosition() {
-      frame = 0;
-      if (!anchor.current || !artwork.current) return;
-      artwork.current.style.setProperty("--quick-links-art-top", `${anchor.current.getBoundingClientRect().top}px`);
-    }
-    function scheduleUpdate() {
-      if (!frame) frame = window.requestAnimationFrame(updatePosition);
-    }
-    updatePosition();
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
-    };
-  }, [visible, anchor]);
-
+export default function QuickLinksArtwork({ visible }: { visible: boolean }) {
   return (
-    <div className="quick-links-artwork" data-visible={visible} aria-hidden="true" ref={artwork}>
+    <div className="quick-links-artwork" data-visible={visible} aria-hidden="true">
       <div className="quick-links-art-group quick-links-art-left">
         <img className="quick-links-art art-bbf" src="/arts/lets-be-bbf.svg" alt="" width={264} height={264} draggable={false} />
         <img className="quick-links-art art-globe" src="/arts/blue-box-green-globe.svg" alt="" width={159} height={159} draggable={false} />

@@ -15,3 +15,7 @@ export function getQuickLinkWindow(activeIndex: number, linkCount: number) {
   const start = Math.max(0, Math.min(activeIndex - 1, linkCount - visibleCount));
   return { start, end: start + visibleCount };
 }
+
+export function hasReachedPageEnd(scrollTop: number, scrollHeight: number, viewportHeight: number) {
+  return Math.ceil(scrollTop + viewportHeight) >= scrollHeight;
+}

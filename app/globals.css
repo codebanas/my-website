@@ -52,6 +52,10 @@ html {
   scroll-snap-type: y proximity;
 }
 
+html:has(.quick-links-artwork[data-visible="true"]) {
+  overscroll-behavior-y: none;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -411,16 +415,13 @@ a:focus-visible {
 }
 
 .quick-links-artwork {
-  --quick-links-art-anchor: max(
-    calc(var(--nav-top) + var(--nav-height) + 24px),
-    calc((100svh - var(--quick-links-menu-height)) / 2)
-  );
+  --art-scale: 1;
   position: fixed;
   z-index: 1;
-  top: var(--quick-links-art-top, var(--quick-links-art-anchor));
   right: 0;
   bottom: 0;
   left: 0;
+  height: calc(220px * var(--art-scale));
   overflow: clip;
   pointer-events: none;
   user-select: none;
@@ -428,10 +429,12 @@ a:focus-visible {
 
 .quick-links-art-group {
   position: absolute;
-  top: 0;
+  /* Let the stickers rise into view while keeping their lower edges cropped. */
+  bottom: calc(-150px * var(--art-scale));
   width: 500px;
   height: 354px;
-  transform-origin: top left;
+  transform: scale(var(--art-scale));
+  transform-origin: bottom left;
 }
 
 .quick-links-art-left {
@@ -492,8 +495,8 @@ a:focus-visible {
 }
 
 @media (max-width: 1279px) {
-  .quick-links-art-group {
-    transform: scale(0.65);
+  .quick-links-artwork {
+    --art-scale: 0.65;
   }
 
   .quick-links-art-left {
@@ -511,14 +514,7 @@ a:focus-visible {
   }
 
   .quick-links-artwork {
-    top: calc(
-      var(--quick-links-art-top, var(--quick-links-art-anchor))
-      + var(--quick-links-menu-height) + 24px
-    );
-  }
-
-  .quick-links-art-group {
-    transform: scale(0.45);
+    --art-scale: 0.45;
   }
 
   .quick-links-art-left {

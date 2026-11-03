@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import QuickLinksArtwork from "@/components/QuickLinksArtwork";
-import { getQuickLinkWindow, quickLinks as links } from "@/lib/quick-links";
+import { getQuickLinkWindow, hasReachedPageEnd, quickLinks as links } from "@/lib/quick-links";
 
 export default function QuickLinks() {
   const navigation = useRef<HTMLElement>(null);
+  const pageAtEnd = useRef(false);
   const activeIndex = useRef(0);
   const [active, setActive] = useState(0);
   const [revealed, setRevealed] = useState(false);
@@ -23,11 +24,41 @@ export default function QuickLinks() {
 
     const observer = new IntersectionObserver(([entry]) => {
       const visible = entry.isIntersecting && entry.intersectionRatio >= 0.2;
-      setArtworkVisible(visible);
       if (visible) setRevealed(true);
     }, { threshold: [0, 0.2] });
     observer.observe(element);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    let frame = 0;
+    let mounted = true;
+
+    function updateScene() {
+      frame = 0;
+      const root = document.documentElement;
+      const atEnd = hasReachedPageEnd(window.scrollY, root.scrollHeight, root.clientHeight);
+      pageAtEnd.current = atEnd;
+      setArtworkVisible(atEnd);
+    }
+
+    function scheduleUpdate() {
+      if (mounted && !frame) frame = window.requestAnimationFrame(updateScene);
+    }
+
+    updateScene();
+    const observer = new ResizeObserver(scheduleUpdate);
+    observer.observe(document.documentElement);
+    document.fonts.ready.then(scheduleUpdate);
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    return () => {
+      mounted = false;
+      observer.disconnect();
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
   }, []);
 
   useEffect(() => {
@@ -43,9 +74,12 @@ export default function QuickLinks() {
       && activeIndex.current + step < links.length;
 
     function onWheel(event: WheelEvent) {
-      if (event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) || !event.deltaY) return;
+      if (!pageAtEnd.current || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) || !event.deltaY) return;
       const step = Math.sign(event.deltaY);
-      if (!gestureUsed && !canMove(step)) return;
+      if (!gestureUsed && !canMove(step)) {
+        if (step > 0) event.preventDefault();
+        return;
+      }
       event.preventDefault();
       if (resetTimer !== undefined) clearTimeout(resetTimer);
       // Treat trackpad momentum as one gesture, rather than skipping every link.
@@ -66,7 +100,7 @@ export default function QuickLinks() {
     }
 
     function onTouchStart(event: TouchEvent) {
-      if (event.touches.length !== 1) {
+      if (!pageAtEnd.current || event.touches.length !== 1) {
         touch = undefined;
         return;
       }
@@ -74,11 +108,14 @@ export default function QuickLinks() {
     }
 
     function onTouchMove(event: TouchEvent) {
-      if (!touch || event.touches.length !== 1) return;
+      if (!pageAtEnd.current || !touch || event.touches.length !== 1) return;
       const delta = touch.y - event.touches[0].clientY;
       if (Math.abs(delta) < 8 || Math.abs(touch.x - event.touches[0].clientX) > Math.abs(delta)) return;
       const step = Math.sign(delta);
-      if (!touch.used && !canMove(step)) return;
+      if (!touch.used && !canMove(step)) {
+        if (step > 0) event.preventDefault();
+        return;
+      }
       event.preventDefault();
       if (!touch.used && Math.abs(delta) >= 28) {
         selectLink(activeIndex.current + step);
@@ -87,18 +124,18 @@ export default function QuickLinks() {
     }
 
     const endTouch = () => { touch = undefined; };
-    element.addEventListener("wheel", onWheel, { passive: false });
-    element.addEventListener("touchstart", onTouchStart, { passive: true });
-    element.addEventListener("touchmove", onTouchMove, { passive: false });
-    element.addEventListener("touchend", endTouch);
-    element.addEventListener("touchcancel", endTouch);
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", endTouch);
+    window.addEventListener("touchcancel", endTouch);
     return () => {
       if (resetTimer !== undefined) clearTimeout(resetTimer);
-      element.removeEventListener("wheel", onWheel);
-      element.removeEventListener("touchstart", onTouchStart);
-      element.removeEventListener("touchmove", onTouchMove);
-      element.removeEventListener("touchend", endTouch);
-      element.removeEventListener("touchcancel", endTouch);
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", endTouch);
+      window.removeEventListener("touchcancel", endTouch);
     };
   }, [selectLink]);
 
@@ -146,7 +183,7 @@ export default function QuickLinks() {
           </div>
         </div>
       </nav>
-      <QuickLinksArtwork visible={artworkVisible} anchor={navigation} />
+      <QuickLinksArtwork visible={artworkVisible} />
     </>
   );
 }
