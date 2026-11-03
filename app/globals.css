@@ -753,6 +753,13 @@ a:focus-visible {
   }
 }
 
+@media (max-width: 767px) {
+  .slider-fade {
+    width: 12px;
+    opacity: 0.5;
+  }
+}
+
 .code-gallery-viewport {
   overflow-x: auto;
   overscroll-behavior-x: contain;

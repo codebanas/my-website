@@ -2,7 +2,8 @@
 
 The page uses the user's original Figma PNG exports, stored unchanged with
 their alpha transparency. These static overlays replace the generated
-gradients and backdrop-blur bands. No extra tint or opacity is applied.
+gradients and backdrop-blur bands. No extra tint is applied; mobile side images
+use reduced opacity as described below.
 
 The top image is `public/nav/blur-top.png`, a 7680 by 720 pixel export. It stays
 fixed across the full viewport width at the existing 160px height, behind the
@@ -26,9 +27,9 @@ the slider's generated gradient and backdrop-blur bands.
 
 The overlay height extends beyond the cards to cover the whole outer card;
 the toolbar sits above the overlays so its text and buttons stay crisp. On
-mobile and tablet screens below 1024px, each image compresses horizontally to
-32px, preserving the existing narrow side treatment. PNG transparency supplies
-the fading directly, without extra tint layers or opacity adjustments. Overlay
+tablet screens from 768px to 1023px, each image compresses horizontally to
+32px. On mobile below 768px, each is 12px wide at 50% opacity for a lighter
+edge. PNG transparency supplies the fading directly, without extra tint layers. Overlay
 pointer events and image dragging are disabled so the slider remains usable.
 
 The card slider spans the full viewport width, including the side overlays.
