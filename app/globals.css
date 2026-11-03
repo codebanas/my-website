@@ -421,6 +421,10 @@ a:focus-visible {
 }
 
 @media (max-width: 1023px) {
+  .hero-description {
+    line-height: 125%;
+  }
+
   .slider-fade {
     --progressive-blur-scale: 0.4;
     --progressive-tint-opacity: calc(0.8 / 3);
