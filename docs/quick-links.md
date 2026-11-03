@@ -26,7 +26,14 @@ heights replace the old media panel's reserved space. Dynamic viewport units
 keep the ending compact on desktop, tablet, and mobile.
 
 At the end of page scrolling, vertical wheel or touch gestures anywhere on the
-screen move only the link window. Scrolling up from Home returns to the page.
+screen move only the link window. Continuous wheel input and longer swipes can
+advance through multiple links, paced at most once per 180ms. A swipe that starts
+while scrolling the page can continue into the link window without lifting the
+finger. The endpoint is measured on each input, avoiding a stale scroll state.
+Scrolling directly over the visible link stack also works before the page ends.
+Normal page Arrow, Page Up/Down, and Space keys work at the endpoint; editable
+fields and button activation retain their normal behavior.
+Scrolling up from Home returns to the page.
 The gallery toolbar is fully hidden while this final screen is active.
 
 The document does not use vertical scroll snapping: it must not jump to the

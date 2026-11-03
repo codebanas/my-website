@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { getQuickLinkWindow, hasReachedPageEnd, quickLinks as links } from "@/lib/quick-links";
+import { startQuickLinksScroll } from "@/lib/quick-links-scroll";
 
 export default function QuickLinks() {
   const navigation = useRef<HTMLElement>(null);
-  const pageAtEnd = useRef(false);
   const activeIndex = useRef(0);
   const [active, setActive] = useState(0);
   const [revealed, setRevealed] = useState(false);
@@ -37,7 +37,6 @@ export default function QuickLinks() {
       frame = 0;
       const root = document.documentElement;
       const atEnd = hasReachedPageEnd(window.scrollY, root.scrollHeight, root.clientHeight);
-      pageAtEnd.current = atEnd;
       setAtPageEnd(atEnd);
     }
 
@@ -63,79 +62,15 @@ export default function QuickLinks() {
   useEffect(() => {
     const element = navigation.current;
     if (!element) return;
-    let distance = 0;
-    let direction = 0;
-    let gestureUsed = false;
-    let resetTimer: ReturnType<typeof setTimeout> | undefined;
-    let touch: { x: number; y: number; used: boolean } | undefined;
-
-    const canMove = (step: number) => activeIndex.current + step >= 0
-      && activeIndex.current + step < links.length;
-
-    function onWheel(event: WheelEvent) {
-      if (!pageAtEnd.current || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) || !event.deltaY) return;
-      const step = Math.sign(event.deltaY);
-      if (!gestureUsed && !canMove(step)) {
-        if (step > 0) event.preventDefault();
-        return;
-      }
-      event.preventDefault();
-      if (resetTimer !== undefined) clearTimeout(resetTimer);
-      // Treat trackpad momentum as one gesture, rather than skipping every link.
-      resetTimer = setTimeout(() => {
-        distance = 0;
-        direction = 0;
-        gestureUsed = false;
-      }, 180);
-      if (gestureUsed) return;
-      if (direction !== step) distance = 0;
-      direction = step;
-      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? element!.clientHeight : 1;
-      distance += Math.abs(event.deltaY) * unit;
-      if (distance >= 32) {
-        selectLink(activeIndex.current + step);
-        gestureUsed = true;
-      }
-    }
-
-    function onTouchStart(event: TouchEvent) {
-      if (!pageAtEnd.current || event.touches.length !== 1) {
-        touch = undefined;
-        return;
-      }
-      touch = { x: event.touches[0].clientX, y: event.touches[0].clientY, used: false };
-    }
-
-    function onTouchMove(event: TouchEvent) {
-      if (!pageAtEnd.current || !touch || event.touches.length !== 1) return;
-      const delta = touch.y - event.touches[0].clientY;
-      if (Math.abs(delta) < 8 || Math.abs(touch.x - event.touches[0].clientX) > Math.abs(delta)) return;
-      const step = Math.sign(delta);
-      if (!touch.used && !canMove(step)) {
-        if (step > 0) event.preventDefault();
-        return;
-      }
-      event.preventDefault();
-      if (!touch.used && Math.abs(delta) >= 28) {
-        selectLink(activeIndex.current + step);
-        touch.used = true;
-      }
-    }
-
-    const endTouch = () => { touch = undefined; };
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
-    window.addEventListener("touchend", endTouch);
-    window.addEventListener("touchcancel", endTouch);
-    return () => {
-      if (resetTimer !== undefined) clearTimeout(resetTimer);
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend", endTouch);
-      window.removeEventListener("touchcancel", endTouch);
-    };
+    return startQuickLinksScroll(element, {
+      isAtEnd: () => {
+        const root = document.documentElement;
+        return hasReachedPageEnd(window.scrollY, root.scrollHeight, root.clientHeight);
+      },
+      getActiveIndex: () => activeIndex.current,
+      selectLink,
+      linkCount: links.length,
+    });
   }, [selectLink]);
 
   return (
