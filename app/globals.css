@@ -827,7 +827,7 @@ a:focus-visible {
 }
 
 .code-card {
-  --card-rotation: -0.8deg;
+  --card-rotation: 0deg;
   --card-height: 332px;
   --card-padding: 16px;
   --card-radius: 16px;
@@ -844,11 +844,7 @@ a:focus-visible {
   transition: top 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.code-card:nth-child(even) {
-  --card-rotation: 0.8deg;
-}
-
-/* Surface and text rotate separately around the same card center. */
+/* Surface and text stay aligned, with the artwork on its own clipped layer. */
 .code-card-surface {
   position: absolute;
   inset: 0;

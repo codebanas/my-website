@@ -22,7 +22,7 @@ Italic versions use the same weight with `font-style: italic`. Figma's unqualifi
 Use Figma's font size in CSS pixels. Match its weight, line height, and letter
 spacing separately; do not resize text to compensate for a different weight.
 The card code uses 14px Bold with 100% line height. The account button label uses
-13px Bold with 100% line height. Card prices and percentages use 20px Heavy with
+13px Bold with 100% line height. Card prices and percentages use 18px Heavy with
 86% line height, matching the supplied Figma typography references.
 The hero uses 56px Heavy with 95% line height on desktop, scaling down on
 smaller screens.
@@ -37,11 +37,11 @@ smaller screens.
 
 ## Browser rendering
 
-Card text and controls share the surface's alternating rotation and pivot at
-the center of the card. The text panel has its own opaque background and stays
+Card surfaces, text, and controls use 0-degree rotation, with 16px between cards.
+The text panel has its own opaque background and stays
 separate from the texture's blending and filtering. Real font faces render at
 their design sizes, with native browser antialiasing. The 8px hover lift uses
-relative positioning, preserving the rotation without scaling text or moving
+relative positioning without scaling text or moving
 neighboring cards. The slider fades use edge overlays rather than a mask
 on the entire text-bearing scroll layer. Initial scrolling is aligned to a
 device pixel.
