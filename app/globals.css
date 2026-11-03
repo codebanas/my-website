@@ -365,15 +365,16 @@ a:focus-visible {
 
 .quick-links-sticky-track {
   --art-scale: 1;
+  --quick-links-art-gap: 24px;
   --quick-links-menu-height: calc(3 * var(--nav-height) + 24px);
   --quick-links-top-clearance: calc(var(--nav-top) + var(--nav-height) + 24px);
   --quick-links-art-height: clamp(
     0px,
-    calc(100dvh - var(--quick-links-top-clearance) - var(--quick-links-menu-height) - 48px),
+    calc(100dvh - var(--quick-links-top-clearance) - var(--quick-links-menu-height) - var(--quick-links-art-gap)),
     calc(172px * var(--art-scale))
   );
   --quick-links-pin-top: calc(
-    100dvh - var(--quick-links-menu-height) - 48px - var(--quick-links-art-height)
+    100dvh - var(--quick-links-menu-height) - var(--quick-links-art-gap) - var(--quick-links-art-height)
   );
   display: flex;
   flex-grow: 1;
