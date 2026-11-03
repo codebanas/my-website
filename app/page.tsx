@@ -2,6 +2,7 @@ import CodeCards from "@/components/CodeCards";
 import HeroText from "@/components/HeroText";
 import ProgressiveFade from "@/components/ProgressiveFade";
 import QuickLinksCue from "@/components/QuickLinksCue";
+import QuickLinks from "@/components/QuickLinks";
 
 export default function Home() {
   return (
@@ -13,7 +14,7 @@ export default function Home() {
             <a className="nav-logo" href="/" aria-label="Codebanas home">
               <img src="/nav/profile-logo.svg" alt="" width={42} height={12} />
             </a>
-            <button className="profile-button" type="button">
+            <button className="pill-button profile-button" type="button">
               <span>Create an Account</span>
               <img src="/nav/arrow-white-circle.svg" alt="" width={16} height={16} />
             </button>
@@ -33,7 +34,10 @@ export default function Home() {
         <HeroText />
         <div className="supporter-content">
           <CodeCards />
-          <QuickLinksCue />
+          <div className="quick-links-section">
+            <QuickLinksCue />
+            <QuickLinks />
+          </div>
         </div>
       </main>
     </>
