@@ -418,10 +418,10 @@ a:focus-visible {
   --art-scale: 1;
   position: fixed;
   z-index: 1;
+  top: calc(var(--quick-links-pin-top) + var(--quick-links-menu-height) + 48px);
   right: 0;
   bottom: 0;
   left: 0;
-  height: calc(220px * var(--art-scale));
   overflow: clip;
   pointer-events: none;
   user-select: none;
@@ -429,12 +429,12 @@ a:focus-visible {
 
 .quick-links-art-group {
   position: absolute;
-  /* Let the stickers rise into view while keeping their lower edges cropped. */
-  bottom: calc(-150px * var(--art-scale));
+  /* Remove the transparent inset above the highest visible artwork edge. */
+  top: calc(-53px * var(--art-scale));
   width: 500px;
   height: 354px;
   transform: scale(var(--art-scale));
-  transform-origin: bottom left;
+  transform-origin: top left;
 }
 
 .quick-links-art-left {
