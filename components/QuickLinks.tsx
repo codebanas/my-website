@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import QuickLinksArtwork from "@/components/QuickLinksArtwork";
 
 const links = ["Home", "How It Works?", "Buy Me a Coffee"] as const;
 
@@ -9,6 +10,7 @@ export default function QuickLinks() {
   const activeIndex = useRef(0);
   const [active, setActive] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [artworkVisible, setArtworkVisible] = useState(false);
 
   const selectLink = useCallback((index: number) => {
     activeIndex.current = index;
@@ -20,10 +22,10 @@ export default function QuickLinks() {
     if (!element) return;
 
     const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return;
-      setRevealed(true);
-      observer.disconnect();
-    }, { threshold: 0.2 });
+      const visible = entry.isIntersecting && entry.intersectionRatio >= 0.2;
+      setArtworkVisible(visible);
+      if (visible) setRevealed(true);
+    }, { threshold: [0, 0.2] });
     observer.observe(element);
     return () => observer.disconnect();
   }, []);
@@ -101,6 +103,7 @@ export default function QuickLinks() {
   }, [selectLink]);
 
   return (
+    <>
     <nav
       className="quick-links"
       aria-label="Quick links"
@@ -131,5 +134,7 @@ export default function QuickLinks() {
         </button>
       ))}
     </nav>
+    <QuickLinksArtwork visible={artworkVisible} anchor={navigation} />
+    </>
   );
 }

@@ -387,6 +387,122 @@ a:focus-visible {
   transform: none;
 }
 
+.quick-links-artwork {
+  --quick-links-art-anchor: max(
+    calc(var(--nav-top) + var(--nav-height) + 24px),
+    calc((100svh - var(--quick-links-menu-height)) / 2)
+  );
+  position: fixed;
+  z-index: 1;
+  top: var(--quick-links-art-top, var(--quick-links-art-anchor));
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: clip;
+  pointer-events: none;
+  user-select: none;
+}
+
+.quick-links-art-group {
+  position: absolute;
+  top: 0;
+  width: 500px;
+  height: 354px;
+  transform-origin: top left;
+}
+
+.quick-links-art-left {
+  left: calc(50% - 768px);
+}
+
+.quick-links-art-right {
+  left: calc(50% + 310px);
+}
+
+.quick-links-art {
+  position: absolute;
+  display: block;
+  opacity: 0;
+  transform: translateY(100svh);
+  transition: transform 720ms cubic-bezier(0.22, 1, 0.36, 1), opacity 320ms ease;
+}
+
+.quick-links-artwork[data-visible="true"] .quick-links-art {
+  opacity: 1;
+  transform: none;
+  transition-delay: var(--art-delay, 0ms);
+}
+
+.art-bbf {
+  top: 64px;
+  left: 0;
+}
+
+.art-globe {
+  --art-delay: 60ms;
+  top: 104px;
+  left: 200px;
+}
+
+.art-banas {
+  --art-delay: 120ms;
+  top: 154px;
+  left: 359px;
+}
+
+.art-code {
+  --art-delay: 40ms;
+  top: 114px;
+  left: 0;
+}
+
+.art-at {
+  --art-delay: 100ms;
+  top: 32px;
+  left: 110px;
+}
+
+.art-hands {
+  --art-delay: 160ms;
+  top: 174px;
+  left: 253px;
+}
+
+@media (max-width: 1279px) {
+  .quick-links-art-group {
+    transform: scale(0.65);
+  }
+
+  .quick-links-art-left {
+    left: calc(50% - 500px);
+  }
+
+  .quick-links-art-right {
+    left: calc(50% + 175px);
+  }
+}
+
+@media (max-width: 767px) {
+  .quick-links-artwork {
+    top: calc(
+      var(--quick-links-art-top, var(--quick-links-art-anchor))
+      + var(--quick-links-menu-height) + 24px
+    );
+  }
+
+  .quick-links-art-group {
+    transform: scale(0.45);
+  }
+
+  .quick-links-art-left {
+    left: calc(50% - 200px);
+  }
+
+  .quick-links-art-right {
+    left: calc(50% + 12px);
+  }
+}
+
 .quick-link {
   max-width: 100%;
   background: transparent;
@@ -847,5 +963,14 @@ a:focus-visible {
   .quick-links {
     opacity: 1;
     transform: none;
+  }
+
+  .quick-links-art {
+    transform: none;
+    transition: none;
+  }
+
+  .quick-links-artwork[data-visible="true"] .quick-links-art {
+    transition-delay: 0ms;
   }
 }
