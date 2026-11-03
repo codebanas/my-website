@@ -9,6 +9,14 @@ fixed across the full viewport width at the existing 160px height, behind the
 navigation. Its z-index is 10; the navigation is 20 and the sticky quick-links
 menu is 11, keeping those controls above the fade.
 
+The top PNG is the earlier, lighter export. Each hero heading line, the hero
+description, and the gallery toolbar also fade independently on page scroll.
+Each starts at full opacity at its unscrolled document position and reaches
+25% opacity when its top edge reaches 32px from the viewport top. Opacity
+stays at 25% beyond that marker and returns to 100% when scrolled back.
+The positions are measured again after resizing, layout changes, or font
+loading. Card contents and the fixed navigation do not use this scroll fade.
+
 The slider uses the user's original Figma exports, stored unchanged at
 `public/gallery/blur-left.png` and `public/gallery/blur-right.png`. Both files
 are 1060 by 1720 pixels with alpha transparency. They render at 265px wide by

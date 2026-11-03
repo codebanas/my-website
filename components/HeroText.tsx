@@ -30,8 +30,8 @@ export default function HeroText() {
   return (
     <section className="hero-section" aria-labelledby="hero-title">
       <h1 className="hero-title" id="hero-title">
-        <span className="hero-title-line">Supporters With Benefits</span>
-        <span className="hero-title-line">
+        <span className="hero-title-line" data-scroll-fade>Supporters With Benefits</span>
+        <span className="hero-title-line" data-scroll-fade>
           Made Simple &amp; Real.
           <span className="hero-ending" aria-hidden="true">
             <span className="hero-ending-measure">{endings[1]}</span>
@@ -39,7 +39,7 @@ export default function HeroText() {
           </span>
         </span>
       </h1>
-      <p className="hero-description">
+      <p className="hero-description" data-scroll-fade>
         Support what we&apos;re building and discover opportunities to receive something back from the
         community you help grow.
       </p>

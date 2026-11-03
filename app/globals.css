@@ -284,6 +284,10 @@ a:focus-visible {
   padding-bottom: 48px;
 }
 
+[data-scroll-fade] {
+  opacity: var(--scroll-opacity, 1);
+}
+
 .hero-section {
   width: min(var(--container-width), calc(100% - 2 * var(--page-gutter)));
   margin-inline: auto;

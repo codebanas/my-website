@@ -1,5 +1,6 @@
 import CodeCards from "@/components/CodeCards";
 import HeroText from "@/components/HeroText";
+import HomeContent from "@/components/HomeContent";
 import QuickLinksCue from "@/components/QuickLinksCue";
 import QuickLinks from "@/components/QuickLinks";
 
@@ -37,7 +38,7 @@ export default function Home() {
           </div>
         </nav>
       </header>
-      <main className="home-content" aria-label="Codebanas">
+      <HomeContent>
         <HeroText />
         <div className="supporter-content">
           <CodeCards />
@@ -48,7 +49,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </main>
+      </HomeContent>
     </>
   );
 }

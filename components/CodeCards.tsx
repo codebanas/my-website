@@ -134,7 +134,7 @@ export default function CodeCards({
 
   return (
     <section className="code-gallery" aria-labelledby="gallery-title">
-      <div className="gallery-toolbar">
+      <div className="gallery-toolbar" data-scroll-fade>
         <h2 className="gallery-title" id="gallery-title">
           [ / Supporter Benefits ]
         </h2>
