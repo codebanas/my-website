@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import CardTexture from "@/components/CardTexture";
+import { startCardAutoScroll } from "@/lib/card-auto-scroll";
 import { getCardAppearance, getCardColor, type CardAppearance } from "@/lib/card-styles";
 import { groupFavorites, shuffle, shuffleWithFavorites } from "@/lib/shuffle";
 
@@ -21,6 +22,20 @@ const sampleCards: CodeCardData[] = [
   { id: "ZX8H1", code: "ZX8H1", price: 129, rate: "0.7%" },
   { id: "BQ4R7", code: "BQ4R7", price: 169, rate: "0.6%" },
   { id: "FD2K9", code: "FD2K9", price: 109, rate: "0.9%" },
+  { id: "QM5V8", code: "QM5V8", price: 119, rate: "0.4%" },
+  { id: "TR8N3", code: "TR8N3", price: 89, rate: "0.6%" },
+  { id: "HP4X7", code: "HP4X7", price: 139, rate: "0.8%" },
+  { id: "LC9R2", code: "LC9R2", price: 99, rate: "0.3%" },
+  { id: "BV6K5", code: "BV6K5", price: 159, rate: "0.7%" },
+  { id: "WN2J8", code: "WN2J8", price: 129, rate: "0.5%" },
+  { id: "AS7D4", code: "AS7D4", price: 179, rate: "0.9%" },
+  { id: "PF3M6", code: "PF3M6", price: 79, rate: "0.2%" },
+  { id: "GY8T2", code: "GY8T2", price: 149, rate: "0.6%" },
+  { id: "EK5B9", code: "EK5B9", price: 109, rate: "0.4%" },
+  { id: "DU4L7", code: "DU4L7", price: 189, rate: "0.8%" },
+  { id: "MX9C3", code: "MX9C3", price: 119, rate: "0.5%" },
+  { id: "RG6W2", code: "RG6W2", price: 169, rate: "0.7%" },
+  { id: "JN7F5", code: "JN7F5", price: 139, rate: "0.3%" },
 ];
 
 export default function CodeCards({
@@ -30,6 +45,7 @@ export default function CodeCards({
   cards?: CodeCardData[];
   startIndex?: number;
 }) {
+  const gallery = useRef<HTMLElement>(null);
   const viewport = useRef<HTMLDivElement>(null);
   const mouseDrag = useRef<{
     pointerId: number;
@@ -74,6 +90,11 @@ export default function CodeCards({
     observer.observe(element);
     return () => observer.disconnect();
   }, [groupSaved, centerSlider]);
+
+  useEffect(() => {
+    if (!viewport.current || !gallery.current) return;
+    return startCardAutoScroll(viewport.current, gallery.current);
+  }, [cards.length]);
 
   function startMouseDrag(event: PointerEvent<HTMLDivElement>) {
     suppressDragClick.current = false;
@@ -133,7 +154,7 @@ export default function CodeCards({
   }
 
   return (
-    <section className="code-gallery" aria-labelledby="gallery-title">
+    <section className="code-gallery" aria-labelledby="gallery-title" ref={gallery}>
       <div className="gallery-toolbar" data-scroll-fade>
         <h2 className="gallery-title" id="gallery-title">
           [ / Supporter Benefits ]

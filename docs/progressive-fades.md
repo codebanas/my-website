@@ -32,7 +32,7 @@ The slider uses the user's original Figma exports, stored unchanged at
 `public/gallery/blur-left.png` and `public/gallery/blur-right.png`. Both files
 are 1060 by 1720 pixels with alpha transparency. They render at 265px wide by
 430px high on desktop, matching the exports at one-quarter scale, centered
-vertically and anchored to their respective screen edges. The images replace
+vertically and anchored to their respective slider edges. The images replace
 the slider's generated gradient and backdrop-blur bands.
 
 The overlay height extends beyond the cards to cover the whole outer card;
@@ -42,10 +42,9 @@ tablet screens from 768px to 1023px, each image compresses horizontally to
 edge. PNG transparency supplies the fading directly, without extra tint layers. Overlay
 pointer events and image dragging are disabled so the slider remains usable.
 
-The card slider spans the full viewport width, including the side overlays.
-Only the hero and gallery toolbar use the centered 1393px content container.
-The slider therefore reveals the partial outer cards beyond the toolbar edges,
-and the side fades end at the screen edges rather than at the content container.
+The card slider is inset by the navigation's responsive page gutter: 16px on
+mobile, 32px on tablet, and 64px on desktop. The side overlays follow these
+slider edges. Hero and gallery toolbar still use the centered 1393px container.
 
 `ProgressiveFade` and its helper remain available for reuse, but the current
 page uses the PNG overlays for the navigation, slider sides, and GIF background.
