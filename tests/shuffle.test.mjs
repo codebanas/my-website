@@ -10,7 +10,7 @@ test("shuffle preserves every card without mutating the source", () => {
   assert.notDeepEqual(shuffled, cards);
 });
 
-test("grouped shuffle keeps every saved and unsaved card, with saved cards adjacent", () => {
+test("grouped shuffle keeps every card, with saved cards adjacent in the middle", () => {
   const cards = Array.from({ length: 8 }, (_, index) => ({ id: String(index) }));
   const saved = new Set(["1", "4", "6"]);
 
@@ -25,6 +25,7 @@ test("grouped shuffle keeps every saved and unsaved card, with saved cards adjac
     assert.deepEqual(result.map((card) => card.id).sort(), cards.map((card) => card.id).sort());
     const positions = result.flatMap((card, index) => saved.has(card.id) ? [index] : []);
     assert.equal(positions.at(-1) - positions[0], saved.size - 1);
+    assert.equal(positions[0], Math.floor((cards.length - saved.size) / 2));
     assert.notDeepEqual(result, cards);
   }
 
@@ -42,10 +43,19 @@ test("grouped shuffle handles no saves, all saves, one saved card, and stale sav
   assert.deepEqual(shuffleWithFavorites([cards[0]], new Set(["a"])), [cards[0]]);
 });
 
-test("a saved group moves if a draw would otherwise leave the same order", () => {
+test("centering takes precedence over moving a saved card out to the edge", () => {
   const cards = [{ id: "a" }, { id: "b" }];
   const result = shuffleWithFavorites(cards, new Set(["a"]), () => 0);
-  assert.deepEqual(result.map((card) => card.id), ["b", "a"]);
+  assert.deepEqual(result.map((card) => card.id), ["a", "b"]);
+});
+
+test("a single saved card always shuffles through the central slot", () => {
+  const cards = ["a", "b", "c", "d", "e", "f", "g"].map((id) => ({ id }));
+  for (const random of [() => 0, () => 0.5, () => 0.999]) {
+    const result = shuffleWithFavorites(cards, new Set(["a"]), random);
+    assert.equal(result[3].id, "a");
+    assert.deepEqual(result.map((card) => card.id).sort(), cards.map((card) => card.id));
+  }
 });
 
 test("shuffle always changes an unchanged draw when multiple cards exist", () => {

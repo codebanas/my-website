@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CardTexture from "@/components/CardTexture";
 import ProgressiveFade from "@/components/ProgressiveFade";
 import { getCardAppearance, getCardColor, type CardAppearance } from "@/lib/card-styles";
@@ -46,26 +46,28 @@ export default function CodeCards({
     ? groupFavorites(orderedCards, new Set(savedCodes))
     : orderedCards;
 
+  const centerSlider = useCallback(() => {
+    const element = viewport.current;
+    if (!element) return;
+    const pixelRatio = window.devicePixelRatio || 1;
+    const center = (element.scrollWidth - element.clientWidth) / 2;
+    element.scrollLeft = Math.round(center * pixelRatio) / pixelRatio;
+  }, []);
+
   useEffect(() => {
     const element = viewport.current;
     if (!element) return;
-
-    const centerCards = () => {
-      const pixelRatio = window.devicePixelRatio || 1;
-      const center = (element.scrollWidth - element.clientWidth) / 2;
-      element.scrollLeft = Math.round(center * pixelRatio) / pixelRatio;
-    };
 
     let previousWidth: number | undefined;
     const observer = new ResizeObserver(([entry]) => {
       const width = entry.contentRect.width;
       if (width === previousWidth) return;
       previousWidth = width;
-      centerCards();
+      centerSlider();
     });
     observer.observe(element);
     return () => observer.disconnect();
-  }, [groupSaved]);
+  }, [groupSaved, centerSlider]);
 
   function toggleSaved(code: string) {
     const nextSaved = savedCodes.includes(code)
@@ -78,6 +80,7 @@ export default function CodeCards({
   function shuffleAllCards() {
     const shuffled = shuffleWithFavorites(orderedCards, new Set(savedCodes));
     setCardOrder(shuffled.map((card) => card.id));
+    if (hasSavedCards) centerSlider();
   }
 
   return (

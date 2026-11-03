@@ -12,7 +12,7 @@ export function shuffle<T>(items: readonly T[], random: () => number = Math.rand
   return result;
 }
 
-/** Shuffle every card, treating saved cards as one randomly placed group. */
+/** Shuffle every card while reserving the middle slots for the saved group. */
 export function shuffleWithFavorites<T extends { id: string }>(
   items: readonly T[],
   savedIds: ReadonlySet<string>,
@@ -25,16 +25,8 @@ export function shuffleWithFavorites<T extends { id: string }>(
 
   const group = shuffle(favorites, random);
   const others = shuffle(items.filter((item) => !savedIds.has(item.id)), random);
-  let position = Math.floor(random() * (others.length + 1));
-  const insertGroup = () => [...others.slice(0, position), ...group, ...others.slice(position)];
-  let result = insertGroup();
-
-  if (result.every((item, index) => item === items[index])) {
-    position = (position + 1) % (others.length + 1);
-    result = insertGroup();
-  }
-
-  return result;
+  const position = Math.floor(others.length / 2);
+  return [...others.slice(0, position), ...group, ...others.slice(position)];
 }
 
 /** Keep the full list, placing saved cards together near its center. */
