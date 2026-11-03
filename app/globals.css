@@ -321,6 +321,7 @@ a:focus-visible {
 .quick-links-cue-content {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 24px;
   height: 48px;
 }

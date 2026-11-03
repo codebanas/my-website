@@ -65,8 +65,8 @@ export default function QuickLinksCue() {
           strokeLinejoin="round"
           aria-hidden="true"
         >
-          <path className="quick-links-arrow-line" pathLength="1" d="M0.75 0.75H65.25A24 22.5 0 0 1 89.25 23.25" />
-          <path className="quick-links-arrow-head" pathLength="1" d="M82.75 16.75L89.25 23.25L95.75 16.75" />
+          <path className="quick-links-arrow-line" pathLength="1" d="M0 0H80A16 16 0 0 1 96 16V24" />
+          <path className="quick-links-arrow-head" pathLength="1" d="M91 19L96 24L101 19" />
         </svg>
       </div>
     </div>
