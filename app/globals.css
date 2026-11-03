@@ -462,13 +462,18 @@ a:focus-visible {
   position: absolute;
   display: block;
   opacity: 0;
-  transform: translateY(100svh);
-  transition: transform 720ms cubic-bezier(0.22, 1, 0.36, 1), opacity 320ms ease;
+  transform: translateY(calc(var(--quick-links-art-height) / var(--art-scale) + 8px));
+  transition:
+    transform 720ms cubic-bezier(0.64, 0, 0.78, 0),
+    opacity 720ms cubic-bezier(0.64, 0, 0.78, 0);
+  transition-delay: calc(160ms - var(--art-delay, 0ms));
 }
 
 .quick-links-artwork[data-visible="true"] .quick-links-art {
   opacity: 1;
   transform: none;
+  transition-duration: 720ms, 320ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1), ease;
   transition-delay: var(--art-delay, 0ms);
 }
 
@@ -1015,6 +1020,7 @@ a:focus-visible {
   }
 
   .quick-links-artwork[data-visible="true"] .quick-links-art {
+    transition: none;
     transition-delay: 0ms;
   }
 }

@@ -16,3 +16,8 @@ The artwork reveals at the end of page scrolling. Further vertical wheel or
 touch gestures anywhere on that screen scroll only the link window. Scrolling
 up from Home returns to the page. Avoid positioning a cropped artwork layer
 above the viewport bottom: that leaves the blank strip the design excludes.
+
+Artwork uses a 720ms upward entrance and a matching downward exit with mirrored
+easing and reversed stagger order. Travel is based on the cropped layer height
+and scale, so it leaves smoothly on every screen size rather than jumping a
+full viewport out of sight. Reduced-motion mode skips these transitions.
