@@ -57,6 +57,7 @@ export default function QuickLinksCue() {
   return (
     <div className="quick-links-cue" ref={cue} data-at-end={atEnd}>
       <div className="quick-links-cue-content">
+        <h2 className="quick-links-cue-label" aria-hidden={atEnd}>Scrollable Quick Links</h2>
         <span className="quick-links-arrow-slot" aria-hidden="true">
           <svg
             className="quick-links-arrow"

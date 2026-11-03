@@ -352,6 +352,7 @@ a:focus-visible {
 
 .quick-links-cue {
   --arrow-slot-width: 104px;
+  --arrow-slot-gap: 22px;
   width: 100%;
   margin-inline: auto;
 }
@@ -479,15 +480,37 @@ a:focus-visible {
   height: 48px;
 }
 
+.quick-links-cue-label {
+  flex-shrink: 0;
+  margin: 0;
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  line-height: 100%;
+  letter-spacing: normal;
+  transition: opacity 180ms ease;
+}
+
+.quick-links-cue[data-at-end="true"] .quick-links-cue-label {
+  opacity: 0;
+}
+
+@media (max-width: 767px) {
+  .quick-links-cue {
+    --arrow-slot-gap: 12px;
+  }
+}
+
 .quick-links-arrow-slot {
   position: relative;
   flex-shrink: 0;
   width: calc(var(--arrow-slot-width) * var(--arrow-expansion, 0));
   min-width: 0;
   height: 28px;
+  margin-inline-start: calc(var(--arrow-slot-gap) * var(--arrow-expansion, 0));
   /* Include the stroke and arrowhead inside real bounds. */
   overflow: hidden;
-  transition: width 240ms ease;
+  transform: translateY(12px);
+  transition: width 240ms ease, margin-inline-start 240ms ease;
 }
 
 .quick-links-arrow {
@@ -547,6 +570,7 @@ a:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .quick-links-cue-label,
   .quick-links-arrow-slot,
   .quick-links-arrow-line,
   .quick-links-arrow-head,
