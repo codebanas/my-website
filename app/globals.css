@@ -343,6 +343,8 @@ a:focus-visible {
 }
 
 .quick-links-cue {
+  --arrow-slot-width: 104px;
+  --arrow-slot-gap: 22px;
   width: min(var(--container-width), calc(100% - 2 * var(--page-gutter)));
   margin-inline: auto;
 }
@@ -504,6 +506,10 @@ a:focus-visible {
 }
 
 @media (max-width: 767px) {
+  .quick-links-cue {
+    --arrow-slot-gap: 12px;
+  }
+
   .quick-links-artwork {
     top: calc(
       var(--quick-links-art-top, var(--quick-links-art-anchor))
@@ -572,17 +578,21 @@ a:focus-visible {
 }
 
 .quick-links-arrow-slot {
+  position: relative;
   flex-shrink: 0;
-  width: calc(96px * var(--arrow-expansion, 0));
+  width: calc(var(--arrow-slot-width) * var(--arrow-expansion, 0));
   min-width: 0;
-  height: 24px;
-  margin-inline-start: calc(24px * var(--arrow-expansion, 0));
-  overflow: clip;
-  overflow-clip-margin: 6px;
+  height: 28px;
+  margin-inline-start: calc(var(--arrow-slot-gap) * var(--arrow-expansion, 0));
+  /* Include the stroke and arrowhead inside real bounds. */
+  overflow: hidden;
   transform: translateY(12px);
 }
 
 .quick-links-arrow {
+  position: absolute;
+  top: 2px;
+  left: 2px;
   display: block;
   flex-shrink: 0;
   overflow: visible;
@@ -607,8 +617,8 @@ a:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .quick-links-arrow-slot {
-    width: 96px;
-    margin-inline-start: 24px;
+    width: var(--arrow-slot-width);
+    margin-inline-start: var(--arrow-slot-gap);
   }
 
   .quick-links-arrow-line,
