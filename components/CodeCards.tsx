@@ -287,7 +287,7 @@ export default function CodeCards({
                     <div className="code-card-details">
                       <div className="code-card-header">
                         <h3 className="code-card-name" id={headingId}>
-                          <img src="/cards/verify.svg" alt="Verified" width={16} height={16} />
+                          <img src="/cards/verify.svg" alt="Verified" width={18} height={18} />
                           {card.code}
                         </h3>
                         <div className="code-card-actions">
