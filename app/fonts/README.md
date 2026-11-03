@@ -37,10 +37,12 @@ smaller screens.
 
 ## Browser rendering
 
-Card text is drawn upright on an opaque background. Only the decorative card
-surface and texture are rotated; the text does not inherit that transform. The
-8px hover lift uses relative positioning so it does not transform the text or
-move neighboring cards. The slider fades use edge overlays rather than a mask
+Card text and controls share the surface's alternating rotation and pivot at
+the center of the card. The text panel has its own opaque background and stays
+separate from the texture's blending and filtering. Real font faces render at
+their design sizes, with native browser antialiasing. The 8px hover lift uses
+relative positioning, preserving the rotation without scaling text or moving
+neighboring cards. The slider fades use edge overlays rather than a mask
 on the entire text-bearing scroll layer. Initial scrolling is aligned to a
 device pixel.
 
