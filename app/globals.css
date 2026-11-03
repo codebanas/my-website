@@ -749,7 +749,7 @@ a:focus-visible {
 
 .code-card-numbers {
   margin-top: auto;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: var(--font-weight-heavy);
   line-height: 86%;
 }
